@@ -1,25 +1,29 @@
-# User Stories
+# User Stories & Acceptance Criteria
 
-## User
-- As a **user**, I want to browse an item so that I can see what is available.  
-- As a **user**, I want to select an item so that I can add it to my cart.  
-- As a **user**, I want to know the total due so that I can understand the cost before checkout.  
-- As a **user**, I want to receive an item so that I can enjoy my order.  
+## 1. User Story: Browse Items
+**As a user, I want to browse an item so that I can see what is available.**
 
-## Cook
-- As a **cook**, I want to receive the order so that I know what to prepare.  
-- As a **cook**, I want to make the order so that it is ready for the customer.  
-- As a **cook**, I want to give order status so that the user knows the progress.  
-- As a **cook**, I want to hand the order over for delivery so that it can reach the user.  
+### Acceptance Criteria
+- The system displays a list of available menu items.  
+- Each menu item shows its **name**, **description**, and **price**.  
+- If no items are available, the system shows a *“No items available”* message.  
 
-## Delivery
-- As a **delivery person**, I want to receive orders from the cook so that I know what to deliver.  
-- As a **delivery person**, I want to give the order to the user so that the customer receives their food.  
+---
 
-## Menu Item
-- As a **menu item**, I want to be populated with food options so that users can browse me.  
-- As a **menu item**, I want to provide a price so that users know how much I cost.  
+## 2. User Story: Add to Cart
+**As a user, I want to select an item so that I can add it to my cart.**
 
-## Cart
-- As a **cart**, I want to process items as an order so that the purchase can move forward.  
-- As a **cart**, I want to allow the user to checkout so that payment can be made and the order is confirmed.  
+### Acceptance Criteria
+- The user can select a menu item and add it to their cart.  
+- The cart updates immediately with the added item.  
+- The system prevents adding unavailable or out-of-stock items.  
+
+---
+
+## 3. User Story: Receive Order (User Side)
+**As a user, I want to receive an item so that I can enjoy my order.**
+
+### Acceptance Criteria
+- The delivery person hands the correct order to the user.  
+- The system marks the order as **"Delivered"** once completed.  
+- The user receives a confirmation (in-app or message) that their order has been delivered.  
