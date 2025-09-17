@@ -21,7 +21,9 @@
 ---
 
 ## 3. User Story: Receive Order (User Side)
-**As a user, I want to receive an item so that I can enjoy my order.**
+**As a delivery person, I want to mark an order as delivered after a delivery so that the customer knows their order has been delivered successfully.
+
+can we update the User Stories for this change.**
 
 ### Acceptance Criteria
 - The delivery person hands the correct order to the user.  
