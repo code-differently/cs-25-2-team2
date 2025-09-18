@@ -66,8 +66,38 @@ public class MenuItem {
     this.availability = availability;
   }
 
-  // Add/remove ingredients
+  // Getters and setters
+  public int getDishId() {
+    return dishId;
+  }
+
+  public String getDishName() {
+    return dishName;
+  }
+
+  public List<Ingredient> getIngredients() {
+    return ingredients;
+  }
+
+  /** Add an ingredient to this menu item without enforcing vegetarian status. */
   public void addIngredient(Ingredient ingredient) {
+    ingredients.add(ingredient);
+  }
+
+  /**
+   * Add an ingredient to this menu item with vegetarian enforcement option. This is an auxiliary
+   * method primarily used for special dietary requirements.
+   *
+   * @param ingredient The ingredient to add
+   * @param enforceVegetarian If true, will throw an exception when trying to add a non-vegetarian
+   *     ingredient
+   * @throws Ingredient.NonVegetarianIngredientException if enforceVegetarian is true and a
+   *     non-vegetarian ingredient is added
+   */
+  public void addIngredient(Ingredient ingredient, boolean enforceVegetarian) {
+    if (enforceVegetarian && !ingredient.isVegetarian()) {
+      throw new Ingredient.NonVegetarianIngredientException(ingredient.getIngredientName());
+    }
     ingredients.add(ingredient);
   }
 
@@ -82,19 +112,6 @@ public class MenuItem {
       total += i.getExtraCost();
     }
     return total;
-  }
-
-  // Getters and setters
-  public int getDishId() {
-    return dishId;
-  }
-
-  public String getDishName() {
-    return dishName;
-  }
-
-  public List<Ingredient> getIngredients() {
-    return ingredients;
   }
 
   public CookedType getCookedType() {
@@ -113,6 +130,55 @@ public class MenuItem {
     this.availability = availability;
   }
 
+  /**
+   * Determines if the dish is vegetarian based on its ingredients.
+   *
+   * @return True if the dish is vegetarian (contains no meat, fish, poultry, or animal byproducts)
+   */
+  public boolean isVegetarian() {
+    // Base potato dishes are vegetarian by default
+    // Check if any ingredient is non-vegetarian
+    for (Ingredient ingredient : ingredients) {
+      if (!ingredient.isVegetarian()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Checks if this dish contains a specific ingredient by name.
+   *
+   * @param ingredientName The name of the ingredient to check for
+   * @return True if the ingredient is in this dish
+   */
+  public boolean containsIngredient(String ingredientName) {
+    for (Ingredient ingredient : ingredients) {
+      if (ingredient.getIngredientName().equalsIgnoreCase(ingredientName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Compares this menu item with another for equality, ignoring the ID.
+   *
+   * @param other The other menu item to compare with
+   * @return True if the items have the same properties (except ID)
+   */
+  public boolean hasSamePropertiesAs(MenuItem other) {
+    if (other == null) return false;
+
+    return this.dishName.equals(other.dishName)
+        && Math.abs(this.price - other.price) < 0.001
+        && // Compare doubles with small epsilon
+        this.cookedType == other.cookedType
+        && this.potatoType == other.potatoType
+        && this.availability == other.availability;
+    // A more complete implementation would also compare ingredients
+  }
+
   @Override
   public String toString() {
     return "MenuItem{"
@@ -127,5 +193,19 @@ public class MenuItem {
         + ") - $"
         + getPrice()
         + '}';
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    MenuItem other = (MenuItem) obj;
+    return this.dishId == other.dishId; // Two menu items are the same if they have the same ID
+  }
+
+  @Override
+  public int hashCode() {
+    return Integer.hashCode(dishId);
   }
 }

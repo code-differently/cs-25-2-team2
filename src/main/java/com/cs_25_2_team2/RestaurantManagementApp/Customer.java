@@ -1,5 +1,7 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
+import java.util.List;
+
 public class Customer {
   private int customerId;
   private String customerName;
@@ -59,5 +61,42 @@ public class Customer {
         + phoneNumber
         + '\''
         + '}';
+  }
+
+  /**
+   * Customer views the menu and gets a formatted display of available items.
+   *
+   * @param menu The menu to view
+   * @return A formatted string of the menu items or a message if no items are available
+   */
+  public String viewMenu(Menu menu) {
+    StringBuilder displayMenu = new StringBuilder();
+
+    if (!menu.isAvailable()) {
+      return "Menu is currently unavailable.";
+    }
+
+    List<MenuItem> availableItems = menu.getAvailableItems();
+
+    if (availableItems.isEmpty()) {
+      return "No items available";
+    }
+
+    displayMenu.append("Menu Items:\n");
+    for (MenuItem item : availableItems) {
+      displayMenu
+          .append(item.getDishId())
+          .append(". ")
+          .append(item.getDishName())
+          .append(" (")
+          .append(item.getCookedType())
+          .append(", ")
+          .append(item.getPotatoType())
+          .append(") - $")
+          .append(String.format("%.2f", item.getPrice()))
+          .append("\n");
+    }
+
+    return displayMenu.toString();
   }
 }
