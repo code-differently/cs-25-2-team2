@@ -103,7 +103,6 @@ public class Menu {
     }
     return filteredItems;
   }
-
   /**
    * Gets menu items by potato type.
    *
