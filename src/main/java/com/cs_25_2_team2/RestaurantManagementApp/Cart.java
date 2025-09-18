@@ -21,6 +21,12 @@ public class Cart {
   }
 
   public void addItem(MenuItem item, int quantity) {
+    if (item == null) {
+      throw new IllegalArgumentException("MenuItem cannot be null");
+    }
+    if (quantity <= 0) {
+      throw new IllegalArgumentException("Quantity must be positive");
+    }
     for (CartItem ci : items) {
       if (ci.getMenuItem().getDishId() == item.getDishId()) {
         ci.setQuantity(ci.getQuantity() + quantity);
