@@ -207,8 +207,6 @@ public class MenuItemTest {
     // Test setting availability back to true
     frenchFries.setAvailability(true);
     assertTrue(frenchFries.isAvailable());
-    frenchFries.setAvailability(true);
-    assertTrue(frenchFries.isAvailable());
   }
 
   @Test
