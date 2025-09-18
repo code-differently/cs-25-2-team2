@@ -88,7 +88,7 @@ public class Menu {
     return availableItems;
   }
 
-    /**
+  /**
    * Gets menu items by cooking type.
    *
    * @param cookingType The cooking type to filter by.
