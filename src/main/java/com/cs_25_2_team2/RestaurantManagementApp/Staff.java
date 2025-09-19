@@ -4,7 +4,7 @@ public abstract class Staff extends Person {
   protected String id;
 
   public Staff(String name, String id) {
-    super(name);
+    super(name, id, id);
     this.id = id;
   }
 
