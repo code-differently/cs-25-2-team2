@@ -2,17 +2,21 @@ package com.cs_25_2_team2.RestaurantManagementApp;
 
 import java.util.List;
 
+import org.springframework.core.annotation.Order;
+
 public class Customer {
   private int customerId;
   private String customerName;
   private String address;
   private String phoneNumber;
+  private Cart cart; 
 
   public Customer(int customerId, String customerName, String address, String phoneNumber) {
     this.customerId = customerId;
     this.customerName = customerName;
     this.address = address;
     this.phoneNumber = phoneNumber;
+    this.cart = new Cart(customerId); // Each customer starts with an empty cart linked to their ID
   }
 
   public int getCustomerId() {
@@ -31,6 +35,10 @@ public class Customer {
     return phoneNumber;
   }
 
+  public Cart getCart() { 
+    return cart;
+   }
+
   public void setName(String name) {
     this.customerName = name;
   }
@@ -46,7 +54,21 @@ public class Customer {
   public void setCustomerId(int customerId) {
     this.customerId = customerId;
   }
+  
+  // Convert Cart → Order
+  public Order checkout() {
+      if (cart.isEmpty()) {
+          throw new IllegalStateException("Cart is empty. Cannot checkout.");
+      }
+      // Create new Order with current cart contents
+      Order order = new Order(0, this, cart.getItems(), new java.sql.Date(System.currentTimeMillis()));
+      
+      // Clear the cart for future use
+      cart.clear();
 
+      return order;
+  }
+  
   @Override
   public String toString() {
     return "Customer{id="
@@ -99,4 +121,4 @@ public class Customer {
 
     return displayMenu.toString();
   }
-}
+  }
