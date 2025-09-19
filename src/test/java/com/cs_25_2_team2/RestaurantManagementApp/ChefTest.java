@@ -1,6 +1,6 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
