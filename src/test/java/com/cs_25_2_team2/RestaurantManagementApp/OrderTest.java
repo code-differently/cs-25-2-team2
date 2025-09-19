@@ -61,4 +61,11 @@ public class OrderTest {
         assertEquals(Order.Status.Placed, order.getStatus(), "Order status should be 'Placed' upon initialization");
         assertEquals(orderDate, order.getCreatedAt(), "Order should have the correct order date");
     }
+
+     @Test
+    @DisplayName("Test total price calculation")
+    void testTotalPriceCalculation() {
+        double expectedTotal = cartItem1.getSubtotal() + cartItem2.getSubtotal();
+        assertEquals(expectedTotal, order.getTotalPrice(), 0.01, "Order total price should match sum of item subtotals");
+    }
 }
