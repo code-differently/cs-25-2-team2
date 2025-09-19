@@ -161,24 +161,6 @@ public class MenuItem {
     return false;
   }
 
-  /**
-   * Compares this menu item with another for equality, ignoring the ID.
-   *
-   * @param other The other menu item to compare with
-   * @return True if the items have the same properties (except ID)
-   */
-  public boolean hasSamePropertiesAs(MenuItem other) {
-    if (other == null) return false;
-
-    return this.dishName.equals(other.dishName)
-        && Math.abs(this.price - other.price) < 0.001
-        && // Compare doubles with small epsilon
-        this.cookedType == other.cookedType
-        && this.potatoType == other.potatoType
-        && this.availability == other.availability;
-    // A more complete implementation would also compare ingredients
-  }
-
   @Override
   public String toString() {
     return "MenuItem{"

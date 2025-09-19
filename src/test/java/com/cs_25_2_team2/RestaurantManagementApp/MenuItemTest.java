@@ -1,51 +1,113 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 public class MenuItemTest {
-  private MenuItem frenchFries;
-  private MenuItem bakedPotato;
-  private MenuItem sweetPotato;
-  private MenuItem sweetPotatoFries;
-  private MenuItem loadedMashedPotato;
-
-  private Ingredient salt;
-  private Ingredient cheese;
-  private Ingredient bacon;
-  private Ingredient butter;
-  private Ingredient sourCream;
-  private Ingredient chives;
-  private Ingredient cinnamon;
+    // Test menu items representing different potato preparations
+    private MenuItem frenchFries;
+    private MenuItem bakedPotato;
+    private MenuItem mashedPotatoes;
+    private MenuItem potatoSoup;
+    private MenuItem sweetPotatoFries;
+    
+    // Common ingredients used across different potato dishes
+    private Ingredient salt;
+    private Ingredient pepper;
+    private Ingredient butter;
+    private Ingredient cheese;
+    private Ingredient bacon;
+    private Ingredient sourCream;
+    private Ingredient chives;
+    private Ingredient garlic;
+    private Ingredient cream;
 
   @BeforeEach
   void setUp() {
-    // Create test menu items
-    frenchFries =
-        new MenuItem(
-            1, "French Fries", 3.99, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
-
-    bakedPotato =
-        new MenuItem(
-            2,
-            "Loaded Baked Potato",
-            5.99,
-            MenuItem.CookedType.Baked,
-            MenuItem.PotatoType.Russet,
-            true);
-
-    // Create test ingredients
+    // Create basic ingredients
     salt = new Ingredient("Salt", false, false, 0.0);
+    pepper = new Ingredient("Black Pepper", false, false, 0.0);
+    butter = new Ingredient("Butter", true, true, 0.50);
     cheese = new Ingredient("Cheddar Cheese", true, true, 0.99);
     bacon = new Ingredient("Bacon Bits", true, true, 1.50);
+    sourCream = new Ingredient("Sour Cream", true, true, 0.75);
+    chives = new Ingredient("Fresh Chives", false, false, 0.50);
+    garlic = new Ingredient("Roasted Garlic", false, false, 0.50);
+    cream = new Ingredient("Heavy Cream", true, true, 0.75);
 
-    // Add ingredients to items
+    // Create different potato dishes
+    frenchFries = new MenuItem(
+        1,
+        "Classic French Fries",
+        3.99,
+        MenuItem.CookedType.Fried,
+        MenuItem.PotatoType.Russet,
+        true
+    );
+
+    bakedPotato = new MenuItem(
+        2,
+        "Loaded Baked Potato",
+        5.99,
+        MenuItem.CookedType.Baked,
+        MenuItem.PotatoType.Russet,
+        true
+    );
+
+    mashedPotatoes = new MenuItem(
+        3,
+        "Creamy Mashed Potatoes",
+        4.99,
+        MenuItem.CookedType.Mashed,
+        MenuItem.PotatoType.YukonGold,
+        true
+    );
+
+    potatoSoup = new MenuItem(
+        4,
+        "Potato Leek Soup",
+        6.99,
+        MenuItem.CookedType.Soupped,
+        MenuItem.PotatoType.YukonGold,
+        true
+    );
+
+    sweetPotatoFries = new MenuItem(
+        5,
+        "Sweet Potato Fries",
+        4.99,
+        MenuItem.CookedType.Fried,
+        MenuItem.PotatoType.JewelYams,
+        true
+    );
+
+    // Add base ingredients to items
     frenchFries.addIngredient(salt);
+    
     bakedPotato.addIngredient(salt);
+    bakedPotato.addIngredient(butter);
     bakedPotato.addIngredient(cheese);
     bakedPotato.addIngredient(bacon);
+    bakedPotato.addIngredient(sourCream);
+    bakedPotato.addIngredient(chives);
+
+    mashedPotatoes.addIngredient(salt);
+    mashedPotatoes.addIngredient(butter);
+    mashedPotatoes.addIngredient(pepper);
+    mashedPotatoes.addIngredient(garlic);
+
+    potatoSoup.addIngredient(salt);
+    potatoSoup.addIngredient(pepper);
+    potatoSoup.addIngredient(cream);
+
+    sweetPotatoFries.addIngredient(salt);
   }
 
   @Test
@@ -56,7 +118,7 @@ public class MenuItemTest {
 
   @Test
   void testGetDishName() {
-    assertEquals("French Fries", frenchFries.getDishName());
+    assertEquals("Classic French Fries", frenchFries.getDishName());
     assertEquals("Loaded Baked Potato", bakedPotato.getDishName());
   }
 
@@ -101,7 +163,7 @@ public class MenuItemTest {
     // Test removing an ingredient
     bakedPotato.removeIngredient(cheese);
     assertFalse(bakedPotato.getIngredients().contains(cheese));
-    assertEquals(2, bakedPotato.getIngredients().size());
+    assertEquals(5, bakedPotato.getIngredients().size()); // salt, butter, bacon, sourCream, chives remain
   }
 
   @Test
@@ -110,14 +172,14 @@ public class MenuItemTest {
     assertEquals(3.99, frenchFries.getPrice(), 0.001);
 
     // Test price with added cost ingredients for baked potato
-    // The price is calculated as: base price (5.99) + cheese (0.99) + bacon (1.50) = 8.48
-    assertEquals(8.48, bakedPotato.getPrice(), 0.001);
+    // Base price (5.99) + butter (0.50) + cheese (0.99) + bacon (1.50) + sourCream (0.75) + chives (0.50) = 10.23
+    assertEquals(10.23, bakedPotato.getPrice(), 0.001);
   }
 
   @Test
   void testGetIngredients() {
     assertEquals(1, frenchFries.getIngredients().size());
-    assertEquals(3, bakedPotato.getIngredients().size());
+    assertEquals(6, bakedPotato.getIngredients().size()); // salt, butter, cheese, bacon, sourCream, chives
     assertTrue(bakedPotato.getIngredients().contains(cheese));
   }
 
@@ -145,76 +207,116 @@ public class MenuItemTest {
   }
 
   @Test
-  void testHasSamePropertiesAs() {
-    MenuItem similarFries =
-        new MenuItem(
-            42, "French Fries", 3.99, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
+  @DisplayName("Test comparison of similar menu items")
+  void testMenuItemComparison() {
+    MenuItem similarFries = new MenuItem(
+        42, "Classic French Fries", 3.99, 
+        MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true
+    );
     similarFries.addIngredient(salt);
 
-    // Test that they're considered to have the same properties
-    assertTrue(frenchFries.hasSamePropertiesAs(similarFries));
+    assertEquals(frenchFries.getDishName(), similarFries.getDishName());
+    assertEquals(frenchFries.getPrice(), similarFries.getPrice(), 0.001);
+    assertEquals(frenchFries.getCookedType(), similarFries.getCookedType());
+    assertEquals(frenchFries.getPotatoType(), similarFries.getPotatoType());
+  }
 
-    // Create a slightly different item
-    MenuItem differentFries =
-        new MenuItem(
-            1,
-            "French Fries",
-            4.99, // Different price
-            MenuItem.CookedType.Fried,
-            MenuItem.PotatoType.Russet,
-            true);
+  @ParameterizedTest
+  @EnumSource(MenuItem.CookedType.class)
+  @DisplayName("Test all cooking methods are supported")
+  void testCookingMethods(MenuItem.CookedType cookType) {
+    MenuItem testItem = new MenuItem(
+        99,
+        "Test Potato",
+        5.99,
+        cookType,
+        MenuItem.PotatoType.Russet,
+        true
+    );
+    assertEquals(cookType, testItem.getCookedType());
+  }
 
-    // Test that they're considered different
-    assertFalse(frenchFries.hasSamePropertiesAs(differentFries));
+  @ParameterizedTest
+  @EnumSource(MenuItem.PotatoType.class)
+  @DisplayName("Test all potato types are supported")
+  void testPotatoTypes(MenuItem.PotatoType potatoType) {
+    MenuItem testItem = new MenuItem(
+        99,
+        "Test Potato",
+        5.99,
+        MenuItem.CookedType.Baked,
+        potatoType,
+        true
+    );
+    assertEquals(potatoType, testItem.getPotatoType());
   }
 
   @Test
-  void testIsVegetarian() {
+  @DisplayName("Test vegetarian status of different potato dishes")
+  void testVegetarianStatus() {
     // French fries with just salt should be vegetarian
     assertTrue(frenchFries.isVegetarian(), "French fries should be vegetarian");
 
-    // Baked potato has bacon which is non-vegetarian
-    assertFalse(bakedPotato.isVegetarian(), "Baked potato with bacon should not be vegetarian");
+    // Loaded baked potato has bacon which is non-vegetarian
+    assertFalse(bakedPotato.isVegetarian(), "Loaded baked potato should not be vegetarian");
 
-    // Create a vegetarian version of the baked potato
-    MenuItem vegBakedPotato =
-        new MenuItem(
-            3,
-            "Vegetarian Baked Potato",
-            5.99,
-            MenuItem.CookedType.Baked,
-            MenuItem.PotatoType.Russet,
-            true);
-    vegBakedPotato.addIngredient(salt);
-    vegBakedPotato.addIngredient(cheese);
-    assertTrue(vegBakedPotato.isVegetarian(), "Vegetarian baked potato should be vegetarian");
+    // Mashed potatoes with butter and garlic should be vegetarian
+    assertTrue(mashedPotatoes.isVegetarian(), "Mashed potatoes should be vegetarian");
+
+    // Sweet potato fries with just salt should be vegetarian
+    assertTrue(sweetPotatoFries.isVegetarian(), "Sweet potato fries should be vegetarian");
   }
 
   @Test
-  void testIsAvailable() {
-    // Test initial availability
-    assertTrue(frenchFries.isAvailable());
-    assertTrue(bakedPotato.isAvailable());
+  @DisplayName("Test ingredient modifications")
+  void testIngredientModifications() {
+    MenuItem customPotato = new MenuItem(
+        6,
+        "Custom Potato",
+        4.99,
+        MenuItem.CookedType.Baked,
+        MenuItem.PotatoType.Russet,
+        true
+    );
+    
+    customPotato.addIngredient(butter);
+    assertTrue(customPotato.containsIngredient("Butter"));
+    
+    customPotato.removeIngredient(butter);
+    assertFalse(customPotato.containsIngredient("Butter"));
   }
 
   @Test
-  void testSetAvailability() {
-    // Test changing availability
+  @DisplayName("Test price calculations with ingredients")
+  void testPriceCalculations() {
+    // Basic french fries price
+    assertEquals(3.99, frenchFries.getPrice(), 0.001);
+    
+    // Loaded baked potato with all toppings
+    double expectedPrice = 5.99 + 0.50 + 0.99 + 1.50 + 0.75 + 0.50; // Base + butter + cheese + bacon + sour cream + chives
+    assertEquals(expectedPrice, bakedPotato.getPrice(), 0.001);
+  }
+
+  @Test
+  @DisplayName("Test availability management")
+  void testAvailabilityManagement() {
+    assertTrue(frenchFries.isAvailable(), "New items should be available by default");
+    
     frenchFries.setAvailability(false);
-    assertFalse(frenchFries.isAvailable());
-
-    bakedPotato.setAvailability(false);
-    // Test setting availability back to true
+    assertFalse(frenchFries.isAvailable(), "Item should be unavailable after setting to false");
+    
     frenchFries.setAvailability(true);
-    assertTrue(frenchFries.isAvailable());
+    assertTrue(frenchFries.isAvailable(), "Item should be available after setting to true");
   }
 
   @Test
-  void testToString() {
+  @DisplayName("Test string representation")
+  void testStringRepresentation() {
     String friesString = frenchFries.toString();
     assertTrue(friesString.contains("dishId=1"));
-    assertTrue(friesString.contains("French Fries"));
+    assertTrue(friesString.contains("Classic French Fries"));
     assertTrue(friesString.contains("Fried"));
     assertTrue(friesString.contains("Russet"));
+    assertTrue(friesString.contains("$3.99"));
   }
 }

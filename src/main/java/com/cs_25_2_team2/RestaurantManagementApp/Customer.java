@@ -2,20 +2,13 @@ package com.cs_25_2_team2.RestaurantManagementApp;
 
 import java.util.List;
 
-import org.springframework.core.annotation.Order;
-
-public class Customer {
+public class Customer extends Person {
   private int customerId;
-  private String customerName;
-  private String address;
-  private String phoneNumber;
-  private Cart cart; 
+  private final Cart cart;
 
-  public Customer(int customerId, String customerName, String address, String phoneNumber) {
+  public Customer(int customerId, String name, String address, String phoneNumber) {
+    super(name, address, phoneNumber);
     this.customerId = customerId;
-    this.customerName = customerName;
-    this.address = address;
-    this.phoneNumber = phoneNumber;
     this.cart = new Cart(customerId); // Each customer starts with an empty cart linked to their ID
   }
 
@@ -23,36 +16,12 @@ public class Customer {
     return customerId;
   }
 
-  public String getName() {
-    return customerName;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  public Cart getCart() { 
-    return cart;
-   }
-
-  public void setName(String name) {
-    this.customerName = name;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
   public void setCustomerId(int customerId) {
     this.customerId = customerId;
+  }
+
+  public Cart getCart() {
+    return cart;
   }
   
   // Convert Cart → Order
@@ -68,19 +37,19 @@ public class Customer {
 
       return order;
   }
-  
+
   @Override
   public String toString() {
     return "Customer{id="
         + customerId
         + ", name='"
-        + customerName
+        + getName()
         + '\''
         + ", address='"
-        + address
+        + getAddress()
         + '\''
         + ", phoneNumber='"
-        + phoneNumber
+        + getPhoneNumber()
         + '\''
         + '}';
   }
@@ -115,7 +84,7 @@ public class Customer {
           .append(", ")
           .append(item.getPotatoType())
           .append(") - $")
-          .append(String.format("%.2f", item.getPrice()))
+          .append(item.getPrice())
           .append("\n");
     }
 
