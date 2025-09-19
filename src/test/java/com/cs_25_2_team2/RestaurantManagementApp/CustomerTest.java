@@ -65,6 +65,21 @@ public class CustomerTest {
   }
 
   @Test
+  @DisplayName("Test Customer inheritance from Person")
+  void testInheritance() {
+    assertTrue(customer instanceof Person, "Customer should be an instance of Person");
+    
+    // Test that inherited methods from Person work correctly
+    customer.setName("Jane Smith");
+    customer.setAddress("456 Oak Ave");
+    customer.setPhoneNumber("555-987-6543");
+    
+    assertEquals("Jane Smith", customer.getName(), "Name should be set through Person's method");
+    assertEquals("456 Oak Ave", customer.getAddress(), "Address should be set through Person's method");
+    assertEquals("555-987-6543", customer.getPhoneNumber(), "Phone number should be set through Person's method");
+  }
+
+  @Test
   void testGetName() {
     assertEquals("John Doe", customer.getName(), "Customer name should be 'John Doe'");
   }
