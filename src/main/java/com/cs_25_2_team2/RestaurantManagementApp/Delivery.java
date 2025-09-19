@@ -5,7 +5,7 @@ public class Delivery extends Staff {
     super(name, id);
   }
 
-  // ToDO: Add method to pick up order
+  // TODO: Add method to pick up order
 
   // TODO: Add method to deliver order
 }
