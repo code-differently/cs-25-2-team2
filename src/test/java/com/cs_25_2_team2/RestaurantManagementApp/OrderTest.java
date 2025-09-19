@@ -6,6 +6,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,5 +78,16 @@ public class OrderTest {
 
         order.updateStatus(Order.Status.Delivered);
         assertEquals(Order.Status.Delivered, order.getStatus(), "Order status should be updated to 'Delivered'");
+    }
+
+     @Test
+    @DisplayName("Test order toString output")
+    void testOrderToString() {
+        String orderString = order.toString();
+        assertTrue(orderString.contains("Order #"), "toString should contain order number");
+        assertTrue(orderString.contains(customer.getName()), "toString should contain customer name");
+        assertTrue(orderString.contains("Total: $"), "toString should contain total price");
+        assertTrue(orderString.contains("Status: "), "toString should contain status");
+        assertTrue(orderString.contains("Created: "), "toString should contain creation date");
     }
 }
