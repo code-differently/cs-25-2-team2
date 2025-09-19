@@ -11,5 +11,4 @@ public abstract class Staff extends Person {
   public String getId() {
     return id;
   }
-
 }
