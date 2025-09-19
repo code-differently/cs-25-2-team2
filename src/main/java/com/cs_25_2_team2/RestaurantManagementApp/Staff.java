@@ -12,5 +12,4 @@ public abstract class Staff extends Person {
     return id;
   }
 
-  // TODO: Add method to get order contents
 }
