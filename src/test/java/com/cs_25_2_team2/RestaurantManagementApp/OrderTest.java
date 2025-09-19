@@ -68,4 +68,14 @@ public class OrderTest {
         double expectedTotal = cartItem1.getSubtotal() + cartItem2.getSubtotal();
         assertEquals(expectedTotal, order.getTotalPrice(), 0.01, "Order total price should match sum of item subtotals");
     }
+
+     @Test
+    @DisplayName("Test status update")
+    void testStatusUpdate() {
+        order.updateStatus(Order.Status.Preparing);
+        assertEquals(Order.Status.Preparing, order.getStatus(), "Order status should be updated to 'Preparing'");
+
+        order.updateStatus(Order.Status.Delivered);
+        assertEquals(Order.Status.Delivered, order.getStatus(), "Order status should be updated to 'Delivered'");
+    }
 }
