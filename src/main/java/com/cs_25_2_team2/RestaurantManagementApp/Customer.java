@@ -23,19 +23,19 @@ public class Customer extends Person {
   public Cart getCart() {
     return cart;
   }
-  
+
   // Convert Cart → Order
   public Order checkout() {
-      if (cart.isEmpty()) {
-          throw new IllegalStateException("Cart is empty. Cannot checkout.");
-      }
-      // Create new Order with current cart contents
-      Order order = new Order(0, this, cart.getItems(), new java.sql.Date(System.currentTimeMillis()));
-      
-      // Clear the cart for future use
-      cart.clear();
+    if (cart.isEmpty()) {
+      throw new IllegalStateException("Cart is empty. Cannot checkout.");
+    }
+    // Create new Order with current cart contents
+    Order order = new Order(0, this, cart.getItems(), new java.sql.Date(System.currentTimeMillis()));
 
-      return order;
+    // Clear the cart for future use
+    cart.clear();
+
+    return order;
   }
 
   @Override
@@ -90,4 +90,4 @@ public class Customer extends Person {
 
     return displayMenu.toString();
   }
-  }
+}
