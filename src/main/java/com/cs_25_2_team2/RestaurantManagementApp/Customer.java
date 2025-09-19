@@ -2,14 +2,12 @@ package com.cs_25_2_team2.RestaurantManagementApp;
 
 import java.util.List;
 
-import org.springframework.core.annotation.Order;
-
 public class Customer {
   private int customerId;
   private String customerName;
   private String address;
   private String phoneNumber;
-  private Cart cart; 
+  private final Cart cart; 
 
   public Customer(int customerId, String customerName, String address, String phoneNumber) {
     this.customerId = customerId;
@@ -68,7 +66,7 @@ public class Customer {
 
       return order;
   }
-  
+
   @Override
   public String toString() {
     return "Customer{id="
@@ -115,7 +113,7 @@ public class Customer {
           .append(", ")
           .append(item.getPotatoType())
           .append(") - $")
-          .append(String.format("%.2f", item.getPrice()))
+          .append(item.getPrice())
           .append("\n");
     }
 
