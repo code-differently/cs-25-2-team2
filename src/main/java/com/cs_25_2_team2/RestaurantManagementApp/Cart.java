@@ -32,7 +32,7 @@ public class Cart {
     if (!item.isAvailable()) {
       throw new MenuItemUnavailableException(item.getDishId(), item.getDishName());
     }
-    
+
     for (CartItem ci : items) {
       if (ci.getMenuItem().getDishId() == item.getDishId()) {
         ci.setQuantity(ci.getQuantity() + quantity);

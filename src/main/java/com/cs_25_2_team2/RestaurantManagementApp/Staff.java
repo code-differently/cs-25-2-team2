@@ -20,7 +20,7 @@ public abstract class Staff extends Person {
 
   @Override
   public String toString() {
-    return String.format("Staff{name='%s', id='%s', role='%s', phone='%s'}", 
-        getName(), id, role, getPhoneNumber());
+    return String.format(
+        "Staff{name='%s', id='%s', role='%s', phone='%s'}", getName(), id, role, getPhoneNumber());
   }
 }

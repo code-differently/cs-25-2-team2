@@ -23,6 +23,27 @@ public class Order {
     Delivered
   }
 
+  /** Constructor for creating a new order with auto-generated ID. */
+  public Order(Customer customer, List<CartItem> items, Date createdAt) {
+    if (customer == null) {
+      throw new IllegalArgumentException("Customer cannot be null");
+    }
+    if (items == null || items.isEmpty()) {
+      throw new IllegalArgumentException("Order must contain at least one item");
+    }
+    if (createdAt == null) {
+      throw new IllegalArgumentException("Created date cannot be null");
+    }
+
+    this.id = nextId++;
+    this.customer = customer;
+    this.items = List.copyOf(items); // Create immutable copy of the items list
+    this.status = Status.Placed;
+    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
+    this.createdAt = createdAt;
+  }
+
+  /** Constructor for creating an order with a specific ID (used for updates). */
   public Order(int id, Customer customer, List<CartItem> items, Date createdAt) {
     if (customer == null) {
       throw new IllegalArgumentException("Customer cannot be null");
@@ -33,8 +54,8 @@ public class Order {
     if (createdAt == null) {
       throw new IllegalArgumentException("Created date cannot be null");
     }
-    
-    this.id = nextId++;
+
+    this.id = id; // Use provided ID instead of generating new one
     this.customer = customer;
     this.items = List.copyOf(items); // Create immutable copy of the items list
     this.status = Status.Placed;
@@ -71,10 +92,10 @@ public class Order {
     if (newStatus == null) {
       throw new IllegalArgumentException("Status cannot be null");
     }
-    
+
     // Validate state transitions
     validateStatusTransition(newStatus);
-    
+
     this.status = newStatus;
     notifyStatusChange();
     logStatusChange();
@@ -82,6 +103,7 @@ public class Order {
 
   /**
    * Validates that the status transition is allowed.
+   *
    * @param newStatus The new status to transition to
    * @throws IllegalStateException if the transition is not allowed
    */
@@ -102,7 +124,8 @@ public class Order {
       }
       case ReadyForDelivery -> {
         if (newStatus != Status.OutForDelivery) {
-          throw new IllegalStateException("Order can only move from ReadyForDelivery to OutForDelivery");
+          throw new IllegalStateException(
+              "Order can only move from ReadyForDelivery to OutForDelivery");
         }
       }
       case OutForDelivery -> {
@@ -151,6 +174,7 @@ public class Order {
 
   /**
    * Cancels the order if it's in a cancellable state.
+   *
    * @throws InvalidOrderStateException if the order cannot be cancelled in its current state
    */
   public void cancelOrder() {
@@ -163,6 +187,7 @@ public class Order {
 
   /**
    * Adds a special request to the order.
+   *
    * @param request The special request to add
    * @throws InvalidOrderStateException if the order is already being prepared
    */

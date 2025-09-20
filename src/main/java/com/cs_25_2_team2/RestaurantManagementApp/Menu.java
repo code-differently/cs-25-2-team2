@@ -58,12 +58,12 @@ public class Menu {
     if (dishId < 0) {
       throw new IllegalArgumentException("Dish ID cannot be negative");
     }
-    
+
     MenuItem item = items.get(dishId);
     if (item != null && !item.isAvailable()) {
       throw new MenuItemUnavailableException(item.getDishId(), item.getDishName());
     }
-    
+
     return item;
   }
 
