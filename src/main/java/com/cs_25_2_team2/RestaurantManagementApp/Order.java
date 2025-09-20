@@ -20,20 +20,13 @@ public class Order {
     Preparing,
     ReadyForDelivery,
     OutForDelivery,
-    Delivered
+    Delivered,
+    Cancelled
   }
 
   /** Constructor for creating a new order with auto-generated ID. */
   public Order(Customer customer, List<CartItem> items, Date createdAt) {
-    if (customer == null) {
-      throw new IllegalArgumentException("Customer cannot be null");
-    }
-    if (items == null || items.isEmpty()) {
-      throw new IllegalArgumentException("Order must contain at least one item");
-    }
-    if (createdAt == null) {
-      throw new IllegalArgumentException("Created date cannot be null");
-    }
+    validateConstructorParameters(customer, items, createdAt);
 
     this.id = nextId++;
     this.customer = customer;
@@ -45,6 +38,26 @@ public class Order {
 
   /** Constructor for creating an order with a specific ID (used for updates). */
   public Order(int id, Customer customer, List<CartItem> items, Date createdAt) {
+    validateConstructorParameters(customer, items, createdAt);
+
+    this.id = id; // Use provided ID instead of generating new one
+    this.customer = customer;
+    this.items = List.copyOf(items); // Create immutable copy of the items list
+    this.status = Status.Placed;
+    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
+    this.createdAt = createdAt;
+  }
+
+  /**
+   * Validates constructor parameters to ensure they meet requirements.
+   *
+   * @param customer the customer for the order
+   * @param items the list of cart items
+   * @param createdAt the order creation date
+   * @throws IllegalArgumentException if any parameter is invalid
+   */
+  private void validateConstructorParameters(
+      Customer customer, List<CartItem> items, Date createdAt) {
     if (customer == null) {
       throw new IllegalArgumentException("Customer cannot be null");
     }
@@ -54,13 +67,6 @@ public class Order {
     if (createdAt == null) {
       throw new IllegalArgumentException("Created date cannot be null");
     }
-
-    this.id = id; // Use provided ID instead of generating new one
-    this.customer = customer;
-    this.items = List.copyOf(items); // Create immutable copy of the items list
-    this.status = Status.Placed;
-    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
-    this.createdAt = createdAt;
   }
 
   public int getId() {
@@ -111,6 +117,9 @@ public class Order {
     switch (status) {
       case Delivered -> {
         throw new IllegalStateException("Cannot change status of a delivered order");
+      }
+      case Cancelled -> {
+        throw new IllegalStateException("Cannot change status of a cancelled order");
       }
       case Placed -> {
         if (newStatus != Status.Preparing) {
@@ -178,10 +187,12 @@ public class Order {
    * @throws InvalidOrderStateException if the order cannot be cancelled in its current state
    */
   public void cancelOrder() {
-    if (status == Status.OutForDelivery || status == Status.Delivered) {
+    if (status == Status.OutForDelivery
+        || status == Status.Delivered
+        || status == Status.Cancelled) {
       throw new InvalidOrderStateException(id, status.toString(), "cancel");
     }
-    this.status = Status.Delivered; // Using Delivered as "cancelled" for simplicity
+    this.status = Status.Cancelled;
     System.out.println("Order #" + id + " has been cancelled");
   }
 

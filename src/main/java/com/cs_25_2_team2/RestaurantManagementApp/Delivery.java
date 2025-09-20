@@ -1,9 +1,9 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.InvalidOrderStateException;
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
@@ -14,7 +14,7 @@ import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundExcepti
  */
 public class Delivery extends Staff {
   private static final Set<Integer> globallyAssignedOrders =
-      new HashSet<>(); // Track orders assigned globally
+      ConcurrentHashMap.newKeySet(); // Track orders assigned globally (thread-safe)
   private final List<Order> assignedOrders;
   private final List<Order> deliveredOrders;
 
