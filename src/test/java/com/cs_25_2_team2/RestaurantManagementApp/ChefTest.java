@@ -1,14 +1,13 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
+import java.sql.Date;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.sql.Date;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,7 @@ class ChefTest {
             1, "Burger", 10.99, MenuItem.CookedType.Grilled, MenuItem.PotatoType.Russet, true);
     CartItem cartItem = new CartItem(burger, 1);
     List<CartItem> items = List.of(cartItem);
-    testOrder = new Order(customer, items, new Date(System.currentTimeMillis()));
+    testOrder = Order.createNew(customer, items, new Date(System.currentTimeMillis()));
   }
 
   @Test

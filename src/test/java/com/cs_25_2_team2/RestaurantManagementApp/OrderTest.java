@@ -1,13 +1,12 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ public class OrderTest {
     cartItems.add(cartItem1);
     cartItems.add(cartItem2);
     orderDate = new Date(System.currentTimeMillis());
-    order = new Order(1, customer, cartItems, orderDate);
+    order = Order.withId(1, customer, cartItems, orderDate);
   }
 
   @Test
@@ -127,21 +126,21 @@ public class OrderTest {
 
     // Test with null items
     try {
-      new Order(customer, null, testDate);
+      Order.createNew(customer, null, testDate);
     } catch (Exception e) {
       // Expected - this may trigger validation code
     }
 
     // Test with empty items
     try {
-      new Order(customer, new ArrayList<>(), testDate);
+      Order.createNew(customer, new ArrayList<>(), testDate);
     } catch (Exception e) {
       // Expected - this may trigger validation code
     }
 
     // Test the other constructor with ID
     try {
-      new Order(999, customer, cartItems, testDate);
+      Order.withId(999, customer, cartItems, testDate);
       // This should work fine
     } catch (Exception e) {
       // Not expected but won't fail test

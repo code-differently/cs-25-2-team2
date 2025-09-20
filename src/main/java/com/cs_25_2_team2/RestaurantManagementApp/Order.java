@@ -24,11 +24,11 @@ public class Order {
     Cancelled
   }
 
-  /** Constructor for creating a new order with auto-generated ID. */
-  public Order(Customer customer, List<CartItem> items, Date createdAt) {
+  /** Private constructor for internal use by factory methods. */
+  private Order(Customer customer, List<CartItem> items, Date createdAt, Integer providedId) {
     validateConstructorParameters(customer, items, createdAt);
 
-    this.id = nextId++;
+    this.id = (providedId != null) ? providedId : nextId++;
     this.customer = customer;
     this.items = List.copyOf(items); // Create immutable copy of the items list
     this.status = Status.Placed;
@@ -36,16 +36,31 @@ public class Order {
     this.createdAt = createdAt;
   }
 
-  /** Constructor for creating an order with a specific ID (used for updates). */
-  public Order(int id, Customer customer, List<CartItem> items, Date createdAt) {
-    validateConstructorParameters(customer, items, createdAt);
+  /**
+   * Factory method for creating a new order with auto-generated ID. Use this for new orders placed
+   * by customers.
+   *
+   * @param customer the customer placing the order
+   * @param items the list of cart items
+   * @param createdAt the order creation date
+   * @return a new Order with auto-generated ID
+   */
+  public static Order createNew(Customer customer, List<CartItem> items, Date createdAt) {
+    return new Order(customer, items, createdAt, null);
+  }
 
-    this.id = id; // Use provided ID instead of generating new one
-    this.customer = customer;
-    this.items = List.copyOf(items); // Create immutable copy of the items list
-    this.status = Status.Placed;
-    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
-    this.createdAt = createdAt;
+  /**
+   * Factory method for creating an order with a specific ID. Use this for testing, data migration,
+   * or when reconstructing orders from storage.
+   *
+   * @param id the specific ID to assign to this order
+   * @param customer the customer for the order
+   * @param items the list of cart items
+   * @param createdAt the order creation date
+   * @return a new Order with the specified ID
+   */
+  public static Order withId(int id, Customer customer, List<CartItem> items, Date createdAt) {
+    return new Order(customer, items, createdAt, id);
   }
 
   /**
