@@ -30,7 +30,7 @@ public class Customer extends Person {
       throw new IllegalStateException("Cart is empty. Cannot checkout.");
     }
     // Create new Order with current cart contents
-    Order order = new Order(0, this, cart.getItems(), new java.sql.Date(System.currentTimeMillis()));
+    Order order = new Order(this, cart.getItems(), new java.sql.Date(System.currentTimeMillis()));
 
     // Clear the cart for future use
     cart.clear();

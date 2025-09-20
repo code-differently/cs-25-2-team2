@@ -312,4 +312,15 @@ public class MenuItemTest {
     assertTrue(friesString.contains("Russet"));
     assertTrue(friesString.contains("$3.99"));
   }
+
+  @Test
+  @DisplayName("Test MenuItem hashCode method")
+  void testMenuItemHashCode() {
+    int hashCode = frenchFries.hashCode();
+    assertTrue(hashCode != 0, "MenuItem hashCode should not be zero");
+
+    // Test that hashCode is consistent
+    int hashCode2 = frenchFries.hashCode();
+    assertEquals(hashCode, hashCode2, "MenuItem hashCode should be consistent");
+  }
 }

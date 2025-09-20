@@ -195,4 +195,45 @@ public class MenuTest {
     menu.addMenuItem(bakedPotato);
     assertEquals(2, menu.getItemCount());
   }
+
+  @Test
+  void testGetAvailableItemById() {
+    menu.addMenuItem(frenchFries);
+
+    // Test getting available item
+    MenuItem item = menu.getAvailableItemById(1);
+    assertEquals(frenchFries, item);
+  }
+
+  @Test
+  void testRemoveMenuItem() {
+    menu.addMenuItem(frenchFries);
+    menu.addMenuItem(bakedPotato);
+    assertEquals(2, menu.getItemCount());
+
+    // Remove existing item
+    menu.removeMenuItem(1);
+    assertEquals(1, menu.getItemCount());
+    assertNull(menu.getItemById(1));
+
+    // Try to remove non-existent item (should not crash)
+    menu.removeMenuItem(999);
+    assertEquals(1, menu.getItemCount());
+  }
+
+  @Test
+  void testMenuBasicOperations() {
+    // Simple test to add coverage for any missed instructions
+    Date originalDate = menu.getLastUpdated();
+    assertNotNull(originalDate, "Menu should have a last updated date");
+
+    // Test menu availability
+    assertTrue(menu.isAvailable(), "Menu should be available by default");
+
+    menu.setAvailability(false);
+    assertFalse(menu.isAvailable(), "Menu should not be available after setting to false");
+
+    menu.setAvailability(true);
+    assertTrue(menu.isAvailable(), "Menu should be available after setting to true");
+  }
 }

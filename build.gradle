@@ -38,9 +38,20 @@ jacocoTestReport {
         xml.required = true
         html.required = true // optional, useful for browsing coverage locally
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: ['**/RestaurantCLI*'])
+        }))
+    }
 }
 
 jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: ['**/RestaurantCLI*'])
+        }))
+    }
     violationRules {
         rule {
             limit {

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cs_25_2_team2.RestaurantManagementApp.exceptions.MenuItemUnavailableException;
+
 /** Represents a menu containing a collection of menu items. */
 public class Menu {
   private final Map<Integer, MenuItem> items;
@@ -22,9 +24,47 @@ public class Menu {
    * Adds a menu item to the menu.
    *
    * @param item The menu item to add.
+   * @throws IllegalArgumentException if the item is null
    */
   public void addMenuItem(MenuItem item) {
+    if (item == null) {
+      throw new IllegalArgumentException("MenuItem cannot be null");
+    }
     items.put(item.getDishId(), item);
+  }
+
+  /**
+   * Removes a menu item from the menu.
+   *
+   * @param dishId The ID of the dish to remove.
+   * @throws IllegalArgumentException if dishId is negative
+   */
+  public void removeMenuItem(int dishId) {
+    if (dishId < 0) {
+      throw new IllegalArgumentException("Dish ID cannot be negative");
+    }
+    items.remove(dishId);
+  }
+
+  /**
+   * Gets a menu item by its ID and validates it's available for ordering.
+   *
+   * @param dishId The ID of the dish to find.
+   * @return The menu item with the given ID.
+   * @throws IllegalArgumentException if dishId is negative
+   * @throws MenuItemUnavailableException if the item exists but is not available
+   */
+  public MenuItem getAvailableItemById(int dishId) {
+    if (dishId < 0) {
+      throw new IllegalArgumentException("Dish ID cannot be negative");
+    }
+
+    MenuItem item = items.get(dishId);
+    if (item != null && !item.isAvailable()) {
+      throw new MenuItemUnavailableException(item.getDishId(), item.getDishName());
+    }
+
+    return item;
   }
 
   /**

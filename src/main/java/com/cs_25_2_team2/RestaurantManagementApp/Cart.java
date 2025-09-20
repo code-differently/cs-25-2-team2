@@ -3,6 +3,8 @@ package com.cs_25_2_team2.RestaurantManagementApp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cs_25_2_team2.RestaurantManagementApp.exceptions.MenuItemUnavailableException;
+
 public class Cart {
   private int userId;
   private List<CartItem> items;
@@ -27,6 +29,10 @@ public class Cart {
     if (quantity <= 0) {
       throw new IllegalArgumentException("Quantity must be positive");
     }
+    if (!item.isAvailable()) {
+      throw new MenuItemUnavailableException(item.getDishId(), item.getDishName());
+    }
+
     for (CartItem ci : items) {
       if (ci.getMenuItem().getDishId() == item.getDishId()) {
         ci.setQuantity(ci.getQuantity() + quantity);

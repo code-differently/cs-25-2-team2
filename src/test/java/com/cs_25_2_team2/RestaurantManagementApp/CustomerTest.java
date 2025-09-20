@@ -257,4 +257,64 @@ public class CustomerTest {
         exception.getMessage(),
         "Exception message should indicate empty cart");
   }
+
+  @Test
+  @DisplayName("Test Person toString method coverage")
+  void testPersonToStringCoverage() {
+    // Create a Chef to test Person's toString method since Person is abstract
+    Chef chef = new Chef("Test Chef", "123 Test St", "555-0000", "CHEF001");
+
+    // Call toString which uses Person's toString implementation
+    String result = chef.toString();
+    assertNotNull(result, "ToString should not be null");
+    assertTrue(result.contains("Test Chef"), "Should contain chef name");
+
+    // Also test Person's individual methods for full coverage
+    assertEquals("Test Chef", chef.getName());
+    assertEquals("123 Test St", chef.getAddress());
+    assertEquals("555-0000", chef.getPhoneNumber());
+
+    // Test Person's setters to get more coverage
+    chef.setName("Updated Chef");
+    chef.setAddress("Updated Address");
+    chef.setPhoneNumber("Updated Phone");
+
+    assertEquals("Updated Chef", chef.getName());
+    assertEquals("Updated Address", chef.getAddress());
+    assertEquals("Updated Phone", chef.getPhoneNumber());
+
+    // Create a concrete Person subclass for direct toString test
+    Person testPerson = new Person("Direct Test", "Direct Address", "Direct Phone") {
+          // Anonymous concrete implementation
+        };
+    String personResult = testPerson.toString();
+    assertNotNull(personResult, "Person toString should not be null");
+    assertTrue(personResult.contains("Direct Test"), "Should contain person name");
+    assertTrue(personResult.contains("Direct Address"), "Should contain address");
+    assertTrue(personResult.contains("Direct Phone"), "Should contain phone");
+  }
+
+  @Test
+  @DisplayName("Test Restaurant Stats coverage through customer interaction")
+  void testRestaurantStatsCoverage() {
+    // Create a restaurant to test uncovered methods
+    Restaurant restaurant = new Restaurant("Test Restaurant", "123 Restaurant St");
+
+    // Test uncovered getters that should work without setup
+    assertNotNull(restaurant.getName(), "Restaurant name should not be null");
+    assertEquals("Test Restaurant", restaurant.getName());
+    assertNotNull(restaurant.getAddress(), "Restaurant address should not be null");
+    assertEquals("123 Restaurant St", restaurant.getAddress());
+
+    // Test stats object creation
+    Restaurant.RestaurantStats stats = restaurant.getStats();
+    assertNotNull(stats, "Restaurant stats should not be null");
+
+    // Test stats methods that should work without orders
+    assertEquals(0, stats.getTotalOrdersProcessed(), "Should start with 0 orders");
+    assertEquals(0.0, stats.getTotalRevenue(), 0.01, "Should start with 0 revenue");
+    assertEquals(0, stats.getOrdersDelivered(), "Should start with 0 delivered orders");
+    assertNotNull(stats.getPopularItems(), "Popular items map should not be null");
+    assertTrue(stats.getPopularItems().isEmpty(), "Popular items should be empty initially");
+  }
 }
