@@ -76,38 +76,74 @@ run-cli.bat
 
 Once the CLI is running, you can use the following commands:
 
-### Staff Management
+### 🏢 Staff Management
 - `staff-list` - List all staff members
 - `staff-contact <id>` - Show contact info for staff member
 - `add-chef <name> <address> <phone> <id>` - Add new chef
 - `add-delivery <name> <address> <phone> <id>` - Add delivery staff
 
-### Menu Management
+### 🍽️ Menu Management
 - `menu` - Show current menu
 - `menu-add <id> <name> <price>` - Add menu item
 
-### Order Management
-- `orders` - Show all orders
-- `order-status <id>` - Show specific order status
-
-### Customer Management
+### 👥 Customer Management
 - `customers` - List all customers
 - `customer-add <id> <name> <address> <phone>` - Add customer
 
-### System Commands
+### 🛒 Cart Management
+- `cart-add <customer-id> <menu-item-id> <quantity>` - Add item to cart
+- `cart-view <customer-id>` - View customer's cart
+- `cart-clear <customer-id>` - Clear customer's cart
+
+### 📦 Order Management
+- `orders` - Show all orders
+- `order-status <id>` - Show specific order status
+- `order-place <customer-id>` - Place order from customer's cart
+- `order-prepare <order-id> <chef-id>` - Chef starts preparing order
+- `order-complete <order-id> <chef-id>` - Chef completes order
+- `order-pickup <order-id> <delivery-id>` - Delivery picks up order
+- `order-deliver <order-id> <delivery-id>` - Delivery delivers order
+
+### 🎭 Demonstrations
+- `demo-workflow` - Demonstrate complete order workflow
+
+### ⚙️ System Commands
 - `help` - Show all available commands
 - `quit` or `exit` - Exit the application
 
 ## Example Usage
 
+### Basic Menu and Staff Operations
 ```
 restaurant> help
 restaurant> menu
 restaurant> staff-list
-restaurant> add-chef "Gordon Ramsay" "123 Kitchen St" "555-CHEF" "CH003"
+restaurant> add-chef Gordon_Ramsay 123_Kitchen_St 555-CHEF CH003
 restaurant> customers
+```
+
+### Complete Order Workflow
+```
+restaurant> customer-add 101 Jane_Smith 789_Oak_St 555-9876
+restaurant> cart-add 101 1 2
+restaurant> cart-add 101 3 1
+restaurant> cart-view 101
+restaurant> order-place 101
+restaurant> orders
+restaurant> order-prepare 1 CH001
+restaurant> order-complete 1 CH001
+restaurant> order-pickup 1 DEL001
+restaurant> order-deliver 1 DEL001
 restaurant> quit
 ```
+
+### Quick Demo
+```
+restaurant> demo-workflow
+restaurant> quit
+```
+
+**Note:** Use underscores instead of spaces in names and addresses to avoid parsing issues (e.g., "Jane_Smith" instead of "Jane Smith").
 
 ## Development
 
