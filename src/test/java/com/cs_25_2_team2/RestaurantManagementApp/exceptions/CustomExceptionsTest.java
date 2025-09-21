@@ -156,7 +156,7 @@ public class CustomExceptionsTest {
     assertTrue(requestException.getMessage().contains("Preparing"));
   }
 
-  // Helper methods to demonstrate exception throwing scenarios
+  // Helper methods that validate input parameters and throw appropriate exceptions for testing purposes
   private void validateQuantity(int quantity) {
     if (quantity <= 0) {
       throw new IllegalArgumentException("Quantity must be positive");
