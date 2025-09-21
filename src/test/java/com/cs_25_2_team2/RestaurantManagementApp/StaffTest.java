@@ -54,6 +54,20 @@ class StaffTest {
         super(name, address, phone, id, role);
       }
 
+      @Override
+      public void assignOrder(Order order) {
+        // Simple test implementation
+        if (order != null) {
+          assignedOrders.add(order);
+        }
+      }
+
+      @Override
+      public boolean isBusy() {
+        // Simple test implementation
+        return !assignedOrders.isEmpty();
+      }
+
       public String testParentToString() {
         return super.toString(); // This will call Staff.toString()
       }

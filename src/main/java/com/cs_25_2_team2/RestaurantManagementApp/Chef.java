@@ -22,6 +22,28 @@ public class Chef extends Staff {
     this.activeOrders = new HashMap<>();
   }
 
+  // ========== STAFF INTERFACE IMPLEMENTATIONS ==========
+
+  /**
+   * Assigns an order to this chef (same as receiveOrder for Chef).
+   *
+   * @param order The order to assign
+   */
+  @Override
+  public void assignOrder(Order order) {
+    receiveOrder(order);
+  }
+
+  /**
+   * Checks if the chef is currently busy (has active orders).
+   *
+   * @return True if the chef is preparing orders, false otherwise
+   */
+  @Override
+  public boolean isBusy() {
+    return !activeOrders.isEmpty();
+  }
+
   // ========== ORDER MANAGEMENT METHODS ==========
 
   /**
@@ -196,15 +218,6 @@ public class Chef extends Staff {
    */
   public int getActiveOrderCount() {
     return activeOrders.size();
-  }
-
-  /**
-   * Checks if the chef is currently busy (has active orders).
-   *
-   * @return True if the chef is preparing orders, false otherwise
-   */
-  public boolean isBusy() {
-    return !activeOrders.isEmpty();
   }
 
   /**

@@ -15,13 +15,9 @@ import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundExcepti
 public class Delivery extends Staff {
   private static final Set<Integer> globallyAssignedOrders =
       new HashSet<>(); // Track orders assigned globally
-  private final List<Order> assignedOrders;
-  private final List<Order> deliveredOrders;
 
   public Delivery(String name, String address, String phoneNumber, String id) {
     super(name, address, phoneNumber, id, "Delivery");
-    this.assignedOrders = new ArrayList<>();
-    this.deliveredOrders = new ArrayList<>();
   }
 
   /**
@@ -81,7 +77,7 @@ public class Delivery extends Staff {
 
     order.updateStatus(Order.Status.Delivered);
     assignedOrders.remove(order);
-    deliveredOrders.add(order);
+    completedOrders.add(order);
     globallyAssignedOrders.remove(orderId); // Remove from global tracking
     System.out.println(
         "Delivery staff "
@@ -93,27 +89,11 @@ public class Delivery extends Staff {
   }
 
   /**
-   * Finds an assigned order by ID.
-   *
-   * @param orderId The ID of the order to find
-   * @return The order if found
-   * @throws OrderNotFoundException if the order is not assigned to this delivery staff
-   */
-  private Order findAssignedOrder(int orderId) {
-    return assignedOrders.stream()
-        .filter(order -> order.getId() == orderId)
-        .findFirst()
-        .orElseThrow(
-            () ->
-                new OrderNotFoundException(
-                    "Order #" + orderId + " not assigned to delivery staff " + getName()));
-  }
-
-  /**
    * Gets all orders assigned to this delivery staff.
    *
    * @return List of assigned orders
    */
+  @Override
   public List<Order> getAssignedOrders() {
     return new ArrayList<>(assignedOrders);
   }
@@ -124,7 +104,7 @@ public class Delivery extends Staff {
    * @return List of delivered orders
    */
   public List<Order> getDeliveredOrders() {
-    return new ArrayList<>(deliveredOrders);
+    return new ArrayList<>(completedOrders);
   }
 
   /**
@@ -133,9 +113,7 @@ public class Delivery extends Staff {
    * @return List of orders out for delivery
    */
   public List<Order> getOrdersOutForDelivery() {
-    return assignedOrders.stream()
-        .filter(order -> order.getStatus() == Order.Status.OutForDelivery)
-        .toList();
+    return getOrdersByStatus(Order.Status.OutForDelivery);
   }
 
   /**
@@ -144,18 +122,7 @@ public class Delivery extends Staff {
    * @return List of orders ready for pickup
    */
   public List<Order> getOrdersReadyForPickup() {
-    return assignedOrders.stream()
-        .filter(order -> order.getStatus() == Order.Status.ReadyForDelivery)
-        .toList();
-  }
-
-  /**
-   * Gets the total number of orders assigned to this delivery staff.
-   *
-   * @return The number of assigned orders
-   */
-  public int getAssignedOrderCount() {
-    return assignedOrders.size();
+    return getOrdersByStatus(Order.Status.ReadyForDelivery);
   }
 
   /**
@@ -164,7 +131,7 @@ public class Delivery extends Staff {
    * @return The number of delivered orders
    */
   public int getDeliveredOrderCount() {
-    return deliveredOrders.size();
+    return completedOrders.size();
   }
 
   /**
@@ -181,6 +148,6 @@ public class Delivery extends Staff {
   public String toString() {
     return String.format(
         "Delivery{name='%s', id='%s', assignedOrders=%d, deliveredOrders=%d}",
-        getName(), getId(), assignedOrders.size(), deliveredOrders.size());
+        getName(), getId(), assignedOrders.size(), completedOrders.size());
   }
 }
