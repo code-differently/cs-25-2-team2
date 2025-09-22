@@ -1,6 +1,7 @@
 plugins {
 	id 'jacoco'
 	id 'java'
+	id 'application'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.diffplug.spotless' version '6.25.0'
@@ -14,6 +15,31 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+// Configure the application plugin for CLI execution
+application {
+    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantCLI'
+}
+
+// Task to run the CLI application
+task runCLI(type: JavaExec) {
+    group = 'application'
+    description = 'Run the Restaurant Management CLI'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantCLI'
+    standardInput = System.in
+}
+
+// Alternative exec task for script compatibility
+task exec(type: JavaExec) {
+    group = 'application'
+    description = 'Execute a Java class'
+    if (project.hasProperty('mainClass')) {
+        mainClass = project.property('mainClass')
+    }
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
 }
 
 repositories {
@@ -38,9 +64,20 @@ jacocoTestReport {
         xml.required = true
         html.required = true // optional, useful for browsing coverage locally
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: ['**/RestaurantCLI*'])
+        }))
+    }
 }
 
 jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: ['**/RestaurantCLI*'])
+        }))
+    }
     violationRules {
         rule {
             limit {
