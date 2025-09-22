@@ -1,0 +1,42 @@
+Start the App
+./run-cli.sh
+
+check menu
+menu
+
+check staff
+staff-list
+
+check customers
+customer
+
+add new customer
+customer-add 101 Jane_Smith 789_Oak_St 555-9876
+
+add to customer cart
+cart-add 101 1 2
+cart-add 101 3 1
+
+remove from cart
+cart-remove 101 2
+
+view the cart
+cart-view 101
+
+place the order
+order-place 101
+
+order status
+orders
+order-status 1
+
+Cooking workflow
+order-prepare 1 CH001
+order-complete 1 CH001
+
+delivery
+order-pickup 1 DEL001
+order-deliver 1 DEL001
+
+exit
+quit
