@@ -5,15 +5,28 @@ import java.util.List;
 
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
+
 public abstract class Staff extends Person {
   protected String id;
+  protected String role;
+  protected final List<Order> assignedOrders;
+  protected final List<Order> completedOrders;
   protected String role;
   protected final List<Order> assignedOrders;
   protected final List<Order> completedOrders;
 
   public Staff(String name, String address, String phoneNumber, String id, String role) {
     super(name, address, phoneNumber);
+  public Staff(String name, String address, String phoneNumber, String id, String role) {
+    super(name, address, phoneNumber);
     this.id = id;
+    this.role = role;
+    this.assignedOrders = new ArrayList<>();
+    this.completedOrders = new ArrayList<>();
     this.role = role;
     this.assignedOrders = new ArrayList<>();
     this.completedOrders = new ArrayList<>();
