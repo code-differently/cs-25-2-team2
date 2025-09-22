@@ -92,9 +92,7 @@ public abstract class Staff extends Person {
    * @return List of orders with the specified status
    */
   protected List<Order> getOrdersByStatus(Order.Status status) {
-    return assignedOrders.stream()
-        .filter(order -> order.getStatus() == status)
-        .toList();
+    return assignedOrders.stream().filter(order -> order.getStatus() == status).toList();
   }
 
   @Override

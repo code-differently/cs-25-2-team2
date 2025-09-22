@@ -92,6 +92,7 @@ Once the CLI is running, you can use the following commands:
 
 ### 🛒 Cart Management
 - `cart-add <customer-id> <menu-item-id> <quantity>` - Add item to cart
+- `cart-remove <customer-id> <menu-item-id>` - Remove item from cart
 - `cart-view <customer-id>` - View customer's cart
 - `cart-clear <customer-id>` - Clear customer's cart
 
