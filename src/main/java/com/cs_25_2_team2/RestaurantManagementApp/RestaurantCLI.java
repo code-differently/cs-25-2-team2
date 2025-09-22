@@ -39,17 +39,32 @@ public class RestaurantCLI {
             1, "French Fries", 3.99, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
     MenuItem mashedPotatoes =
         new MenuItem(
-            2, "Mashed Potatoes", 4.99, MenuItem.CookedType.Mashed, MenuItem.PotatoType.YukonGold, true);
+            2,
+            "Mashed Potatoes",
+            4.99,
+            MenuItem.CookedType.Mashed,
+            MenuItem.PotatoType.YukonGold,
+            true);
     MenuItem bakedPotato =
         new MenuItem(
-            3, "Loaded Baked Potato", 6.99, MenuItem.CookedType.Baked, MenuItem.PotatoType.Russet, true);
+            3,
+            "Loaded Baked Potato",
+            6.99,
+            MenuItem.CookedType.Baked,
+            MenuItem.PotatoType.Russet,
+            true);
     MenuItem hashBrowns =
         new MenuItem(
             4, "Hash Browns", 3.49, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
     MenuItem sweetPotatoFries =
         new MenuItem(
-            5, "Sweet Potato Fries", 4.49, MenuItem.CookedType.Fried, MenuItem.PotatoType.JapaneseSweet, true);
-    
+            5,
+            "Sweet Potato Fries",
+            4.49,
+            MenuItem.CookedType.Fried,
+            MenuItem.PotatoType.JapaneseSweet,
+            true);
+
     menu.addMenuItem(fries);
     menu.addMenuItem(mashedPotatoes);
     menu.addMenuItem(bakedPotato);
@@ -118,6 +133,7 @@ public class RestaurantCLI {
 
         // Cart Management
       case "cart-add" -> addToCart(parts);
+      case "cart-remove" -> removeFromCart(parts);
       case "cart-view" -> viewCart(parts);
       case "cart-clear" -> clearCart(parts);
 
@@ -159,6 +175,7 @@ public class RestaurantCLI {
 
             🛒 Cart Management:
               cart-add <customer-id> <menu-item-id> <quantity> - Add item to cart
+              cart-remove <customer-id> <menu-item-id> - Remove item from cart
               cart-view <customer-id>       - View customer's cart
               cart-clear <customer-id>      - Clear customer's cart
 
@@ -434,28 +451,74 @@ public class RestaurantCLI {
       System.out.println("Usage: cart-add <customer-id> <menu-item-id> <quantity>");
       return;
     }
-    
+
     try {
       int customerId = Integer.parseInt(parts[1]);
       int menuItemId = Integer.parseInt(parts[2]);
       int quantity = Integer.parseInt(parts[3]);
-      
+
       Customer customer = findCustomerById(customerId);
       if (customer == null) {
         System.out.println("❌ Customer not found: " + customerId);
         return;
       }
-      
+
       MenuItem menuItem = menu.getItemById(menuItemId);
       if (menuItem == null) {
         System.out.println("❌ Menu item not found: " + menuItemId);
         return;
       }
-      
+
       customer.getCart().addItem(menuItem, quantity);
-      System.out.println("✅ Added " + quantity + "x " + menuItem.getDishName() + 
-                        " to " + customer.getName() + "'s cart");
-      
+      System.out.println(
+          "✅ Added "
+              + quantity
+              + "x "
+              + menuItem.getDishName()
+              + " to "
+              + customer.getName()
+              + "'s cart");
+
+    } catch (NumberFormatException e) {
+      System.out.println("❌ Invalid number format in command");
+    }
+  }
+
+  private void removeFromCart(String[] parts) {
+    if (parts.length < 3) {
+      System.out.println("Usage: cart-remove <customer-id> <menu-item-id>");
+      return;
+    }
+
+    try {
+      int customerId = Integer.parseInt(parts[1]);
+      int menuItemId = Integer.parseInt(parts[2]);
+
+      Customer customer = findCustomerById(customerId);
+      if (customer == null) {
+        System.out.println("❌ Customer not found: " + customerId);
+        return;
+      }
+
+      // Check if the item exists in the cart before removing
+      boolean itemFound = customer.getCart().getItems().stream()
+          .anyMatch(cartItem -> cartItem.getMenuItem().getDishId() == menuItemId);
+
+      if (!itemFound) {
+        System.out.println("❌ Menu item " + menuItemId + " not found in cart");
+        return;
+      }
+
+      // Get the menu item name for the confirmation message
+      String itemName = customer.getCart().getItems().stream()
+          .filter(cartItem -> cartItem.getMenuItem().getDishId() == menuItemId)
+          .map(cartItem -> cartItem.getMenuItem().getDishName())
+          .findFirst()
+          .orElse("Unknown Item");
+
+      customer.getCart().removeItem(menuItemId);
+      System.out.println("✅ Removed " + itemName + " from " + customer.getName() + "'s cart");
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid number format in command");
     }
@@ -466,7 +529,7 @@ public class RestaurantCLI {
       System.out.println("Usage: cart-view <customer-id>");
       return;
     }
-    
+
     try {
       int customerId = Integer.parseInt(parts[1]);
       Customer customer = findCustomerById(customerId);
@@ -474,19 +537,24 @@ public class RestaurantCLI {
         System.out.println("❌ Customer not found: " + customerId);
         return;
       }
-      
+
       System.out.println("🛒 Cart for " + customer.getName() + ":");
       if (customer.getCart().isEmpty()) {
         System.out.println("  Cart is empty");
       } else {
-        customer.getCart().getItems().forEach(item -> 
-            System.out.printf("  %dx %s - $%.2f each%n", 
-                item.getQuantity(), 
-                item.getMenuItem().getDishName(), 
-                item.getMenuItem().getPrice()));
+        customer
+            .getCart()
+            .getItems()
+            .forEach(
+                item ->
+                    System.out.printf(
+                        "  %dx %s - $%.2f each%n",
+                        item.getQuantity(),
+                        item.getMenuItem().getDishName(),
+                        item.getMenuItem().getPrice()));
         System.out.printf("  Total: $%.2f%n", calculateCartTotal(customer.getCart()));
       }
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid customer ID format");
     }
@@ -497,7 +565,7 @@ public class RestaurantCLI {
       System.out.println("Usage: cart-clear <customer-id>");
       return;
     }
-    
+
     try {
       int customerId = Integer.parseInt(parts[1]);
       Customer customer = findCustomerById(customerId);
@@ -505,10 +573,10 @@ public class RestaurantCLI {
         System.out.println("❌ Customer not found: " + customerId);
         return;
       }
-      
+
       customer.getCart().clear();
       System.out.println("✅ Cleared cart for " + customer.getName());
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid customer ID format");
     }
@@ -521,7 +589,7 @@ public class RestaurantCLI {
       System.out.println("Usage: order-place <customer-id>");
       return;
     }
-    
+
     try {
       int customerId = Integer.parseInt(parts[1]);
       Customer customer = findCustomerById(customerId);
@@ -529,26 +597,29 @@ public class RestaurantCLI {
         System.out.println("❌ Customer not found: " + customerId);
         return;
       }
-      
+
       if (customer.getCart().isEmpty()) {
         System.out.println("❌ Customer's cart is empty");
         return;
       }
-      
+
       // Create order from cart
       Order order = customer.checkout();
       orderQueue.add(order, 1); // Add with normal priority
-      
+
       // Assign to available chef
       Chef availableChef = findAvailableChef();
       if (availableChef != null) {
         availableChef.receiveOrder(order);
-        System.out.println("✅ Order #" + order.getId() + " placed and assigned to Chef " + 
-                          availableChef.getName());
+        System.out.println(
+            "✅ Order #"
+                + order.getId()
+                + " placed and assigned to Chef "
+                + availableChef.getName());
       } else {
         System.out.println("✅ Order #" + order.getId() + " placed and queued (all chefs busy)");
       }
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid customer ID format");
     }
@@ -559,20 +630,20 @@ public class RestaurantCLI {
       System.out.println("Usage: order-prepare <order-id> <chef-id>");
       return;
     }
-    
+
     try {
       int orderId = Integer.parseInt(parts[1]);
       String chefId = parts[2];
-      
+
       Chef chef = findChefById(chefId);
       if (chef == null) {
         System.out.println("❌ Chef not found: " + chefId);
         return;
       }
-      
+
       chef.startPreparingOrder(orderId);
       System.out.println("✅ Chef " + chef.getName() + " started preparing order #" + orderId);
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid order ID format");
     } catch (Exception e) {
@@ -585,20 +656,20 @@ public class RestaurantCLI {
       System.out.println("Usage: order-complete <order-id> <chef-id>");
       return;
     }
-    
+
     try {
       int orderId = Integer.parseInt(parts[1]);
       String chefId = parts[2];
-      
+
       Chef chef = findChefById(chefId);
       if (chef == null) {
         System.out.println("❌ Chef not found: " + chefId);
         return;
       }
-      
+
       chef.completeOrder(orderId);
       System.out.println("✅ Chef " + chef.getName() + " completed order #" + orderId);
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid order ID format");
     } catch (Exception e) {
@@ -611,17 +682,17 @@ public class RestaurantCLI {
       System.out.println("Usage: order-pickup <order-id> <delivery-id>");
       return;
     }
-    
+
     try {
       int orderId = Integer.parseInt(parts[1]);
       String deliveryId = parts[2];
-      
+
       Delivery delivery = findDeliveryById(deliveryId);
       if (delivery == null) {
         System.out.println("❌ Delivery staff not found: " + deliveryId);
         return;
       }
-      
+
       // First assign the order, then pick it up
       Order order = orderQueue.get(orderId);
       if (order != null && order.getStatus() == Order.Status.ReadyForDelivery) {
@@ -631,7 +702,7 @@ public class RestaurantCLI {
       } else {
         System.out.println("❌ Order not ready for pickup or not found");
       }
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid order ID format");
     } catch (Exception e) {
@@ -644,20 +715,20 @@ public class RestaurantCLI {
       System.out.println("Usage: order-deliver <order-id> <delivery-id>");
       return;
     }
-    
+
     try {
       int orderId = Integer.parseInt(parts[1]);
       String deliveryId = parts[2];
-      
+
       Delivery delivery = findDeliveryById(deliveryId);
       if (delivery == null) {
         System.out.println("❌ Delivery staff not found: " + deliveryId);
         return;
       }
-      
+
       delivery.deliverOrder(orderId);
       System.out.println("✅ " + delivery.getName() + " delivered order #" + orderId);
-      
+
     } catch (NumberFormatException e) {
       System.out.println("❌ Invalid order ID format");
     } catch (Exception e) {
@@ -668,27 +739,27 @@ public class RestaurantCLI {
   private void demonstrateFullWorkflow() {
     System.out.println("🎭 Demonstrating Full Order Workflow");
     System.out.println("=====================================");
-    
+
     // Ensure we have the required entities
     if (customers.isEmpty()) {
       System.out.println("❌ No customers found. Adding demo customer...");
       customers.add(new Customer(999, "Demo Customer", "123 Demo St", "555-DEMO"));
     }
-    
+
     if (chefs.isEmpty()) {
       System.out.println("❌ No chefs found. Please add a chef first.");
       return;
     }
-    
+
     if (deliveryStaff.isEmpty()) {
       System.out.println("❌ No delivery staff found. Please add delivery staff first.");
       return;
     }
-    
+
     Customer customer = customers.get(0);
     Chef chef = chefs.get(0);
     Delivery delivery = deliveryStaff.get(0);
-    
+
     // Step 1: Add items to cart
     System.out.println("\n1️⃣ Adding items to customer cart...");
     List<MenuItem> availableItems = menu.getAvailableItems();
@@ -696,36 +767,37 @@ public class RestaurantCLI {
       customer.getCart().addItem(availableItems.get(0), 2);
       System.out.println("   Added 2x " + availableItems.get(0).getDishName());
     }
-    
+
     // Step 2: Place order
     System.out.println("\n2️⃣ Placing order...");
     if (!customer.getCart().isEmpty()) {
       Order order = customer.checkout();
       orderQueue.add(order, 1);
       chef.receiveOrder(order);
-      System.out.println("   Order #" + order.getId() + " placed and assigned to " + chef.getName());
-      
+      System.out.println(
+          "   Order #" + order.getId() + " placed and assigned to " + chef.getName());
+
       // Step 3: Prepare order
       System.out.println("\n3️⃣ Chef preparing order...");
       chef.startPreparingOrder(order.getId());
       System.out.println("   " + chef.getName() + " started preparing order #" + order.getId());
-      
+
       // Step 4: Complete order
       System.out.println("\n4️⃣ Chef completing order...");
       chef.completeOrder(order.getId());
       System.out.println("   " + chef.getName() + " completed order #" + order.getId());
-      
+
       // Step 5: Assign to delivery
       System.out.println("\n5️⃣ Assigning to delivery...");
       delivery.assignOrder(order);
       delivery.pickupOrder(order.getId());
       System.out.println("   " + delivery.getName() + " picked up order #" + order.getId());
-      
+
       // Step 6: Deliver order
       System.out.println("\n6️⃣ Delivering order...");
       delivery.deliverOrder(order.getId());
       System.out.println("   " + delivery.getName() + " delivered order #" + order.getId());
-      
+
       System.out.println("\n✅ Complete workflow demonstrated!");
     } else {
       System.out.println("❌ No menu items available for demo");
@@ -735,31 +807,19 @@ public class RestaurantCLI {
   // ========== HELPER METHODS ==========
 
   private Customer findCustomerById(int id) {
-    return customers.stream()
-        .filter(c -> c.getCustomerId() == id)
-        .findFirst()
-        .orElse(null);
+    return customers.stream().filter(c -> c.getCustomerId() == id).findFirst().orElse(null);
   }
 
   private Chef findChefById(String id) {
-    return chefs.stream()
-        .filter(c -> c.getId().equals(id))
-        .findFirst()
-        .orElse(null);
+    return chefs.stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
   }
 
   private Delivery findDeliveryById(String id) {
-    return deliveryStaff.stream()
-        .filter(d -> d.getId().equals(id))
-        .findFirst()
-        .orElse(null);
+    return deliveryStaff.stream().filter(d -> d.getId().equals(id)).findFirst().orElse(null);
   }
 
   private Chef findAvailableChef() {
-    return chefs.stream()
-        .filter(chef -> !chef.isBusy())
-        .findFirst()
-        .orElse(null);
+    return chefs.stream().filter(chef -> !chef.isBusy()).findFirst().orElse(null);
   }
 
   private double calculateCartTotal(Cart cart) {
