@@ -1,12 +1,13 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -126,21 +127,21 @@ public class OrderTest {
 
     // Test with null items
     try {
-      Order.createNew(customer, null, testDate);
+      new Order(customer, null, testDate);
     } catch (Exception e) {
       // Expected - this may trigger validation code
     }
 
     // Test with empty items
     try {
-      Order.createNew(customer, new ArrayList<>(), testDate);
+      new Order(customer, new ArrayList<>(), testDate);
     } catch (Exception e) {
       // Expected - this may trigger validation code
     }
 
     // Test the other constructor with ID
     try {
-      Order.withId(999, customer, cartItems, testDate);
+      new Order(999, customer, cartItems, testDate);
       // This should work fine
     } catch (Exception e) {
       // Not expected but won't fail test

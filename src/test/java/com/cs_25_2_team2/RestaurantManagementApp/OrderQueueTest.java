@@ -1,17 +1,18 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,9 +51,9 @@ public class OrderQueueTest {
                 3, "Salad", 6.99, MenuItem.CookedType.Baked, MenuItem.PotatoType.YukonGold, true),
             1));
 
-    order1 = Order.withId(1, customer, items1, new Date(System.currentTimeMillis()));
-    order2 = Order.withId(2, customer, items2, new Date(System.currentTimeMillis()));
-    order3 = Order.withId(3, customer, items3, new Date(System.currentTimeMillis()));
+    order1 = new Order(1, customer, items1, new Date(System.currentTimeMillis()));
+    order2 = new Order(2, customer, items2, new Date(System.currentTimeMillis()));
+    order3 = new Order(3, customer, items3, new Date(System.currentTimeMillis()));
   }
 
   @Test
@@ -171,7 +172,7 @@ public class OrderQueueTest {
                 4, "Pizza", 12.99, MenuItem.CookedType.Baked, MenuItem.PotatoType.Russet, true),
             1));
     Order updatedOrder =
-        Order.withId(order1.getId(), customer, newItems, new Date(System.currentTimeMillis()));
+        new Order(order1.getId(), customer, newItems, new Date(System.currentTimeMillis()));
 
     orderQueue.update(order1.getId(), updatedOrder);
     assertEquals(1, orderQueue.size());

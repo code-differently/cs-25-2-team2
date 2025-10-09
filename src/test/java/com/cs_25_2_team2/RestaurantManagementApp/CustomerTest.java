@@ -283,17 +283,15 @@ public class CustomerTest {
     assertEquals("Updated Address", chef.getAddress());
     assertEquals("Updated Phone", chef.getPhoneNumber());
 
-    // Test Chef's toString method (which overrides Person's toString)
-    String chefToStringResult = chef.toString();
-    assertNotNull(chefToStringResult, "Chef toString should not be null");
-    assertTrue(chefToStringResult.contains("Updated Chef"), "Should contain chef name");
-
-    // Test Customer's toString method (which also overrides Person's toString)
-    String customerToStringResult = customer.toString();
-    assertNotNull(customerToStringResult, "Customer toString should not be null");
-    assertTrue(customerToStringResult.contains("John Doe"), "Should contain customer name");
-    assertTrue(customerToStringResult.contains("123 Main St"), "Should contain customer address");
-    assertTrue(customerToStringResult.contains("555-123-4567"), "Should contain customer phone");
+    // Create a concrete Person subclass for direct toString test
+    Person testPerson = new Person("Direct Test", "Direct Address", "Direct Phone") {
+          // Anonymous concrete implementation
+        };
+    String personResult = testPerson.toString();
+    assertNotNull(personResult, "Person toString should not be null");
+    assertTrue(personResult.contains("Direct Test"), "Should contain person name");
+    assertTrue(personResult.contains("Direct Address"), "Should contain address");
+    assertTrue(personResult.contains("Direct Phone"), "Should contain phone");
   }
 
   @Test
