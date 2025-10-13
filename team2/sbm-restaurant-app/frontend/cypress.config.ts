@@ -12,7 +12,7 @@ export default defineConfig({
   component: {
     devServer: {
       framework: 'react',
-      bundler: 'vite',
+      bundler: '',
     },
     specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/component.ts',
