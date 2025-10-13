@@ -52,7 +52,7 @@
 ### Acceptance Criteria 
 - Each ingredient displays its name, current quantity, unit of measurement (e.g., lbs, oz, pieces), and status (e.g., in stock, low, out of stock).
 - The system updates ingredient quantities automatically when items are used in an order.
-- The system provides an inventory view showing all available ingredients.
+- The system provides an inventory view showing all available ingredients  .
 
 
 
