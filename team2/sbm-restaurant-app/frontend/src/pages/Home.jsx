@@ -2,31 +2,43 @@ import React from 'react';
 import MenuList from '../components/MenuList';
 
 const Home = () => {
-  // Mock data for testing
+  // Mock data for testing - Potato Recipe Menu
   const mockMenuItems = [
     {
       id: 1,
-      name: "Spud Supreme Burger",
-      description: "Juicy beef burger with crispy potato chips and special sauce",
-      price: 14.99
+      name: "Classic Loaded Baked Potato",
+      description: "Fluffy baked russet potato topped with melted cheddar, crispy bacon bits, sour cream, and fresh chives",
+      price: 12.99
     },
     {
       id: 2,
-      name: "Loaded Potato Fries",
-      description: "Golden fries loaded with cheese, bacon, and green onions",
-      price: 8.99
+      name: "Garlic Herb Roasted Baby Potatoes",
+      description: "Golden baby potatoes roasted with rosemary, thyme, garlic, and olive oil until crispy outside and tender inside",
+      price: 9.99
     },
     {
       id: 3,
-      name: "Munch Wrap",
-      description: "Crispy wrap filled with seasoned ground beef and fresh veggies",
-      price: 11.99
+      name: "Truffle Parmesan Potato Gratin",
+      description: "Layers of thinly sliced potatoes baked in cream sauce with truffle oil and topped with parmesan cheese",
+      price: 16.99
     },
     {
       id: 4,
-      name: "Spud Smoothie",
-      description: "Refreshing fruit smoothie with a hint of sweet potato",
-      price: 6.99
+      name: "Spiced Sweet Potato Fries",
+      description: "Hand-cut sweet potato fries seasoned with paprika, cumin, and a hint of cinnamon, served with chipotle aioli",
+      price: 8.99
+    },
+    {
+      id: 5,
+      name: "Potato Gnocchi in Brown Butter Sage",
+      description: "House-made potato gnocchi tossed in brown butter with crispy sage leaves and grated pecorino romano",
+      price: 14.99
+    },
+    {
+      id: 6,
+      name: "Hasselback Potatoes",
+      description: "Swedish-style sliced potatoes roasted with herbs, butter, and breadcrumbs until golden and accordion-like",
+      price: 11.99
     }
   ];
   return (
