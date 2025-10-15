@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MenuList from '../components/MenuList';
 
 const Home = () => {
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
+
   // Mock data for testing - Potato Recipe Menu
   const mockMenuItems = [
     {
@@ -56,7 +62,14 @@ const Home = () => {
       <section className="menu-preview">
         <div className="container">
           <h2>Our Featured Menu</h2>
-          <MenuList items={mockMenuItems} />
+          <MenuList items={mockMenuItems} addToCart={addToCart} />
+        </div>
+      </section>
+
+      <section className="cart-summary">
+        <div className="container">
+          <h3>Cart Total: ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}</h3>
+          <p>Items in cart: {cart.length}</p>
         </div>
       </section>
       
