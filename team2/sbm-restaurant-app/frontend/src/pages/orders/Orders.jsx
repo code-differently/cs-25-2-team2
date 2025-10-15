@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { orderService } from '../../services/orderService';
 import OrderCard from '../../components/order/OrderCards';

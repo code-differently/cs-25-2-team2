@@ -1,15 +1,17 @@
+"use client";
+
 // Main Home Page Export
 import React, { useState } from 'react';
 import "./homestyle.scss";
 
 // Mock data for featured items
 const mockItems = [
-  { id: 1, name: "Classic Baked Potato", price: 8.99, image: "/api/placeholder/300/200" },
-  { id: 2, name: "Loaded Potato Skins", price: 12.99, image: "/api/placeholder/300/200" },
-  { id: 3, name: "Sweet Potato Fries", price: 6.99, image: "/api/placeholder/300/200" },
-  { id: 4, name: "Potato Gnocchi", price: 14.99, image: "/api/placeholder/300/200" },
-  { id: 5, name: "Hashmallow Casserole", price: 10.99, image: "/api/placeholder/300/200" },
-  { id: 6, name: "Spud Burger", price: 13.99, image: "/api/placeholder/300/200" }
+  { id: 1, name: "Classic Baked Potato", image: "/api/placeholder/300/200" },
+  { id: 2, name: "Loaded Potato Skins", image: "/api/placeholder/300/200" },
+  { id: 3, name: "Sweet Potato Fries", image: "/api/placeholder/300/200" },
+  { id: 4, name: "Potato Gnocchi", image: "/api/placeholder/300/200" },
+  { id: 5, name: "Hashmallow Casserole", image: "/api/placeholder/300/200" },
+  { id: 6, name: "Spud Burger", image: "/api/placeholder/300/200" }
 ];
 
 export default function HomePage() {
@@ -84,10 +86,6 @@ export default function HomePage() {
                   />
                   <div className="p-4">
                     <h3 className="item-name text-xl font-semibold mb-2 text-gray-800">{item.name}</h3>
-                    <p className="item-price text-lg font-bold text-amber-600">${item.price}</p>
-                    <button className="view-menu-btn w-full mt-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
-                      View Menu
-                    </button>
                   </div>
                 </div>
               ))}
