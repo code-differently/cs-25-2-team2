@@ -1,40 +1,40 @@
 # Team Task Assignment - Basic Folder Structure
 
-## 📁 Basic Folder Structure Created
+## Basic Folder Structure Created
 
 ```
 src/
 ├── components/
-│   ├── home/                 # 🔥 NEW - Home Components Domain
+│   ├── home/                 # NEW - Home Components Domain
 │   │   └── index.js          # Placeholder with suggested structure
-│   ├── menu/                 # 🔥 NEW - Menu Components Domain
+│   ├── menu/                 # NEW - Menu Components Domain
 │   │   └── index.js          # Placeholder with suggested structure
-│   ├── cart/                 # 🔥 NEW - Cart Components Domain  
+│   ├── cart/                 # NEW - Cart Components Domain  
 │   │   └── index.js          # Placeholder with suggested structure
 │   └── order/                # Existing - Order Components
 ├── pages/
-│   ├── home/                 # 🔥 NEW - Home Pages Domain
-│   │   ├── HomePage.jsx      # ♻️ MOVED - Main home page implementation
-│   │   ├── homestyle.scss    # ♻️ MOVED - Home page styles
+│   ├── home/                 # NEW - Home Pages Domain
+│   │   ├── HomePage.jsx      # MOVED - Main home page implementation
+│   │   ├── homestyle.scss    # MOVED - Home page styles
 │   │   └── index.js          # Placeholder with suggested structure
-│   ├── menu/                 # 🔥 NEW - Menu Pages Domain
+│   ├── menu/                 # NEW - Menu Pages Domain
 │   │   └── index.js          # Placeholder with suggested structure
-│   ├── cart/                 # 🔥 NEW - Cart Pages Domain
+│   ├── cart/                 # NEW - Cart Pages Domain
 │   │   └── index.js          # Placeholder with suggested structure
 │   ├── orders/               # Existing - Order Pages
-│   └── Home.jsx              # 🔗 EXPORT - Maintains backward compatibility
+│   └── Home.jsx              # EXPORT - Maintains backward compatibility
 ```
 
-## 🎯 Team Task Assignments
+## Team Task Assignments
 
-### **Task 1: Home Domain** 🏠
+### **Task 1: Home Domain** 
 **Folders to Work In:**
 - `src/components/home/` - Home page components
 - `src/pages/home/` - Home page and related pages
 
 **Current State:**
-- ✅ `HomePage.jsx` - Current implementation moved here
-- ✅ `homestyle.scss` - Current styles moved here
+-  `HomePage.jsx` - Current implementation moved here
+-  `homestyle.scss` - Current styles moved here
 
 **Suggested Components Structure:**
 ```
@@ -51,15 +51,15 @@ components/home/
 **Suggested Pages Structure:**
 ```
 pages/home/
-├── HomePage.jsx          # ✅ Main home/landing page (current)
+├── HomePage.jsx          # Main home/landing page (current)
 ├── AboutPage.jsx         # About us page
 ├── ContactPage.jsx       # Contact information page
 ├── LandingPage.jsx       # Marketing landing page
-├── homestyle.scss        # ✅ Home page styles (current)
+├── homestyle.scss        # Home page styles (current)
 └── index.js              # Export all home pages
 ```
 
-### **Task 2: Menu Domain** 👨‍💻
+### **Task 2: Menu Domain** 
 **Folders to Work In:**
 - `src/components/menu/` - Menu components
 - `src/pages/menu/` - Menu pages
@@ -85,7 +85,7 @@ pages/menu/
 └── index.js              # Export all menu pages
 ```
 
-### **Task 3: Cart Domain** 👩‍💻
+### **Task 3: Cart Domain** 
 **Folders to Work In:**
 - `src/components/cart/` - Cart components
 - `src/pages/cart/` - Cart pages
@@ -111,7 +111,7 @@ pages/cart/
 └── index.js              # Export all cart pages
 ```
 
-### **Task 4: Integration & Services** 👥
+### **Task 4: Integration & Services** 
 **Responsibilities:**
 - Create service layers for business logic
 - Integrate all domains with existing app
@@ -127,7 +127,7 @@ services/
 └── orderService.js       # Existing - Order operations
 ```
 
-## 🛠 Development Guidelines
+## Development Guidelines
 
 ### **Component Architecture**
 Follow the established pattern from `Orders.jsx`:
@@ -160,7 +160,7 @@ export default function ComponentName() {
 --gold-dark          /* Active states */
 ```
 
-## 📋 Getting Started
+## Getting Started
 
 ### **1. Choose Your Domain**
 - **Home Team**: Work in `components/home/` and `pages/home/`
@@ -191,7 +191,7 @@ git checkout -b feature/integration-services
 - Teams can start building their domain components independently
 - Integration team can create services and update components
 
-## ✅ Success Criteria
+##  Success Criteria
 
 ### **Home Domain**
 - [ ] Hero section with engaging welcome message
@@ -218,7 +218,7 @@ git checkout -b feature/integration-services
 - [ ] Proper routing between pages
 - [ ] Unified styling and UX
 
-## 🚀 Ready for Team Assignment!
+## Ready for Team Assignment!
 
 The basic structure is in place for all domains. Each team member can:
 1. Take ownership of their domain folder
