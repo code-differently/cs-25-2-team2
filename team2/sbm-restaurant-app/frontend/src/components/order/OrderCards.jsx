@@ -1,6 +1,4 @@
 import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Clock, CheckCircle, Package, Truck, XCircle } from "lucide-react";
 import "./orderstyle.scss";
@@ -44,28 +42,28 @@ export default function OrderCard({ order, onStatusUpdate, onCancel }) {
   const StatusIcon = status.icon;
 
   return (
-    <Card className="order-card border rounded-lg">
-      <CardHeader>
+    <div className="order-card border rounded-lg bg-white shadow-md">
+      <div className="p-4 border-b">
         <div className="flex justify-between items-start">
           <div>
             <p className="order-text--id text-sm mb-1">
               Order #{order.id}
             </p>
-            <p className="order-text--date text-xs">
+            <p className="order-text--date text-xs text-gray-500">
               {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
             </p>
           </div>
-          <Badge 
-            className="order-badge flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium"
+          <span 
+            className="order-badge flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium text-white"
             style={{ backgroundColor: status.color }}
           >
             <StatusIcon className="w-3 h-3" />
             {status.label}
-          </Badge>
+          </span>
         </div>
-      </CardHeader>
+      </div>
       
-      <CardContent>
+      <div className="p-4">
         <div className="space-y-3 mb-4">
           {order.items?.map((item, index) => (
             <div key={index} className="flex justify-between items-center">
@@ -94,14 +92,14 @@ export default function OrderCard({ order, onStatusUpdate, onCancel }) {
             {onCancel && order.status !== 'Delivered' && order.status !== 'OutForDelivery' && (
               <button 
                 onClick={() => onCancel(order.id)}
-                className="order-button px-3 py-1 text-sm rounded"
+                className="order-button px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600"
               >
                 Cancel Order
               </button>
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
