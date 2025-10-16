@@ -1,0 +1,82 @@
+// General Order Card Styling (SCSS)
+.order-card {
+  background-color: var(--charcoal-medium);
+  border-color: var(--charcoal-light);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// General text styles
+.order-text {
+  &--id {
+    color: var(--cream-dark);
+  }
+  
+  &--date {
+    color: var(--gold-primary);
+  }
+  
+  &--item-name {
+    color: var(--cream);
+    
+    .quantity {
+      color: var(--cream-dark);
+    }
+  }
+  
+  &--price {
+    color: var(--gold-primary);
+  }
+  
+  &--total-label {
+    color: var(--cream);
+  }
+  
+  &--total-amount {
+    color: var(--gold-primary);
+  }
+}
+
+// General badge styling
+.order-badge {
+  color: var(--charcoal-dark);
+}
+
+// General border styling
+.order-border {
+  border-color: var(--charcoal-light);
+}
+
+// General button styling
+.order-button {
+  background-color: var(--charcoal-light);
+  color: var(--cream);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: var(--charcoal-dark);
+    opacity: 0.9;
+  }
+}
+
+// Orders Page General Styling (SCSS)
+.orders-page {
+  .page-title {
+    color: var(--cream);
+  }
+  
+  .page-subtitle {
+    color: var(--gold-primary);
+  }
+  
+  .loading-text, .empty-text {
+    color: var(--cream-dark);
+  }
+  
+  .error-text {
+    color: #ef4444;
+  }
+}
