@@ -7,6 +7,7 @@
 // - MenuItemDetailPage.jsx (detailed menu item view)
 // - menupagestyle.scss (menu page styles)
 import React, {useState} from "react";
+import "./menu.scss";
 
 
 export default function MenuPage() {
@@ -89,11 +90,9 @@ export default function MenuPage() {
         <p>No items match your search or filter</p>
        ): (
          // Otherwise, show all filtered items in a grid layout
-        <div>
-          {/* Loop through all filtered items and show a card for each */}
-          {filterItems.map((item) =>(
+          filterItems.map((item) =>(
             <div 
-              key={item.id}
+              key={item.id} className="menu-card"
               >
                 {/*Need to add image*/}
               <img></img>
@@ -104,8 +103,7 @@ export default function MenuPage() {
                 <p className="item-price-text">{item.price}</p>
               </div>
         </div>
-       ))}
-      </div>
+       ))
        )}
       </section>
     </div>
