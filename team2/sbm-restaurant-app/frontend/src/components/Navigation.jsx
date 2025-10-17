@@ -11,6 +11,8 @@ export default function Navigation() {
     { name: "Menu", path: "/menu" },
     { name: "Cart", path: "/cart" },
     { name: "Orders", path: "/orders" },
+    { name: "Sign In", path: "/signin" },
+    { name: "Log In", path: "/login" },
   ];
 
   return (
