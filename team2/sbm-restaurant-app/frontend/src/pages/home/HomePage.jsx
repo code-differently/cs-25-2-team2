@@ -1,5 +1,5 @@
-import Carousel from "../components/Carousel";
-import TeamSection from "../components/TeamSection";
+import Carousel from "../../components/Carousel";
+import TeamSection from "../../components/TeamSection";
 import "./homestyle.scss";
 
 const Home = () => {
