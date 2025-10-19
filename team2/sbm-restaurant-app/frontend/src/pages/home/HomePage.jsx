@@ -3,6 +3,7 @@
 // Main Home Page Export
 import React, { useState } from 'react';
 import Carousel from "../../components/Carousel";
+import TeamSection from "../../components/TeamSection";
 import "./homestyle.scss";
 
 export default function HomePage() {
@@ -113,6 +114,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Team Section */}
+      <TeamSection />
     </div>
   );
 }
