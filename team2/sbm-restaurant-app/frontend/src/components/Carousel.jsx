@@ -1,16 +1,18 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 
 const dishes = [
   {
-    img: "https://source.unsplash.com/800x400/?fries",
+    img: "https://picsum.photos/800/400?random=1",
     title: "Crispy Golden Fries",
   },
   {
-    img: "https://source.unsplash.com/800x400/?baked-potato",
+    img: "https://picsum.photos/800/400?random=2",
     title: "Loaded Baked Potato",
   },
   {
-    img: "https://source.unsplash.com/800x400/?mashed-potatoes",
+    img: "https://picsum.photos/800/400?random=3",
     title: "Creamy Mashed Potatoes",
   },
 ];
@@ -20,6 +22,15 @@ const Carousel = () => {
 
   const nextSlide = () => setIndex((index + 1) % dishes.length);
   const prevSlide = () => setIndex((index - 1 + dishes.length) % dishes.length);
+
+  // Auto-rotation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % dishes.length);
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   return (
     <div className="carousel">
