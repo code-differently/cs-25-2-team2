@@ -2,25 +2,25 @@ const team = [
   { 
     name: "Trishtan Husser", 
     role: "Head Chef & Potato Specialist", 
-    img: "https://picsum.photos/150/150?random=20",
+    img: "/images/team/potato-5/trishtan3.png",
     description: "15+ years perfecting the art of potato cuisine"
   },
   { 
     name: "Dean Walston", 
     role: "Kitchen Manager", 
-    img: "https://picsum.photos/150/150?random=21",
+    img: "/images/team/potato-5/dean4.png",
     description: "Ensures every dish meets our golden standards"
   },
   { 
     name: "Brooklyn Harden", 
     role: "Delivery Coordinator", 
-    img: "https://picsum.photos/150/150?random=22",
+    img: "/images/team/potato-5/brooklyn6.png",
     description: "Gets your spuds to you hot and fast"
   },
   { 
     name: "Wayleom Vargas", 
     role: "Customer Experience Lead", 
-    img: "https://picsum.photos/150/150?random=23",
+    img: "/images/team/potato-5/wayleom5.png",
     description: "Making sure every spud experience is perfect"
   },
 ];
