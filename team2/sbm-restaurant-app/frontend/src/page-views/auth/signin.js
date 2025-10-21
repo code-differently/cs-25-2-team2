@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import '../../styles/auth.scss';
+import { useRouter } from 'next/navigation';
+import '../../../styles/auth.scss';
 
 // This is a simple redirect component to the login page
 export default function SignInPage() {
