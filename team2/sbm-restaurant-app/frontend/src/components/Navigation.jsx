@@ -46,7 +46,7 @@ export default function Navigation() {
 
   const navItems = [
     { name: "Home", path: "/", icon: <Home size={18} /> },
-    { name: "Menu", path: "/menu", icon: <MenuIcon size={18} /> },
+    { name: "Menu", path: "/menus", icon: <MenuIcon size={18} /> },
     { name: "Cart", path: "/cart", icon: <ShoppingCart size={18} />, badge: true },
     { name: "Orders", path: "/orders", icon: <Clock size={18} /> },
   ];
