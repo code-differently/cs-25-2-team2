@@ -1,4 +1,4 @@
-import MenuPage from "../../pages/menu/index";
+import MenuPage from "../../page-views/menu/Menu.jsx";
 
 export default function MenuPageWrapper() {
   return <MenuPage />;

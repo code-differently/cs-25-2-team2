@@ -1,7 +1,8 @@
-// General Order Card Styling (SCSS)
+// Order Styling with Light/Dark Theme Support
 .order-card {
-  background-color: var(--charcoal-medium);
-  border-color: var(--charcoal-light);
+  background-color: var(--theme-surface-elevated);
+  border-color: var(--theme-border);
+  color: var(--theme-text-primary);
   transition: all 0.3s ease;
   
   &:hover {
@@ -12,7 +13,7 @@
 // General text styles
 .order-text {
   &--id {
-    color: var(--cream-dark);
+    color: var(--theme-text-muted);
   }
   
   &--date {
@@ -20,10 +21,10 @@
   }
   
   &--item-name {
-    color: var(--cream);
+    color: var(--theme-text-primary);
     
     .quantity {
-      color: var(--cream-dark);
+      color: var(--theme-text-secondary);
     }
   }
   
@@ -32,7 +33,7 @@
   }
   
   &--total-label {
-    color: var(--cream);
+    color: var(--theme-text-primary);
   }
   
   &--total-amount {
@@ -42,30 +43,36 @@
 
 // General badge styling
 .order-badge {
-  color: var(--charcoal-dark);
+  color: var(--theme-text-primary);
+  background-color: var(--theme-surface);
 }
 
 // General border styling
 .order-border {
-  border-color: var(--charcoal-light);
+  border-color: var(--theme-border);
 }
 
 // General button styling
 .order-button {
-  background-color: var(--charcoal-light);
-  color: var(--cream);
+  background-color: var(--theme-surface);
+  color: var(--theme-text-primary);
+  border-color: var(--theme-border);
   transition: all 0.2s ease;
   
   &:hover {
-    background-color: var(--charcoal-dark);
-    opacity: 0.9;
+    background-color: var(--gold-primary);
+    color: var(--theme-background);
   }
 }
 
-// Orders Page General Styling (SCSS)
+// Orders Page Theme-Aware Styling
 .orders-page {
+  background-color: var(--theme-background);
+  color: var(--theme-text-primary);
+  min-height: 100vh;
+  
   .page-title {
-    color: var(--cream);
+    color: var(--theme-text-primary);
   }
   
   .page-subtitle {
@@ -73,10 +80,104 @@
   }
   
   .loading-text, .empty-text {
-    color: var(--cream-dark);
+    color: var(--theme-text-secondary);
   }
   
   .error-text {
-    color: #ef4444;
+    color: var(--error-color);
   }
+  
+  // Search and filter controls
+  .filter-container {
+    background-color: var(--theme-surface-elevated);
+    border-color: var(--theme-border);
+    
+    input, select {
+      background-color: var(--theme-surface);
+      border-color: var(--theme-border);
+      color: var(--theme-text-primary);
+      
+      &:focus {
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 0 1px var(--gold-primary);
+      }
+      
+      &::placeholder {
+        color: var(--theme-text-muted);
+      }
+      
+      option {
+        background-color: var(--theme-surface);
+        color: var(--theme-text-primary);
+      }
+    }
+  }
+  
+  // Quick stats cards
+  .stats-card {
+    background-color: var(--theme-surface);
+    border-color: var(--theme-border);
+    
+    .stats-number {
+      color: var(--gold-primary);
+      
+      &.success {
+        color: var(--success-color);
+      }
+      
+      &.info {
+        color: var(--info-color);
+      }
+    }
+    
+    .stats-label {
+      color: var(--theme-text-secondary);
+    }
+  }
+  
+  // Empty state
+  .empty-state {
+    background-color: var(--theme-surface-elevated);
+    border-color: var(--theme-border);
+    
+    .empty-title {
+      color: var(--theme-text-primary);
+    }
+    
+    .empty-subtitle {
+      color: var(--theme-text-secondary);
+    }
+  }
+  
+  // Refresh button
+  .refresh-button {
+    color: var(--gold-primary);
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--gold-dark);
+    }
+  }
+  
+  // Results text
+  .results-text, .order-count-text {
+    color: var(--theme-text-secondary);
+  }
+}
+
+/* Additional order-specific styles */
+.empty-state {
+  background-color: var(--theme-surface-elevated) !important;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empty-title {
+  color: var(--theme-text-primary) !important;
+}
+
+.empty-text {
+  color: var(--theme-text-secondary) !important;
 }

@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import "../../styles/auth.scss";
 import { authService } from '../../services/authService';
 import { User, Lock, LogIn, UserPlus, AlertCircle } from 'lucide-react';
-import '../../styles/auth.scss';
+import '../../../styles/auth.scss';
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and register
@@ -16,6 +20,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Check if user is already logged in on component mount and handle mode parameter
   useEffect(() => {
@@ -25,11 +30,11 @@ export default function LoginPage() {
     }
     
     // Check for register mode from URL parameters
-    const { mode } = router.query;
+    const mode = searchParams.get('mode');
     if (mode === 'register') {
       setIsLogin(false);
     }
-  }, [router, router.query]);
+  }, [router, searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,13 +89,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="auth-page flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="auth-container w-full max-w-md space-y-8 bg-white p-8 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl">
+    <div className="auth-page flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="auth-container w-full max-w-md space-y-8 p-8 rounded-2xl shadow-lg border transition-all duration-300 hover:shadow-xl">
         <div className="text-center">
-          <h1 className="auth-title text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="auth-title text-3xl font-bold mb-2">
             {isLogin ? 'Welcome Back' : 'Create an Account'}
           </h1>
-          <p className="auth-subtitle text-gray-600 mb-8">
+          <p className="auth-subtitle mb-8">
             {isLogin 
               ? 'Sign in to access your account' 
               : 'Join Spud Munch Bunch for a potato-filled adventure'}
@@ -98,7 +103,10 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className={`p-4 rounded-md flex items-center space-x-2 ${error.includes('successful') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+          <div className={`p-4 rounded-md flex items-center space-x-2 ${error.includes('successful') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`} style={{
+            backgroundColor: error.includes('successful') ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+            color: error.includes('successful') ? 'var(--success-color)' : 'var(--error-color)'
+          }}>
             <AlertCircle size={18} />
             <span>{error}</span>
           </div>
@@ -106,12 +114,12 @@ export default function LoginPage() {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="username" className="block text-sm font-medium mb-1">
               Username
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-gray-400" />
+                <User className="h-5 w-5" />
               </div>
               <input
                 id="username"
@@ -120,7 +128,7 @@ export default function LoginPage() {
                 required
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full py-3 px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                className="w-full py-3 px-4 pl-10 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                 placeholder="Enter your username"
               />
             </div>
@@ -129,7 +137,7 @@ export default function LoginPage() {
           {!isLogin && (
             <>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium mb-1">
                   Full Name
                 </label>
                 <input
@@ -139,13 +147,13 @@ export default function LoginPage() {
                   required={!isLogin}
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                  className="w-full py-3 px-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                   placeholder="Enter your full name"
                 />
               </div>
 
               <div>
-                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
                   Phone Number
                 </label>
                 <input
@@ -155,7 +163,7 @@ export default function LoginPage() {
                   required={!isLogin}
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                  className="w-full py-3 px-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -163,12 +171,12 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium mb-1">
               Password
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
+                <Lock className="h-5 w-5" />
               </div>
               <input
                 id="password"
@@ -177,7 +185,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full py-3 px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                className="w-full py-3 px-4 pl-10 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                 placeholder="Enter your password"
               />
             </div>
@@ -185,12 +193,12 @@ export default function LoginPage() {
 
           {!isLogin && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
                 Confirm Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5" />
                 </div>
                 <input
                   id="confirmPassword"
@@ -199,7 +207,7 @@ export default function LoginPage() {
                   required={!isLogin}
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full py-3 px-4 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                  className="w-full py-3 px-4 pl-10 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -210,7 +218,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
+              className="w-full flex justify-center items-center py-3 px-4 font-semibold rounded-lg shadow-md transition-colors duration-200"
             >
               {loading ? (
                 "Processing..."
@@ -232,7 +240,7 @@ export default function LoginPage() {
         <div className="text-center mt-4">
           <button
             onClick={toggleMode}
-            className="toggle-button text-amber-600 hover:text-amber-800 font-medium transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-amber-50"
+            className="toggle-button font-medium transition-colors duration-300 px-4 py-2 rounded-lg"
           >
             {isLogin
               ? "Don't have an account? Sign up"
