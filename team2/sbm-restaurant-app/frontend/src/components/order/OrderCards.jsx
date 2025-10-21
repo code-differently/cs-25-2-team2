@@ -4,35 +4,36 @@ import { Clock, CheckCircle, Package, Truck, XCircle } from "lucide-react";
 import "./orderstyle.scss";
 
 // Status configuration to match backend Order.Status enum
+// Using global CSS variables for colors
 const statusConfig = {
   Placed: {
     label: "Placed",
-    color: "#FFD700", // Gold
+    color: "var(--status-placed)",
     icon: Clock
   },
   Preparing: {
     label: "Preparing",
-    color: "#4434d5b4", // Goldenrod
+    color: "var(--status-preparing)",
     icon: Package
   },
   ReadyForDelivery: {
     label: "Ready for Delivery",
-    color: "#22c55e", // Emerald
+    color: "var(--status-ready)",
     icon: CheckCircle
   },
   OutForDelivery: {
     label: "Out for Delivery",
-    color: "#FF6347", // Tomato
+    color: "var(--status-out-for-delivery)",
     icon: Truck
   },
   Delivered: {
     label: "Delivered",
-    color: "#228B22", // Forest Green
+    color: "var(--status-delivered)",
     icon: CheckCircle
   },
   pending: {
     label: "Pending",
-    color: "#808080", // Gray
+    color: "var(--status-pending)",
     icon: Clock
   }
 };
