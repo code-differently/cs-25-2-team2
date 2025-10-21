@@ -26,11 +26,14 @@ export default function HomePage() {
       {/* Best Sellers Carousel Section */}
       <section className="py-12 px-6">
         <div className="container mx-auto max-w-6xl">
+          <div className="flex justify-center mb-6">
+            <img src="/images/potatologo.png" alt="Potato Logo" style={{ width: '500px', height: '500px' }} className="object-contain animate-drive-right-repeat" />
+          </div>
           <h2 className="menu-title text-3xl font-bold mb-8 text-center">
             Our Best Sellers
           </h2>
           <p className="text-center text-gray-600 mb-8 text-lg">
-            Dig into the spuds everyone’s obsessed with!
+           
           </p>
 
           {/* Featured Menu Items Carousel */}
