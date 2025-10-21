@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import "../../../styles/auth.scss";
+import "../../styles/auth.scss";
 import { authService } from '../../services/authService';
 import { User, Lock, LogIn, UserPlus, AlertCircle } from 'lucide-react';
 import '../../../styles/auth.scss';
