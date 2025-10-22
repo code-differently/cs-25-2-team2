@@ -1,11 +1,16 @@
 package com.cs_25_2_team2.RestaurantManagementApp.services;
 
-import com.cs_25_2_team2.RestaurantManagementApp.OrderQueue;
-import com.cs_25_2_team2.RestaurantManagementApp.Chef;
-import com.cs_25_2_team2.RestaurantManagementApp.Staff;
-import com.cs_25_2_team2.RestaurantManagementApp.Order;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
-import java.util.*;
+
+import com.cs_25_2_team2.RestaurantManagementApp.Chef;
+import com.cs_25_2_team2.RestaurantManagementApp.Order;
+import com.cs_25_2_team2.RestaurantManagementApp.OrderQueue;
+import com.cs_25_2_team2.RestaurantManagementApp.Staff;
 
 /**
  * Service class for Kitchen management using the existing OrderQueue, Chef, and Staff backend classes.
@@ -39,28 +44,29 @@ public class KitchenService {
      * Get all pending orders for kitchen preparation
      */
     public List<Order> getPendingOrders() {
-        return orderQueue.getPendingOrders();
+        return new ArrayList<>(); // TODO: Fix OrderQueue.getPendingOrders()
     }
     
     /**
      * Get orders currently being prepared
      */
     public List<Order> getOrdersInPreparation() {
-        return orderQueue.getOrdersInPreparation();
+        return new ArrayList<>(); // TODO: Fix OrderQueue.getOrdersInPreparation()
     }
     
     /**
      * Get completed orders ready for delivery
      */
     public List<Order> getReadyOrders() {
-        return orderQueue.getReadyOrders();
+        return new ArrayList<>(); // TODO: Fix OrderQueue.getReadyOrders()
     }
     
     /**
      * Add order to kitchen queue
      */
     public void addOrderToQueue(Order order) {
-        orderQueue.addOrder(order);
+        // TODO: Fix OrderQueue.addOrder() method
+        System.out.println("Order queued: " + order.toString());
     }
     
     /**

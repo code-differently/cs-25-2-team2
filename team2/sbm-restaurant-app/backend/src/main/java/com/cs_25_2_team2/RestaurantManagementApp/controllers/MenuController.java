@@ -1,13 +1,26 @@
 package com.cs_25_2_team2.RestaurantManagementApp.controllers;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.cs_25_2_team2.RestaurantManagementApp.Ingredient;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
 import com.cs_25_2_team2.RestaurantManagementApp.services.MenuService;
 
 /**
@@ -310,7 +323,9 @@ public class MenuController {
         ));
         
         try {
-            menu.addMenuItem(mapToBackendFormat(item1));
+            // TODO: Fix menu initialization - menu variable not in scope
+            // menu.addMenuItem(mapToBackendFormat(item1));
+            System.out.println("Sample menu initialization skipped - needs proper Menu service integration");
         } catch (Exception e) {
             System.err.println("Error initializing sample menu: " + e.getMessage());
         }
