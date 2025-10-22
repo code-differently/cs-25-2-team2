@@ -28,9 +28,9 @@ const team = [
 const TeamSection = () => (
   <section className="py-16 px-6 bg-gradient-to-b from-amber-50 to-white">
     <div className="container mx-auto max-w-6xl">
-      <h2 className="text-4xl font-bold mb-4 text-center text-gray-800">Meet Our Spud Bunch</h2>
+      <h2 className="text-4xl font-bold mb-4 text-center text-gray-800">We Bring the Spud, You Bring the Appetite.</h2>
       <p className="text-center text-gray-600 mb-12 text-lg max-w-2xl mx-auto">
-        The passionate team behind every perfectly crafted potato dish, working together to bring you the ultimate spud experience.
+        The spud savvy team behind every golden bite blending creativity, tech, and a love for all things potato to bring you the ultimate spud experience.
       </p>
       <div className="team-grid">
         {team.map((member, i) => (
