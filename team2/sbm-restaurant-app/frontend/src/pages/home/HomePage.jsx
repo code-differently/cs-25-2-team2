@@ -25,10 +25,10 @@ export default function HomePage() {
       {/* Best Sellers Carousel Section */}
       <section className="py-1 px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="w-full flex justify-start mb-6">
+          <div className="w-full flex justify-start mb-0">
             <img src="/images/potatologo.png" alt="Potato Logo" style={{ width: '350px', height: '210px' }} className="object-contain animate-drive-right-repeat" />
           </div>
-          <h2 className="menu-title text-3xl font-bold mb-8 text-center">
+          <h2 className="menu-title text-3xl font-bold mb-2 text-center">
             Our Best Sellers
           </h2>
           <p className="text-center text-gray-600 mb-8 text-lg">
@@ -85,18 +85,18 @@ export default function HomePage() {
           <div className="features-grid grid md:grid-cols-3 gap-8">
             <div className="feature-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border">
               <div className="feature-icon text-4xl mb-4">🥔</div>
-              <h3 className="feature-title text-xl font-bold mb-3">Fresh Ingredients</h3>
-              <p className="feature-description">We use only the finest, locally-sourced potatoes and fresh ingredients in all our dishes.</p>
+              <h3 className="feature-title text-xl font-bold mb-3">All Potatoes. All the Time.</h3>
+              <p className="feature-description">100% spuds. 0% distractions.</p>
             </div>
             <div className="feature-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border">
-              <div className="feature-icon text-4xl mb-4">👨‍🍳</div>
-              <h3 className="feature-title text-xl font-bold mb-3">Expert Chefs</h3>
-              <p className="feature-description">Our skilled chefs craft each potato dish with passion and decades of culinary expertise.</p>
+              <div className="feature-icon text-4xl mb-4">😋</div>
+              <h3 className="feature-title text-xl font-bold mb-3">Comfort Food, Delivered Fast.</h3>
+              <p className="feature-description">Hot, fresh, and delivered to your door.</p>
             </div>
             <div className="feature-card p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border">
-              <div className="feature-icon text-4xl mb-4">🚚</div>
-              <h3 className="feature-title text-xl font-bold mb-3">Fast Delivery</h3>
-              <p className="feature-description">Enjoy our delicious potato creations delivered hot and fresh to your door in 30 minutes or less.</p>
+              <div className="feature-icon text-4xl mb-4">💛</div>
+              <h3 className="feature-title text-xl font-bold mb-3">Made with Love & Extra Butter.</h3>
+              <p className="feature-description">Crafted by spud lovers, for spud lovers.</p>
             </div>
           </div>
         </div>
