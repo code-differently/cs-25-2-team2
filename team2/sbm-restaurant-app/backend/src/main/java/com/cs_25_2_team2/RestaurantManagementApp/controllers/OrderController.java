@@ -20,14 +20,14 @@ import com.cs_25_2_team2.RestaurantManagementApp.Customer;
  * Provides endpoints for creating, retrieving, updating, and canceling orders.
  * 
  * Base URL: /api/orders
- * CORS enabled for: http://localhost:5173 (React development server)
+ * CORS enabled for: http://localhost:3000 (Next.js development server)
  * 
  * @author Team 2
  * @version 1.0
  */
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "http://localhost:5173") // or your React dev server URL
+@CrossOrigin(origins = "http://localhost:3000") // Next.js dev server URL
 public class OrderController {
     private final List<Order> orders = new ArrayList<>();
     
