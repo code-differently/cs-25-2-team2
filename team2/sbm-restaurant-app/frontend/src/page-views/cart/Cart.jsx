@@ -7,7 +7,7 @@ import { authService } from "../../services/authService";
 import { cartService } from "../../services/cartService";
 import CartRowItem from "../../components/cart/CartRowItem";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, AlertCircle } from "lucide-react";
+import { ArrowLeft, ShoppingBag, AlertCircle, CreditCard } from "lucide-react";
 import "./cartpage.scss";
 
 export default function CartComponent() {
@@ -58,7 +58,7 @@ export default function CartComponent() {
     setCart(updatedCart);
   };
 
-  // Handle checkout button click
+  // Handle direct checkout button click (original functionality)
   const handleCheckout = async () => {
     if (!user) {
       // Redirect to login page if not logged in
@@ -68,6 +68,26 @@ export default function CartComponent() {
 
     // Execute the checkout mutation
     checkoutMutation.mutate();
+  };
+
+  // Handle proceed to payment button click
+  const handleProceedToPayment = async () => {
+    if (!user) {
+      // Redirect to login page if not logged in with payment redirect
+      router.push(`/auth/login?redirect=${encodeURIComponent('/payment')}`);
+      return;
+    }
+
+    // Validate cart before proceeding
+    const validation = cartService.validateCartForPayment();
+    
+    if (!validation.valid) {
+      setError(validation.error);
+      return;
+    }
+
+    // Navigate to payment page
+    router.push('/payment');
   };
 
   const cartTotals = cartService.getCartTotals(cart);
@@ -136,10 +156,6 @@ export default function CartComponent() {
                     <span>Subtotal</span>
                     <span>${cartTotals.subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Tax (8%)</span>
-                    <span>${cartTotals.tax.toFixed(2)}</span>
-                  </div>
                   <div className="separator my-2"></div>
                   <div className="flex justify-between font-bold">
                     <span>Total</span>
@@ -162,13 +178,27 @@ export default function CartComponent() {
                 </div>
               )}
 
-              <button
-                onClick={handleCheckout}
-                disabled={checkoutMutation.isPending}
-                className="checkout-button w-full mt-4"
-              >
-                {checkoutMutation.isPending ? "Processing..." : "Place Order"}
-              </button>
+              {/* Two checkout options */}
+              <div className="checkout-options mt-4 space-y-3">
+                {/* Direct checkout - original functionality */}
+                <button
+                  onClick={handleCheckout}
+                  disabled={checkoutMutation.isPending}
+                  className="checkout-button w-full"
+                >
+                  {checkoutMutation.isPending ? "Processing..." : "Place Order"}
+                </button>
+
+                {/* Payment flow - new functionality */}
+                <button
+                  onClick={handleProceedToPayment}
+                  disabled={checkoutMutation.isPending}
+                  className="payment-button w-full flex items-center justify-center gap-2"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  Pay with Credit Card
+                </button>
+              </div>
             </div>
           </div>
         )}
