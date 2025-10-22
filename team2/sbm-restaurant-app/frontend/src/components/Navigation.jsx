@@ -65,7 +65,10 @@ export default function Navigation() {
     <nav className="bg-white shadow-md border-b-2 sticky top-0 z-50" style={{borderColor: 'var(--gold-primary)'}}>
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold" style={{color: 'var(--gold-primary)'}}>Spud Munch Bunch</h1>
+          <div className="flex items-center gap-3">
+            <img src="/images/potatologo.png" alt="Potato Logo" className="h-16 w-16 object-contain" />
+            <h1 className="text-2xl font-bold" style={{color: 'var(--gold-primary)'}}>Spud Munch Bunch</h1>
+          </div>
           <div className="flex gap-4 items-center">
             {navItems.map((item) => (
               <Link

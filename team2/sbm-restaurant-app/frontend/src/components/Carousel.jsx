@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import carouselData from "./carouselData";
 
-const dishes = [
+const dishes = carouselData.length > 0 ? carouselData : [
   {
     img: "https://picsum.photos/800/400?random=1",
     title: "Crispy Golden Fries",
