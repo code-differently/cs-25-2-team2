@@ -1,257 +1,301 @@
 package com.cs_25_2_team2.RestaurantManagementApp.services;
 
+import com.cs_25_2_team2.RestaurantManagementApp.entities.CustomerEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.StaffEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.CartEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.CustomerRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.StaffRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.OrderRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.CartRepository;
+// Import domain classes for API layer
 import com.cs_25_2_team2.RestaurantManagementApp.Customer;
 import com.cs_25_2_team2.RestaurantManagementApp.Staff;
 import com.cs_25_2_team2.RestaurantManagementApp.Chef;
 import com.cs_25_2_team2.RestaurantManagementApp.Order;
 import com.cs_25_2_team2.RestaurantManagementApp.Cart;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Service class for User management using the existing Customer and Staff backend classes.
- * Handles user authentication, profile management, and user-specific operations.
+ * Service class for User management using Spring Data JPA repositories.
+ * Handles customer and staff authentication, registration, and profile management.
  * 
- * Uses the existing backend architecture:
- * - Customer class for customer operations
- * - Staff class hierarchy (Chef, etc.)
- * - Cart class for shopping cart management
- * - Order class for order management
+ * Uses Spring Data JPA with PostgreSQL database:
+ * - CustomerEntity for customer data persistence
+ * - StaffEntity for staff data persistence (Chef, Delivery roles)
+ * - Proper database transactions and error handling
  * 
  * @author Team 2
- * @version 1.0
+ * @version 2.0
  */
 @Service
+@Transactional
 public class UserService {
     
-    private final Map<Integer, Customer> customers = new ConcurrentHashMap<>();
-    private final Map<String, Staff> staffMembers = new ConcurrentHashMap<>();
-    private final Map<String, Object> userCredentials = new ConcurrentHashMap<>(); // username -> user object
-    private int nextCustomerId = 1;
-    private int nextStaffId = 1;
+    @Autowired
+    private CustomerRepository customerRepository;
+    
+    @Autowired
+    private StaffRepository staffRepository;
+    
+    @Autowired
+    private OrderRepository orderRepository;
+    
+    @Autowired
+    private CartRepository cartRepository;
     
     /**
-     * Constructor initializes with sample users
-     */
-    public UserService() {
-        initializeSampleUsers();
-    }
-    
-    /**
-     * Authenticate user login - Frontend: username, role compatibility
+     * Authenticate user (Customer or Staff) by username and password
      */
     public Object authenticateUser(String username, String password) {
-        Object user = userCredentials.get(username);
-        if (user != null) {
-            // In a real system, you'd verify the password here
-            // For now, we'll use a simple password check
-            if (password.equals("password")) { // Simple demo password
-                return user;
+        // First try to find customer
+        Optional<CustomerEntity> customer = customerRepository.findByUsername(username);
+        if (customer.isPresent()) {
+            // In a real app, you'd hash and compare passwords
+            // For now, we'll do a simple comparison (NOT SECURE - just for demo)
+            if (password.equals("password")) { // Demo password
+                return customer.get();
             }
         }
-        return null;
-    }
-    
-    /**
-     * Register new customer - maps to Customer class
-     */
-    public Customer registerCustomer(String username, String name, String address, String phoneNumber) {
-        Customer customer = new Customer(nextCustomerId++, name, address, phoneNumber);
-        customers.put(customer.getCustomerId(), customer);
-        userCredentials.put(username, customer);
-        return customer;
-    }
-    
-    /**
-     * Register new staff member - maps to Staff hierarchy
-     */
-    public Staff registerStaff(String username, String name, String address, String phoneNumber, String role) {
-        Staff staff;
-        String staffId = "STAFF" + nextStaffId++;
         
-        // Create appropriate staff type based on role
-        switch (role.toUpperCase()) {
-            case "CHEF":
-                staff = new Chef(name, address, phoneNumber, staffId);
-                break;
-            case "ADMIN":
-            default:
-                // For admin and other roles, create a basic Staff implementation
-                staff = new Staff(name, address, phoneNumber, staffId, role) {
-                    @Override
-                    public void assignOrder(Order order) {
-                        // Admin doesn't typically get assigned orders
-                        getAssignedOrders().add(order);
-                    }
-                    
-                    @Override
-                    public boolean isBusy() {
-                        return false; // Admin is typically not "busy" in kitchen sense
-                    }
-                };
-                break;
+        // Then try to find staff
+        Optional<StaffEntity> staff = staffRepository.findByUsername(username);
+        if (staff.isPresent()) {
+            // Same simple password check (NOT SECURE - just for demo)
+            if (password.equals("password")) { // Demo password
+                return staff.get();
+            }
         }
         
-        staffMembers.put(staff.getId(), staff);
-        userCredentials.put(username, staff);
-        return staff;
+        return null; // Authentication failed
     }
     
     /**
-     * Get customer by ID
+     * Register new customer using JPA repository
      */
-    public Customer getCustomerById(int customerId) {
-        return customers.get(customerId);
+    public CustomerEntity registerCustomer(String username, String name, String address, String phoneNumber) {
+        // Check if username already exists
+        if (customerRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+        
+        // Generate customer ID
+        String customerId = "CUST" + String.format("%06d", new Random().nextInt(999999));
+        
+        // Create new customer entity
+        CustomerEntity customer = new CustomerEntity(customerId, username, name, address, phoneNumber);
+        customer.setPasswordHash("hashedPassword"); // In real app, hash the password
+        
+        // Save customer to database
+        CustomerEntity savedCustomer = customerRepository.save(customer);
+        
+        // Create cart for customer
+        CartEntity cart = new CartEntity(savedCustomer);
+        cartRepository.save(cart);
+        
+        return savedCustomer;
     }
     
     /**
-     * Get staff by ID
+     * Register new staff member using JPA repository
      */
-    public Staff getStaffById(String staffId) {
-        return staffMembers.get(staffId);
+    public StaffEntity registerStaff(String username, String name, String address, String phoneNumber, String role) {
+        // Check if username already exists
+        if (staffRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+        
+        // Generate staff ID
+        String staffId = role.toUpperCase() + String.format("%03d", new Random().nextInt(999));
+        
+        // Create staff entity with proper role enum
+        StaffEntity.StaffRole staffRole = StaffEntity.StaffRole.valueOf(role);
+        StaffEntity staff = new StaffEntity(staffId, username, name, phoneNumber, staffRole);
+        staff.setPasswordHash("hashedPassword"); // In real app, hash the password
+        
+        // Save staff to database
+        return staffRepository.save(staff);
     }
     
     /**
-     * Get user by username (could be Customer or Staff)
+     * Get user by username (Customer or Staff)
      */
     public Object getUserByUsername(String username) {
-        return userCredentials.get(username);
+        // Try customer first
+        Optional<CustomerEntity> customer = customerRepository.findByUsername(username);
+        if (customer.isPresent()) {
+            return customer.get();
+        }
+        
+        // Try staff
+        Optional<StaffEntity> staff = staffRepository.findByUsername(username);
+        return staff.orElse(null);
     }
     
     /**
-     * Update customer profile
+     * Get customer by ID - accepts int parameter and returns Customer domain object
+     */
+    public Customer getCustomerById(int customerId) {
+        String entityId = convertToEntityCustomerId(customerId);
+        CustomerEntity entity = customerRepository.findById(entityId).orElse(null);
+        return convertToCustomer(entity);
+    }
+    
+    /**
+     * Get staff by ID - returns Staff domain object
+     */
+    public Staff getStaffById(String staffId) {
+        StaffEntity entity = staffRepository.findById(staffId).orElse(null);
+        return convertToStaff(entity);
+    }
+    
+    /**
+     * Update customer profile - accepts int customerId and returns Customer domain object
      */
     public Customer updateCustomerProfile(int customerId, String name, String address, String phoneNumber) {
-        Customer customer = customers.get(customerId);
-        if (customer != null) {
-            // Since Customer fields are set in Person constructor, we'd need to create a new customer
-            // or add setter methods to the Person class
-            // For now, return the existing customer
-            System.out.println("Profile update requested for customer: " + customerId);
-            // In a real implementation, you'd update the customer object
+        String entityId = convertToEntityCustomerId(customerId);
+        Optional<CustomerEntity> customerOpt = customerRepository.findById(entityId);
+        if (customerOpt.isPresent()) {
+            CustomerEntity customer = customerOpt.get();
+            customer.setName(name);
+            customer.setAddress(address);
+            customer.setPhoneNumber(phoneNumber);
+            CustomerEntity savedEntity = customerRepository.save(customer);
+            return convertToCustomer(savedEntity);
         }
+        return null;
+    }
+    
+    /**
+     * Customer checkout - accepts int customerId and returns Order domain object
+     */
+    @Transactional
+    public Order customerCheckout(int customerId) {
+        String entityId = convertToEntityCustomerId(customerId);
+        // Get customer with cart
+        Optional<CustomerEntity> customerOpt = customerRepository.findByIdWithCart(entityId);
+        if (customerOpt.isEmpty()) {
+            throw new RuntimeException("Customer not found");
+        }
+        
+        CustomerEntity customer = customerOpt.get();
+        CartEntity cart = customer.getCart();
+        
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            throw new RuntimeException("Cart is empty");
+        }
+        
+        // Create order from cart (simplified for demo)
+        String orderId = "ORD" + String.format("%06d", new Random().nextInt(999999));
+        OrderEntity order = new OrderEntity(orderId, customer, new java.math.BigDecimal("19.99"));
+        
+        // Set dummy payment info (in real app, process payment)
+        order.setCreditCardLastFour("1234");
+        order.setCreditCardToken("token_" + System.currentTimeMillis());
+        order.setCardExpiryMonth(12);
+        order.setCardExpiryYear(2025);
+        order.setCardholderName(customer.getName());
+        
+        // Save order
+        OrderEntity savedOrder = orderRepository.save(order);
+        
+        // Clear cart (delete cart items)
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+        
+        // Convert to domain object (simplified - would need proper Order conversion)
+        Customer domainCustomer = convertToCustomer(customer);
+        return domainCustomer.checkout(); // Use existing domain logic
+    }
+    
+    /**
+     * Get customer's cart - accepts int customerId and returns Cart domain object
+     */
+    public Cart getCustomerCart(int customerId) {
+        String entityId = convertToEntityCustomerId(customerId);
+        CustomerEntity customer = customerRepository.findById(entityId).orElse(null);
+        return convertToCart(customer);
+    }
+    
+    /**
+     * Get all customers using JPA repository
+     */
+    public List<CustomerEntity> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+    
+    /**
+     * Get all staff using JPA repository
+     */
+    public List<StaffEntity> getAllStaff() {
+        return staffRepository.findAll();
+    }
+    
+    /**
+     * Get staff by role using JPA repository
+     */
+    public List<StaffEntity> getStaffByRole(String role) {
+        StaffEntity.StaffRole staffRole = StaffEntity.StaffRole.valueOf(role);
+        return staffRepository.findByRole(staffRole);
+    }
+    
+    // ===== CONVERTER METHODS BETWEEN ENTITIES AND DOMAIN OBJECTS =====
+    
+    /**
+     * Convert CustomerEntity to Customer domain object
+     */
+    private Customer convertToCustomer(CustomerEntity entity) {
+        if (entity == null) return null;
+        
+        // Parse customerId from string to int for domain object
+        int customerId = Integer.parseInt(entity.getCustomerId().replace("CUST", ""));
+        Customer customer = new Customer(customerId, entity.getName(), entity.getAddress(), entity.getPhoneNumber());
+        
+        // Note: Customer domain class doesn't have email field, so we skip it
+        
         return customer;
     }
     
     /**
-     * Customer checkout - uses the existing Customer.checkout() method
+     * Convert StaffEntity to Staff domain object (Chef subclass)
      */
-    public Order customerCheckout(int customerId) {
-        Customer customer = customers.get(customerId);
-        if (customer != null) {
-            try {
-                return customer.checkout(); // Uses existing backend method
-            } catch (IllegalStateException e) {
-                throw new RuntimeException("Checkout failed: " + e.getMessage());
-            }
-        }
-        throw new RuntimeException("Customer not found");
-    }
-    
-    /**
-     * Get customer's cart
-     */
-    public Cart getCustomerCart(int customerId) {
-        Customer customer = customers.get(customerId);
-        return customer != null ? customer.getCart() : null;
-    }
-    
-    /**
-     * Get all customers (Admin function)
-     */
-    public List<Customer> getAllCustomers() {
-        return new ArrayList<>(customers.values());
-    }
-    
-    /**
-     * Get all staff members (Admin function)
-     */
-    public List<Staff> getAllStaff() {
-        return new ArrayList<>(staffMembers.values());
-    }
-    
-    /**
-     * Get customers by role filter (for frontend compatibility)
-     */
-    public List<Customer> getCustomers() {
-        return getAllCustomers();
-    }
-    
-    /**
-     * Get staff by role filter
-     */
-    public List<Staff> getStaffByRole(String role) {
-        return staffMembers.values().stream()
-            .filter(staff -> staff.getRole().equalsIgnoreCase(role))
-            .toList();
-    }
-    
-    /**
-     * Initialize sample users matching frontend authService expectations
-     */
-    private void initializeSampleUsers() {
-        // Sample customer
-        Customer customer = new Customer(1, "John Doe", "123 Main St", "123-456-7890");
-        customers.put(customer.getCustomerId(), customer);
-        userCredentials.put("customer", customer);
+    private Staff convertToStaff(StaffEntity entity) {
+        if (entity == null) return null;
         
-        // Sample chef
-        Chef chef = new Chef("Gordon Ramsay", "456 Kitchen Ave", "987-654-3210", "CHEF001");
-        staffMembers.put(chef.getId(), chef);
-        userCredentials.put("chef", chef);
+        // For now, create Chef objects since that's what the controllers expect
+        // StaffEntity doesn't have address field, so we'll use empty string
+        return new Chef(entity.getName(), "", entity.getPhoneNumber(), entity.getStaffId());
+    }
+    
+    /**
+     * Convert int customerId to String format for entities
+     */
+    private String convertToEntityCustomerId(int customerId) {
+        return String.format("CUST%06d", customerId);
+    }
+    
+    /**
+     * Convert String customerId from entity to int for domain
+     */
+    private int convertToDomainCustomerId(String entityCustomerId) {
+        return Integer.parseInt(entityCustomerId.replace("CUST", ""));
+    }
+    
+    /**
+     * Create a Cart domain object from customer
+     */
+    private Cart convertToCart(CustomerEntity customerEntity) {
+        if (customerEntity == null) return null;
         
-        // Sample admin
-        Staff admin = new Staff("Admin User", "789 Office Blvd", "555-123-4567", "ADMIN001", "ADMIN") {
-            @Override
-            public void assignOrder(Order order) {
-                getAssignedOrders().add(order);
-            }
-            
-            @Override
-            public boolean isBusy() {
-                return false;
-            }
-        };
-        staffMembers.put(admin.getId(), admin);
-        userCredentials.put("admin", admin);
-    }
-    
-    /**
-     * Helper method to determine user role for frontend compatibility
-     */
-    public String getUserRole(Object user) {
-        if (user instanceof Customer) {
-            return "CUSTOMER";
-        } else if (user instanceof Chef) {
-            return "CHEF";
-        } else if (user instanceof Staff) {
-            return ((Staff) user).getRole().toUpperCase();
-        }
-        return "UNKNOWN";
-    }
-    
-    /**
-     * Helper method to get user ID for frontend compatibility
-     */
-    public String getUserId(Object user) {
-        if (user instanceof Customer) {
-            return String.valueOf(((Customer) user).getCustomerId());
-        } else if (user instanceof Staff) {
-            return ((Staff) user).getId();
-        }
-        return null;
-    }
-    
-    /**
-     * Helper method to get user name for frontend compatibility
-     */
-    public String getUserName(Object user) {
-        if (user instanceof Customer) {
-            return ((Customer) user).getName();
-        } else if (user instanceof Staff) {
-            return ((Staff) user).getName();
-        }
-        return null;
+        int customerId = convertToDomainCustomerId(customerEntity.getCustomerId());
+        Cart cart = new Cart(customerId);
+        
+        // In a full implementation, you'd load cart items from CartEntity and CartItemEntity
+        // For now, return empty cart
+        
+        return cart;
     }
 }
