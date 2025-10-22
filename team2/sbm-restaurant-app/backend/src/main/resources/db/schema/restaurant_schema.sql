@@ -19,13 +19,6 @@ CREATE TABLE customers (
     phone_number VARCHAR(20),
     email VARCHAR(255) UNIQUE,
     
-    -- Required Payment Information
-    credit_card_last_four VARCHAR(4) NOT NULL,
-    credit_card_token VARCHAR(255) NOT NULL,
-    card_expiry_month INTEGER NOT NULL CHECK (card_expiry_month BETWEEN 1 AND 12),
-    card_expiry_year INTEGER NOT NULL CHECK (card_expiry_year >= EXTRACT(YEAR FROM CURRENT_DATE)),
-    cardholder_name VARCHAR(255) NOT NULL,
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -97,6 +90,14 @@ CREATE TABLE orders (
     )),
     assigned_chef_id VARCHAR(10) REFERENCES staff(staff_id),
     assigned_delivery_id VARCHAR(10) REFERENCES staff(staff_id),
+    
+    -- Payment Information for this order
+    credit_card_last_four VARCHAR(4) NOT NULL,
+    credit_card_token VARCHAR(255) NOT NULL,
+    card_expiry_month INTEGER NOT NULL CHECK (card_expiry_month BETWEEN 1 AND 12),
+    card_expiry_year INTEGER NOT NULL CHECK (card_expiry_year >= EXTRACT(YEAR FROM CURRENT_DATE)),
+    cardholder_name VARCHAR(255) NOT NULL,
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
