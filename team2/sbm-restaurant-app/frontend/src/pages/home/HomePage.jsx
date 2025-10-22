@@ -1,13 +1,12 @@
 "use client";
 
 // Main Home Page Export
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from "../../components/Carousel";
 import TeamSection from "../../components/TeamSection";
 import "./homestyle.scss";
 
 export default function HomePage() {
-
   return (
     <div className="home-page min-h-screen">
       {/* Hero Header Section */}
@@ -24,10 +23,10 @@ export default function HomePage() {
       </header>
 
       {/* Best Sellers Carousel Section */}
-      <section className="py-12 px-6">
+      <section className="py-1 px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="flex justify-center mb-6">
-            <img src="/images/potatologo.png" alt="Potato Logo" style={{ width: '500px', height: '500px' }} className="object-contain animate-drive-right-repeat" />
+          <div className="w-full flex justify-start mb-6">
+            <img src="/images/potatologo.png" alt="Potato Logo" style={{ width: '350px', height: '210px' }} className="object-contain animate-drive-right-repeat" />
           </div>
           <h2 className="menu-title text-3xl font-bold mb-8 text-center">
             Our Best Sellers
