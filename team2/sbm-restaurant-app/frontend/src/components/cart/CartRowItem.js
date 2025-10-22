@@ -132,13 +132,17 @@ export default function CartRowItem({ item, updateQuantity, removeFromCart }) {
             <div className="flex items-center gap-4">
               <div className="text-right cart-price-info">
                 <p className="text-xs" style={{ color: "var(--theme-text-secondary)" }}>
-                  ${item.price.toFixed(2)} each
+                  {typeof item.price === "number"
+                    ? `$${item.price.toFixed(2)} each`
+                    : `$${parseFloat(item.price).toFixed(2)} each`}
                 </p>
                 <p
                   className="font-bold text-lg"
                   style={{ color: "var(--theme-accent)" }}
                 >
-                  ${subtotal.toFixed(2)}
+                  {typeof subtotal === "number"
+                    ? `$${subtotal.toFixed(2)}`
+                    : `$${parseFloat(subtotal).toFixed(2)}`}
                 </p>
               </div>
 

@@ -77,7 +77,7 @@ export default function CartComponent() {
     <div className="cart-page min-h-screen p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <Link href="/menu" className="back-button">
+          <Link href="/menus" className="back-button">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Menu
           </Link>
@@ -99,7 +99,7 @@ export default function CartComponent() {
             <p className="mb-6">
               Add some delicious potato dishes to get started!
             </p>
-            <Link href="/menu" className="browse-menu-button">
+            <Link href="/menus" className="browse-menu-button">
               Browse Menu
             </Link>
           </div>
