@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserPlus } from 'lucide-react';
-import '../../../styles/auth.scss';
+import '../../styles/auth.scss';
 
 // This is a simple redirect component to the login page with registration mode active
 export default function RegisterPage() {
