@@ -110,7 +110,7 @@ public class OrderController {
     @GetMapping("/customer/{customerId}")
     public List<Order> getOrdersByCustomer(@PathVariable int customerId) {
         return orders.stream()
-            .filter(o -> o.getCustomer().getId() == customerId)
+            .filter(o -> o.getCustomer().getCustomerId() == customerId)
             .toList();
     }
     
