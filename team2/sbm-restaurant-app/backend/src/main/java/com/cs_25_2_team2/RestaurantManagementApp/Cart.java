@@ -59,4 +59,18 @@ public class Cart {
   public void clear() {
     items.clear();
   }
+
+  // Add getCustomerId method to match controller expectations
+  public int getCustomerId() {
+    return userId;
+  }
+
+  // Add calculateTotal method to match controller expectations
+  public double calculateTotal() {
+    double total = 0.0;
+    for (CartItem item : items) {
+      total += item.getMenuItem().getPrice() * item.getQuantity();
+    }
+    return total;
+  }
 }
