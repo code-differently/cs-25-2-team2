@@ -1,0 +1,106 @@
+// All color variables are now available globally through globals.scss
+
+.order-confirmation-page {
+  background-color: var(--charcoal-dark);
+  color: var(--cream);
+  
+  .confirmation-card {
+    background-color: var(--charcoal-medium);
+    .confirmation-header {
+      background-color: rgba(34, 197, 94, 0.1); // Using success-color value directly
+      
+      svg {
+        color: var(--success-color);
+      }
+    }
+    
+    .order-item {
+      padding: 0.5rem 0;
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--charcoal-light);
+      }
+    }
+    
+    .separator {
+      height: 1px;
+      background-color: var(--charcoal-light);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.375rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background-color: rgba(212, 175, 55, 0.1); // Using gold-primary value directly
+      color: var(--gold-primary);
+      
+      &.status-placed {
+        background-color: rgba(255, 215, 0, 0.1); // Using status-placed value directly
+        color: var(--status-placed);
+      }
+      
+      &.status-preparing {
+        background-color: rgba(68, 52, 213, 0.1); // Using status-preparing value directly
+        color: var(--status-preparing);
+      }
+      
+      &.status-readyfordelivery {
+        background-color: rgba(34, 197, 94, 0.1); // Using status-ready value directly
+        color: var(--status-ready);
+      }
+      
+      &.status-outfordelivery {
+        background-color: rgba(255, 99, 71, 0.1); // Using status-out-for-delivery value directly
+        color: var(--status-out-for-delivery);
+      }
+      
+      &.status-delivered {
+        background-color: rgba(34, 139, 34, 0.1); // Using status-delivered value directly
+        color: var(--status-delivered);
+      }
+      
+      &.status-pending {
+        background-color: rgba(128, 128, 128, 0.1); // Using status-pending value directly
+        color: var(--status-pending);
+      }
+    }
+    
+    .special-instructions {
+      padding: 1rem;
+      border-radius: 0.375rem;
+      background-color: var(--charcoal-medium);
+      border: 1px solid var(--charcoal-light);
+    }
+  }
+  
+  .back-to-menu, .view-orders {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .back-to-menu {
+    background-color: var(--gold-primary);
+    color: var(--charcoal-dark);
+    
+    &:hover {
+      background-color: var(--gold-dark);
+      transform: translateY(-1px);
+    }
+  }
+  
+  .view-orders {
+    background-color: transparent;
+    border: 1px solid var(--gold-light);
+    color: var(--gold-light);
+    
+    &:hover {
+      background-color: rgba(212, 175, 55, 0.1);
+    }
+  }
+}

@@ -17,9 +17,29 @@ java {
 	}
 }
 
-// Configure the application plugin for CLI execution
+// Configure source sets to point to the actual Spring Boot app location
+sourceSets {
+	main {
+		java {
+			srcDirs = ['team2/sbm-restaurant-app/backend/src/main/java']
+		}
+		resources {
+			srcDirs = ['team2/sbm-restaurant-app/backend/src/main/resources']
+		}
+	}
+	test {
+		java {
+			srcDirs = ['team2/sbm-restaurant-app/backend/src/test/java']
+		}
+		resources {
+			srcDirs = ['team2/sbm-restaurant-app/backend/src/test/resources']
+		}
+	}
+}
+
+// Configure the application plugin for Spring Boot
 application {
-    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantCLI'
+    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantManagementAppApplication'
 }
 
 // Task to run the CLI application
@@ -27,7 +47,7 @@ task runCLI(type: JavaExec) {
     group = 'application'
     description = 'Run the Restaurant Management CLI'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantCLI'
+    mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantManagementAppApplication'
     standardInput = System.in
 }
 
@@ -48,8 +68,16 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Spring Boot main class configuration
+springBoot {
+	mainClass = 'com.cs_25_2_team2.RestaurantManagementApp.RestaurantManagementAppApplication'
 }
 
 test {
