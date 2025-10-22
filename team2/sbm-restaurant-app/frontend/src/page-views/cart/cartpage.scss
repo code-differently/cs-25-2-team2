@@ -167,7 +167,14 @@
     color: #ef4444;
   }
   
-  // Checkout Button
+  // Checkout Options Container
+  .checkout-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  // Checkout Button (Direct Order)
   .checkout-button {
     background-color: var(--theme-accent);
     color: var(--theme-text-on-accent);
@@ -188,6 +195,33 @@
     &:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+    }
+  }
+
+  // Payment Button (Credit Card)
+  .payment-button {
+    background-color: var(--theme-surface);
+    color: var(--theme-accent);
+    border: 2px solid var(--theme-accent);
+    font-weight: 600;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--theme-accent);
+      color: var(--theme-text-on-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    svg {
+      flex-shrink: 0;
     }
   }
 }

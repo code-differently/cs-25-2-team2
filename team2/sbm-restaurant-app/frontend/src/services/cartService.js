@@ -98,12 +98,10 @@ export const cartService = {
     const items = cart || cartService.getCart();
     
     const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = subtotal * 0.08; // 8% tax rate
-    const total = subtotal + tax;
+    const total = subtotal; // No sales tax applied
     
     return {
       subtotal: parseFloat(subtotal.toFixed(2)),
-      tax: parseFloat(tax.toFixed(2)),
       total: parseFloat(total.toFixed(2)),
       itemCount: items.reduce((count, item) => count + item.quantity, 0)
     };
@@ -149,8 +147,27 @@ export const cartService = {
         orderData.special_instructions = specialInstructions;
       }
       
+      // Set initial status for direct checkout
+      orderData.status = "Placed";
+      orderData.paymentMethod = "Cash/Card at Counter";
+      orderData.orderNotes = specialInstructions || "Direct checkout order";
+      
+      console.log('Creating direct checkout order:', orderData);
+      
       // Create order
       const createdOrder = await orderService.createOrder(orderData);
+      
+      console.log('Direct checkout order created:', createdOrder);
+      
+      // Update order status to "Placed" if needed
+      if (createdOrder.id && createdOrder.status !== 'Placed') {
+        try {
+          await orderService.updateOrderStatus(createdOrder.id, 'Placed');
+          console.log('Order status updated to Placed for direct checkout');
+        } catch (statusError) {
+          console.warn('Could not update order status, but order was created:', statusError);
+        }
+      }
       
       // Clear cart after successful order creation
       cartService.clearCart();
@@ -160,6 +177,47 @@ export const cartService = {
       console.error('Error during checkout:', error);
       throw error;
     }
+  },
+
+  // Navigate to payment page (used by cart components)
+  proceedToPayment: () => {
+    const cart = cartService.getCart();
+    
+    if (cart.length === 0) {
+      throw new Error('Cart is empty');
+    }
+    
+    // Check if user is logged in
+    if (!authService.isLoggedIn()) {
+      // Redirect to login with return URL
+      window.location.href = '/auth/login?redirect=/payment';
+      return;
+    }
+    
+    // Navigate to payment page
+    window.location.href = '/payment';
+  },
+
+  // Validate cart before payment
+  validateCartForPayment: () => {
+    const cart = cartService.getCart();
+    const user = authService.getCurrentUser();
+    
+    if (cart.length === 0) {
+      return { valid: false, error: 'Cart is empty' };
+    }
+    
+    if (!user) {
+      return { valid: false, error: 'User must be logged in' };
+    }
+    
+    // Check if all items have valid prices
+    const invalidItems = cart.filter(item => !item.price || item.price <= 0);
+    if (invalidItems.length > 0) {
+      return { valid: false, error: 'Some items have invalid prices' };
+    }
+    
+    return { valid: true };
   }
 };
 

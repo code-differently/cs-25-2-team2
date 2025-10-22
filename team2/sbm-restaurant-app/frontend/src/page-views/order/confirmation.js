@@ -97,11 +97,7 @@ export default function OrderConfirmation() {
             <div className="order-totals space-y-1">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
-                <span>${(order.totalPrice - (order.totalPrice * 0.08)).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Tax (8%)</span>
-                <span>${(order.totalPrice * 0.08).toFixed(2)}</span>
+                <span>${order.totalPrice.toFixed(2)}</span>
               </div>
               <div className="separator my-2"></div>
               <div className="flex justify-between font-bold">
