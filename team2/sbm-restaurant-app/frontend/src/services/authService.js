@@ -45,7 +45,7 @@ export const authService = {
   // Login user
   login: async (username, password) => {
     try {
-      const response = await api.post('/auth/login', { username, password });
+      const response = await api.post('/users/login', { username, password });
       // Store token/user data in localStorage
       localStorage.setItem('user', JSON.stringify(response.data));
       return response.data;
@@ -77,7 +77,7 @@ export const authService = {
   // Register new user
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/users/register', userData);
       return response.data;
     } catch (error) {
       console.warn('Backend API unreachable for register, using mock implementation:', error.message);
