@@ -54,11 +54,11 @@ export default function OrderConfirmation() {
           <h1 className="text-3xl font-bold mb-4 text-red-600">Something went wrong</h1>
           <p className="mb-6">{error || "We couldn't find your order. Please check your order history or contact support."}</p>
           <div className="flex gap-4">
-            <Link href="/menu" className="back-to-menu">
+            <Link href="/menus" className="back-to-menu">
               <ShoppingBag className="w-4 h-4 mr-2" />
               Back to Menu
             </Link>
-            <Link href="/account/orders" className="view-orders">
+            <Link href="/orders" className="view-orders">
               View My Orders
             </Link>
           </div>
@@ -125,11 +125,11 @@ export default function OrderConfirmation() {
             )}
 
             <div className="flex gap-4 mt-8">
-              <Link href="/menu" className="back-to-menu">
+              <Link href="/menus" className="back-to-menu">
                 <ShoppingBag className="w-4 h-4 mr-2" />
                 Order More
               </Link>
-              <Link href="/account/orders" className="view-orders">
+              <Link href="/orders" className="view-orders">
                 View My Orders
               </Link>
             </div>

@@ -136,7 +136,45 @@ export const cartService = {
     };
   },
   
-  // Create order from cart
+  // Unified checkout function that handles both order placement and payment
+  checkoutWithPayment: async (paymentData, specialInstructions = '') => {
+    try {
+      // Convert cart to order format
+      const orderData = await cartService.cartToOrder();
+      
+      // Add special instructions if provided
+      if (specialInstructions) {
+        orderData.special_instructions = specialInstructions;
+      }
+      
+      // Add payment information
+      const completeOrder = {
+        ...orderData,
+        payment: paymentData.payment,
+        billingAddress: paymentData.billingAddress,
+        status: "Paid", // Order is both placed and paid
+        paymentMethod: 'Credit Card',
+        orderNotes: specialInstructions || `Order placed and paid via ${paymentData.payment.method}`
+      };
+      
+      console.log('Creating unified order with payment:', completeOrder);
+      
+      // Create order
+      const createdOrder = await orderService.createOrder(completeOrder);
+      
+      console.log('Unified checkout order created:', createdOrder);
+      
+      // Clear cart after successful order creation
+      cartService.clearCart();
+      
+      return createdOrder;
+    } catch (error) {
+      console.error('Error during unified checkout:', error);
+      throw error;
+    }
+  },
+
+  // Legacy checkout function (kept for backwards compatibility but not used)
   checkout: async (specialInstructions = '') => {
     try {
       // Convert cart to order format
