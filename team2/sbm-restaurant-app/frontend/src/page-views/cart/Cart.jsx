@@ -166,15 +166,6 @@ export default function CartComponent() {
                   Pay with Credit Card
                 </button>
 
-                  {/* Test Payment Button for Dev/Test */}
-                  <button
-                    type="button"
-                    className="payment-button w-full flex items-center justify-center gap-2"
-                    style={{ marginTop: '0.75rem', background: '#4ade80', color: '#1e293b', fontWeight: 'bold' }}
-                    onClick={() => router.push('/payment?test=1')}
-                  >
-                    💳 Test Payment (Dev Only)
-                  </button>
               </div>
             </div>
           </div>

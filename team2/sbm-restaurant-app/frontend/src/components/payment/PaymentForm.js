@@ -66,31 +66,11 @@ export default function PaymentForm() {
     // Load cart data
     const cartItems = cartService.getCart();
     const totals = cartService.getCartTotals(cartItems);
-    
-
-        // Test Payment Handler
-        const handleTestPayment = () => {
-          setIsProcessing(true);
-          setTimeout(() => {
-  const [testMode, setTestMode] = useState(false); // Detect test mode from query param
-            // Simulate order creation
-            const fakeOrder = {
-              id: Math.floor(Math.random() * 1000000),
-              payment: {
-                transactionId: 'TEST_' + Date.now(),
-              },
-            };
-            setOrderDetails(fakeOrder);
-            setPaymentSuccess(true);
-            setIsProcessing(false);
-          }, 1200);
-        };
     if (cartItems.length === 0) {
       // Redirect to menu if cart is empty
       router.push('/menus');
       return;
     }
-    
     setCart(cartItems);
     setCartTotals(totals);
   }, [router]);
@@ -109,24 +89,6 @@ export default function PaymentForm() {
     let sum = 0;
     let isEven = false;
     
-  // Pre-fill and auto-submit in test mode
-  useEffect(() => {
-    if (testMode) {
-      setPaymentData({
-        cardNumber: '4242424242424242',
-        expiryMonth: (new Date().getMonth() + 1).toString().padStart(2, '0'),
-        expiryYear: (new Date().getFullYear() + 1).toString(),
-        cvv: '123',
-        cardholderName: 'Test User',
-        billingAddress: {
-          street: '123 Test St',
-          city: 'Testville',
-          state: 'TS',
-          zipCode: '12345'
-        }
-      });
-    }
-  }, [testMode]);
 
     for (let i = cleaned.length - 1; i >= 0; i--) {
       let digit = parseInt(cleaned[i]);
