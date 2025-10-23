@@ -48,10 +48,10 @@ export default function OrderCard({ order, onStatusUpdate, onCancel }) {
         <div className="flex justify-between items-start">
           <div>
             <p className="order-text--id text-sm mb-1">
-              Order #{order.id}
+              Order #{order.id || 'N/A'}
             </p>
             <p className="order-text--date text-xs text-gray-500">
-              {format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a")}
+              {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy 'at' h:mm a") : 'Date not available'}
             </p>
           </div>
           <span 
@@ -70,11 +70,11 @@ export default function OrderCard({ order, onStatusUpdate, onCancel }) {
             <div key={index} className="flex justify-between items-center">
               <div>
                 <p className="order-text--item-name font-medium">
-                  {item.menuItem?.name || item.name} <span className="quantity font-normal">x{item.quantity}</span>
+                  {item.menuItem?.name || item.name} <span className="quantity font-normal">x{item.quantity || 1}</span>
                 </p>
               </div>
               <p className="order-text--price font-medium">
-                ${item.subtotal.toFixed(2)}
+                ${(item.subtotal || (item.price * item.quantity) || 0).toFixed(2)}
               </p>
             </div>
           ))}
@@ -83,7 +83,7 @@ export default function OrderCard({ order, onStatusUpdate, onCancel }) {
         <div className="order-border pt-3 border-t flex justify-between items-center">
           <span className="order-text--total-label font-bold">Total</span>
           <span className="order-text--total-amount text-xl font-bold">
-            ${order.totalPrice.toFixed(2)}
+            ${(order.totalPrice || order.total_amount || order.totalAmount || 0).toFixed(2)}
           </span>
         </div>
 

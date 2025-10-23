@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import { authService } from "../../services/authService";
 import { cartService } from "../../services/cartService";
 import CartRowItem from "../../components/cart/CartRowItem";
@@ -16,6 +15,12 @@ export default function CartComponent() {
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+
+    // Test Payment Handler for dev/testing
+    const handleTestPayment = () => {
+      // Navigate to payment page with test flag
+      router.push('/payment?test=1');
+    };
 
   // Load cart data and user information
   useEffect(() => {
@@ -31,21 +36,6 @@ export default function CartComponent() {
     loadData();
   }, []);
 
-  // Use React Query for checkout mutation
-  const checkoutMutation = useMutation({
-    mutationFn: async () => {
-      // Create order from cart with special instructions
-      return await cartService.checkout(specialInstructions);
-    },
-    onSuccess: (order) => {
-      // Redirect to order confirmation page on success
-      router.push(`/orders/confirmation?orderId=${order.id}`);
-    },
-    onError: (err) => {
-      setError(err.message || 'An error occurred during checkout');
-    }
-  });
-
   // Cart item quantity update function
   const updateQuantity = (itemId, newQuantity) => {
     const updatedCart = cartService.updateQuantity(itemId, newQuantity);
@@ -56,18 +46,6 @@ export default function CartComponent() {
   const removeFromCart = (itemId) => {
     const updatedCart = cartService.removeItem(itemId);
     setCart(updatedCart);
-  };
-
-  // Handle direct checkout button click (original functionality)
-  const handleCheckout = async () => {
-    if (!user) {
-      // Redirect to login page if not logged in
-      router.push(`/auth/login?redirect=${encodeURIComponent('/cart')}`);
-      return;
-    }
-
-    // Execute the checkout mutation
-    checkoutMutation.mutate();
   };
 
   // Handle proceed to payment button click
@@ -178,26 +156,25 @@ export default function CartComponent() {
                 </div>
               )}
 
-              {/* Two checkout options */}
-              <div className="checkout-options mt-4 space-y-3">
-                {/* Direct checkout - original functionality */}
-                <button
-                  onClick={handleCheckout}
-                  disabled={checkoutMutation.isPending}
-                  className="checkout-button w-full"
-                >
-                  {checkoutMutation.isPending ? "Processing..." : "Place Order"}
-                </button>
-
-                {/* Payment flow - new functionality */}
+              {/* Payment flow - go directly to payment */}
+              <div className="checkout-options mt-4">
                 <button
                   onClick={handleProceedToPayment}
-                  disabled={checkoutMutation.isPending}
                   className="payment-button w-full flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-4 h-4" />
                   Pay with Credit Card
                 </button>
+
+                  {/* Test Payment Button for Dev/Test */}
+                  <button
+                    type="button"
+                    className="payment-button w-full flex items-center justify-center gap-2"
+                    style={{ marginTop: '0.75rem', background: '#4ade80', color: '#1e293b', fontWeight: 'bold' }}
+                    onClick={() => router.push('/payment?test=1')}
+                  >
+                    💳 Test Payment (Dev Only)
+                  </button>
               </div>
             </div>
           </div>
