@@ -1,10 +1,11 @@
 const menuItems = [
     { 
       id: 1, 
-      name: "Texas Style Baked Potato", 
+      name: "Texas Loaded Baked Potato", 
       category: "Main", 
-      price: 12.99,
+      price: 7.99,
       calories: "650 cal",
+      image: "/images/Texasloadedbakedpotato.png",
       toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
         { name: "Bacon", image: "/images/toppings/bacon.webp" },
@@ -13,11 +14,12 @@ const menuItems = [
     },
     { 
       id: 2, 
-      name: "Pollo Mexicano Baked Potato", 
+      name: "Aloo Tikki Chaat", 
       category: "Main", 
-      price: 13.99,
-      calories: "580 cal",
-       toppings: [
+      price: 14.99,
+      calories: "300 cal",
+      image: "/images/Aloo Tikki.png",
+      toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
         { name: "Chicken", image: "/images/toppings/chicken.jpg" },
         { name: "Pico de Gallo", image: "/images/toppings/picodegallo.png" }
@@ -25,10 +27,11 @@ const menuItems = [
     },
     { 
       id: 3, 
-      name: "CB Ranch Baked Potato", 
-      category: "Main", 
-      price: 10.99,
-      calories: "520 cal",
+      name: "Potato Salad", 
+      category: "Side", 
+      price: 5.99,
+      calories: "357 cal",
+      image: "/images/PotatoSalad.png",
       toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
        { name: "Green Onions", image: "/images/toppings/greenOnions.webp" },
@@ -40,8 +43,9 @@ const menuItems = [
       name: "Loaded Baked Potato Soup", 
       category: "Soup", 
       price: 5.99,
-      calories: "380 cal",
-       toppings: [
+      calories: "450 cal",
+      image: "/images/LoadedBakedPotatoSoup.png",
+      toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
        { name: "Green Onions", image: "/images/toppings/greenOnions.webp" },
         { name: "Bacon", image: "/images/toppings/bacon.webp" }
@@ -50,10 +54,11 @@ const menuItems = [
     },
     { 
       id: 5, 
-      name: "Plain Jane Baked Potato", 
+      name: "Golden Fried Potatoes", 
       category: "Main", 
       price: 9.99,
-      calories: "290 cal",
+      calories: "360 cal",
+      image: "/images/Golden Fried Potatoes.png",
       toppings: [
         { name: "Sour Cream", image: "/images/toppings/sourcream.png" },
        { name: "Green Onions", image: "/images/toppings/greenOnions.webp" },
@@ -62,10 +67,11 @@ const menuItems = [
     },
     { 
       id: 6, 
-      name: "Loaded Fries", 
-      category: "Side", 
-      price: 6.99,
-      calories: "480 cal",
+      name: "Loaded Sweet Potato Fries", 
+      category: "Main", 
+      price: 10.99,
+      calories: "700 cal",
+      image: "/images/LoadedSweetPotatoFries.png",
       toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
        { name: "Green Onions", image: "/images/toppings/greenOnions.webp" },
@@ -77,7 +83,8 @@ const menuItems = [
       name: "Hash Browns", 
       category: "Side", 
       price: 5.99,
-      calories: "320 cal",
+      calories: "470 cal",
+      image: "/images/hashbrowns.png",
       toppings: [
         { name: "Salt", image: "/images/toppings/salt1.png" },
         { name: "Pepper", image: "/images/toppings/blackpepper.jpg" }
@@ -88,7 +95,8 @@ const menuItems = [
       name: "Mashed Potatoes", 
       category: "Side", 
       price: 6.99,
-      calories: "280 cal",
+      calories: "214 cal",
+      image: "/images/MashedPotatoes.png",
       toppings: [
          { name: "Butter", image: "/images/toppings/butter.png" },
         { name: "Salt", image: "/images/toppings/salt1.png" },
@@ -97,21 +105,23 @@ const menuItems = [
     },
     { 
       id: 9, 
-      name: "Hasselback Potatoes", 
-      category: "Side", 
-      price: 5.99,
-      calories: "240 cal",
-       toppings: [
+      name: "Baked Broccoli Casserole", 
+      category: "Main", 
+      price: 15.99,
+      calories: "400 cal",
+      image: "/images/BakedBroccoliPotatoCass.png",
+      toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
         { name: "Garlic", image: "/images/toppings/garlic.png" }
       ]
     },
     { 
       id: 10, 
-      name: "Gnocchi Soup", 
+      name: "Chicken Gnoochi Soup", 
       category: "Soup", 
       price: 5.99,
-      calories: "340 cal",
+      calories: "600 cal",
+      image: "/images/Chickengnoochi.png",
       toppings: [
         { name: "Cheese", image: "/images/toppings/cheese.png" },
        { name: "Croutons", image: "/images/toppings/croutons.png" },
