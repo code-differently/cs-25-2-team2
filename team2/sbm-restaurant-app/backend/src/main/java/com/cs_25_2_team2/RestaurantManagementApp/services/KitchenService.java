@@ -72,7 +72,7 @@ public class KitchenService {
     /**
      * Start preparing an order - assigns to available chef
      */
-    public boolean startPreparingOrder(int orderId) {
+    public boolean startPreparingOrder(Long orderId) {
         Order order = findOrderById(orderId);
         if (order == null) {
             return false;
@@ -101,7 +101,7 @@ public class KitchenService {
     /**
      * Mark order as ready/complete
      */
-    public boolean completeOrder(int orderId) {
+    public boolean completeOrder(Long orderId) {
         Order order = findOrderById(orderId);
         if (order == null) {
             return false;
@@ -149,16 +149,16 @@ public class KitchenService {
     /**
      * Get chef by ID
      */
-    public Chef getChefById(String chefId) {
-        return chefs.get(chefId);
+    public Chef getChefById(Long chefId) {
+        return chefs.get(String.valueOf(chefId));
     }
     
     /**
      * Add chef to kitchen
      */
     public void addChef(Chef chef) {
-        chefs.put(chef.getId(), chef);
-        kitchenStaff.put(chef.getId(), chef);
+        chefs.put(String.valueOf(chef.getId()), chef);
+        kitchenStaff.put(String.valueOf(chef.getId()), chef);
     }
     
     /**
@@ -198,24 +198,24 @@ public class KitchenService {
     /**
      * Find order by ID across all queue statuses
      */
-    private Order findOrderById(int orderId) {
+    private Order findOrderById(Long orderId) {
         // Check pending orders
         for (Order order : getPendingOrders()) {
-            if (order.getId() == orderId) {
+            if (order.getId() == orderId.intValue()) {
                 return order;
             }
         }
         
         // Check orders in preparation
         for (Order order : getOrdersInPreparation()) {
-            if (order.getId() == orderId) {
+            if (order.getId() == orderId.intValue()) {
                 return order;
             }
         }
         
         // Check ready orders
         for (Order order : getReadyOrders()) {
-            if (order.getId() == orderId) {
+            if (order.getId() == orderId.intValue()) {
                 return order;
             }
         }
@@ -248,10 +248,10 @@ public class KitchenService {
      */
     private void initializeSampleKitchenStaff() {
         // Sample chefs
-        Chef chef1 = new Chef("Gordon Ramsay", "456 Kitchen Ave", "987-654-3210", "CHEF001");
-        Chef chef2 = new Chef("Julia Child", "789 Culinary St", "555-987-6543", "CHEF002");
-        Chef chef3 = new Chef("Anthony Bourdain", "321 Food Blvd", "444-555-6666", "CHEF003");
-        
+        Chef chef1 = new Chef("Gordon Ramsay", "456 Kitchen Ave", "987-654-3210", 1L);
+        Chef chef2 = new Chef("Julia Child", "789 Culinary St", "555-987-6543", 2L);
+        Chef chef3 = new Chef("Anthony Bourdain", "321 Food Blvd", "444-555-6666", 3L);
+
         addChef(chef1);
         addChef(chef2);
         addChef(chef3);

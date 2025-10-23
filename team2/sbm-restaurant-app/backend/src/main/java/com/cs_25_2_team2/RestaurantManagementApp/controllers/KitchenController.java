@@ -56,7 +56,7 @@ public class KitchenController {
      * Start preparing an order - assigns to available chef using Chef.assignOrder()
      */
     @PutMapping("/orders/{id}/start")
-    public ResponseEntity<Map<String, Object>> startPreparingOrder(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> startPreparingOrder(@PathVariable Long id) {
         try {
             boolean started = kitchenService.startPreparingOrder(id);
             
@@ -83,7 +83,7 @@ public class KitchenController {
      * Mark order as ready/complete using Order.updateStatus()
      */
     @PutMapping("/orders/{id}/complete")
-    public ResponseEntity<Map<String, Object>> completeOrder(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> completeOrder(@PathVariable Long id) {
         try {
             boolean completed = kitchenService.completeOrder(id);
             
@@ -190,10 +190,10 @@ public class KitchenController {
     /**
      * Get orders assigned to a specific chef
      */
-    @GetMapping("/chefs/{chefId}/orders")
-    public ResponseEntity<List<Map<String, Object>>> getOrdersForChef(@PathVariable String chefId) {
+    @GetMapping("/chef/{chefId}/orders")
+    public ResponseEntity<List<Map<String, Object>>> getOrdersForChef(@PathVariable Long chefId) {
         try {
-            List<Order> chefOrders = kitchenService.getOrdersForChef(chefId);
+            List<Order> chefOrders = kitchenService.getOrdersForChef(chefId.toString());
             List<Map<String, Object>> orderData = chefOrders.stream()
                 .map(this::mapOrderToResponse)
                 .toList();

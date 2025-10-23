@@ -81,12 +81,9 @@ public class UserService {
         if (customerRepository.existsByUsername(username)) {
             throw new RuntimeException("Username already exists");
         }
-        
-        // Generate customer ID
-        String customerId = "CUST" + String.format("%06d", new Random().nextInt(999999));
-        
+            
         // Create new customer entity
-        CustomerEntity customer = new CustomerEntity(customerId, username, name, address, phoneNumber);
+        CustomerEntity customer = new CustomerEntity(username, name, address, phoneNumber);
         customer.setPasswordHash("hashedPassword"); // In real app, hash the password
         
         // Save customer to database
@@ -107,13 +104,11 @@ public class UserService {
         if (staffRepository.existsByUsername(username)) {
             throw new RuntimeException("Username already exists");
         }
-        
-        // Generate staff ID
-        String staffId = role.toUpperCase() + String.format("%03d", new Random().nextInt(999));
-        
+    
+
         // Create staff entity with proper role enum
         StaffEntity.StaffRole staffRole = StaffEntity.StaffRole.valueOf(role);
-        StaffEntity staff = new StaffEntity(staffId, username, name, phoneNumber, staffRole);
+        StaffEntity staff = new StaffEntity(username, name, phoneNumber, staffRole);
         staff.setPasswordHash("hashedPassword"); // In real app, hash the password
         
         // Save staff to database
@@ -188,9 +183,7 @@ public class UserService {
             throw new RuntimeException("Cart is empty");
         }
         
-        // Create order from cart (simplified for demo)
-        String orderId = "ORD" + String.format("%06d", new Random().nextInt(999999));
-        OrderEntity order = new OrderEntity(orderId, customer, new java.math.BigDecimal("19.99"));
+        OrderEntity order = new OrderEntity(customer, new java.math.BigDecimal("19.99"));
         
         // Set dummy payment info (in real app, process payment)
         order.setCreditCardLastFour("1234");
@@ -249,11 +242,9 @@ public class UserService {
      */
     private Customer convertToCustomer(CustomerEntity entity) {
         if (entity == null) return null;
-        
-        // Parse customerId from string to int for domain object
-        int customerId = Integer.parseInt(entity.getCustomerId().replace("CUST", ""));
-        Customer customer = new Customer(customerId, entity.getName(), entity.getAddress(), entity.getPhoneNumber());
-        
+
+        Customer customer = new Customer(entity.getCustomerId(), entity.getName(), entity.getAddress(), entity.getPhoneNumber());
+
         // Note: Customer domain class doesn't have email field, so we skip it
         
         return customer;
@@ -280,8 +271,8 @@ public class UserService {
     /**
      * Convert String customerId from entity to int for domain
      */
-    private int convertToDomainCustomerId(String entityCustomerId) {
-        return Integer.parseInt(entityCustomerId.replace("CUST", ""));
+    private Long convertToDomainCustomerId(Long entityCustomerId) {
+        return entityCustomerId;
     }
     
     /**
@@ -290,7 +281,7 @@ public class UserService {
     private Cart convertToCart(CustomerEntity customerEntity) {
         if (customerEntity == null) return null;
         
-        int customerId = convertToDomainCustomerId(customerEntity.getCustomerId());
+        Long customerId = convertToDomainCustomerId(customerEntity.getCustomerId());
         Cart cart = new Cart(customerId);
         
         // In a full implementation, you'd load cart items from CartEntity and CartItemEntity

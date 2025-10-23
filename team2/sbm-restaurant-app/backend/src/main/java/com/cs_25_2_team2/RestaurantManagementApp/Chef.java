@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.InvalidOrderStateException;
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
@@ -16,7 +17,7 @@ public class Chef extends Staff {
   private final Map<Integer, Order> orders;
   private final Map<Integer, Order> activeOrders; // Orders currently being prepared
 
-  public Chef(String name, String address, String phoneNumber, String id) {
+  public Chef(String name, String address, String phoneNumber, Long id) {
     super(name, address, phoneNumber, id, "Chef");
     this.orders = new HashMap<>();
     this.activeOrders = new HashMap<>();

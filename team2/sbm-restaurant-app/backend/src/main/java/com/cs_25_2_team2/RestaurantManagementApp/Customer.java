@@ -3,20 +3,20 @@ package com.cs_25_2_team2.RestaurantManagementApp;
 import java.util.List;
 
 public class Customer extends Person {
-  private int customerId;
+  private Long customerId;
   private final Cart cart;
 
-  public Customer(int customerId, String name, String address, String phoneNumber) {
+  public Customer(Long customerId, String name, String address, String phoneNumber) {
     super(name, address, phoneNumber);
     this.customerId = customerId;
     this.cart = new Cart(customerId); // Each customer starts with an empty cart linked to their ID
   }
 
-  public int getCustomerId() {
+  public Long getCustomerId() {
     return customerId;
   }
 
-  public void setCustomerId(int customerId) {
+  public void setCustomerId(Long customerId) {
     this.customerId = customerId;
   }
 

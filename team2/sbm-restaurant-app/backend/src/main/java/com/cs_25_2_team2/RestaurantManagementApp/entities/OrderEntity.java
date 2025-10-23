@@ -3,6 +3,7 @@ package com.cs_25_2_team2.RestaurantManagementApp.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +14,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -25,15 +28,16 @@ import jakarta.persistence.Table;
 public class OrderEntity {
     
     @Id
-    @Column(name = "order_id", length = 10)
-    private String orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private Long orderId;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private CustomerEntity customer;
     
-    @Column(name = "restaurant_id", length = 10)
-    private String restaurantId;
+    @Column(name = "restaurant_id")
+    private Long restaurantId;
     
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
@@ -89,21 +93,21 @@ public class OrderEntity {
     // Constructors
     public OrderEntity() {}
     
-    public OrderEntity(String orderId, CustomerEntity customer, BigDecimal totalPrice) {
-        this.orderId = orderId;
+    public OrderEntity(CustomerEntity customer, BigDecimal totalPrice) {
+        orderId = new Random().nextLong(99999999999L);
         this.customer = customer;
         this.totalPrice = totalPrice;
     }
     
     // Getters and Setters
-    public String getOrderId() { return orderId; }
-    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public Long getOrderId() { return orderId; }
+    public void setOrderId(Long orderId) { this.orderId = orderId; }
     
     public CustomerEntity getCustomer() { return customer; }
     public void setCustomer(CustomerEntity customer) { this.customer = customer; }
     
-    public String getRestaurantId() { return restaurantId; }
-    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+    public Long getRestaurantId() { return restaurantId; }
+    public void setRestaurantId(Long restaurantId) { this.restaurantId = restaurantId; }
     
     public BigDecimal getTotalPrice() { return totalPrice; }
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }

@@ -59,7 +59,7 @@ public class DataInitializer implements CommandLineRunner {
     
     private void createSampleCustomers() {
         // Customer 1
-        CustomerEntity customer1 = new CustomerEntity("CUST000001", "johndoe", "John Doe", "123 Main St", "555-0001");
+        CustomerEntity customer1 = new CustomerEntity( "johndoe", "John Doe", "123 Main St", "555-0001");
         customer1.setPasswordHash("hashedPassword");
         customer1.setEmail("john.doe@email.com");
         CustomerEntity savedCustomer1 = customerRepository.save(customer1);
@@ -69,7 +69,7 @@ public class DataInitializer implements CommandLineRunner {
         cartRepository.save(cart1);
         
         // Customer 2
-        CustomerEntity customer2 = new CustomerEntity("CUST000002", "janesmith", "Jane Smith", "456 Oak Ave", "555-0002");
+        CustomerEntity customer2 = new CustomerEntity( "janesmith", "Jane Smith", "456 Oak Ave", "555-0002");
         customer2.setPasswordHash("hashedPassword");
         customer2.setEmail("jane.smith@email.com");
         CustomerEntity savedCustomer2 = customerRepository.save(customer2);
@@ -83,17 +83,17 @@ public class DataInitializer implements CommandLineRunner {
     
     private void createSampleStaff() {
         // Chef 1
-        StaffEntity chef1 = new StaffEntity("CHEF001", "gordon", "Gordon Ramsay", "555-1001", StaffEntity.StaffRole.Chef);
+        StaffEntity chef1 = new StaffEntity( "gordon", "Gordon Ramsay", "555-1001", StaffEntity.StaffRole.Chef);
         chef1.setPasswordHash("hashedPassword");
         staffRepository.save(chef1);
         
         // Chef 2
-        StaffEntity chef2 = new StaffEntity("CHEF002", "julia", "Julia Child", "555-1002", StaffEntity.StaffRole.Chef);
+        StaffEntity chef2 = new StaffEntity( "julia", "Julia Child", "555-1002", StaffEntity.StaffRole.Chef);
         chef2.setPasswordHash("hashedPassword");
         staffRepository.save(chef2);
         
         // Delivery Staff
-        StaffEntity delivery1 = new StaffEntity("DEL001", "speedster", "Fast Eddie", "555-2001", StaffEntity.StaffRole.Delivery);
+        StaffEntity delivery1 = new StaffEntity( "speedster", "Fast Eddie", "555-2001", StaffEntity.StaffRole.Delivery);
         delivery1.setPasswordHash("hashedPassword");
         staffRepository.save(delivery1);
         
@@ -102,35 +102,35 @@ public class DataInitializer implements CommandLineRunner {
     
     private void createSampleMenuItems() {
         // French Fries
-        MenuItemEntity fries = new MenuItemEntity("DISH001", "French Fries", 
+        MenuItemEntity fries = new MenuItemEntity( "French Fries", 
             MenuItemEntity.Category.SIDE, new BigDecimal("3.99"), 
             MenuItemEntity.CookedType.Fried, MenuItemEntity.PotatoType.Russet);
         fries.setDescription("Golden crispy potato fries");
         menuItemRepository.save(fries);
         
         // Loaded Potato Skins
-        MenuItemEntity potatoSkins = new MenuItemEntity("DISH002", "Loaded Potato Skins", 
+        MenuItemEntity potatoSkins = new MenuItemEntity( "Loaded Potato Skins", 
             MenuItemEntity.Category.MAIN_DISH, new BigDecimal("5.99"), 
             MenuItemEntity.CookedType.Baked, MenuItemEntity.PotatoType.Russet);
         potatoSkins.setDescription("Baked potato skins with cheese and bacon");
         menuItemRepository.save(potatoSkins);
         
         // Potato Soup
-        MenuItemEntity soup = new MenuItemEntity("DISH003", "Potato Soup", 
+        MenuItemEntity soup = new MenuItemEntity( "Potato Soup", 
             MenuItemEntity.Category.SOUP, new BigDecimal("4.99"), 
             MenuItemEntity.CookedType.Soupped, MenuItemEntity.PotatoType.YukonGold);
         soup.setDescription("Creamy potato soup with herbs");
         menuItemRepository.save(soup);
         
         // Baked Potato
-        MenuItemEntity bakedPotato = new MenuItemEntity("DISH004", "Baked Potato", 
+        MenuItemEntity bakedPotato = new MenuItemEntity( "Baked Potato", 
             MenuItemEntity.Category.MAIN_DISH, new BigDecimal("4.49"), 
             MenuItemEntity.CookedType.Baked, MenuItemEntity.PotatoType.Russet);
         bakedPotato.setDescription("Fluffy baked potato with toppings");
         menuItemRepository.save(bakedPotato);
         
         // Sweet Potato Fries
-        MenuItemEntity sweetFries = new MenuItemEntity("DISH005", "Sweet Potato Fries", 
+        MenuItemEntity sweetFries = new MenuItemEntity("Sweet Potato Fries", 
             MenuItemEntity.Category.SIDE, new BigDecimal("4.29"), 
             MenuItemEntity.CookedType.Fried, MenuItemEntity.PotatoType.JapaneseSweet);
         sweetFries.setDescription("Crispy sweet potato fries with cinnamon");

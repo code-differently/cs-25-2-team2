@@ -193,7 +193,7 @@ public class Restaurant {
   }
 
   /** Completes an order and assigns it for delivery. */
-  public void completeOrder(int orderId, String chefId) {
+  public void completeOrder(int orderId, Long chefId) {
     Chef chef = findChefById(chefId);
     if (chef == null) {
       throw new OrderNotFoundException("Chef not found: " + chefId);
@@ -213,7 +213,7 @@ public class Restaurant {
   }
 
   /** Completes delivery of an order. */
-  public void deliverOrder(int orderId, String deliveryStaffId) {
+  public void deliverOrder(int orderId, Long deliveryStaffId) {
     Delivery deliveryPerson = findDeliveryStaffById(deliveryStaffId);
     if (deliveryPerson == null) {
       throw new OrderNotFoundException("Delivery staff not found: " + deliveryStaffId);
@@ -270,7 +270,7 @@ public class Restaurant {
     if (staff.getName() == null || staff.getName().trim().isEmpty()) {
       throw new IllegalArgumentException("Staff member must have a name");
     }
-    if (staff.getId() == null || staff.getId().trim().isEmpty()) {
+    if (staff.getId() == null) {
       throw new IllegalArgumentException("Staff member must have an ID");
     }
   }
@@ -287,11 +287,11 @@ public class Restaurant {
 
   // ========== SEARCH AND RETRIEVAL ==========
 
-  private Chef findChefById(String id) {
+  private Chef findChefById(Long id) {
     return chefs.stream().filter(chef -> chef.getId().equals(id)).findFirst().orElse(null);
   }
 
-  private Delivery findDeliveryStaffById(String id) {
+  private Delivery findDeliveryStaffById(Long id) {
     return deliveryStaff.stream()
         .filter(delivery -> delivery.getId().equals(id))
         .findFirst()
@@ -299,7 +299,7 @@ public class Restaurant {
   }
 
   /** Finds staff member by ID (demonstrates polymorphism). */
-  public Staff findStaffById(String id) {
+  public Staff findStaffById(Long id) {
     // Check chefs first
     Staff staff = findChefById(id);
     if (staff != null) return staff;
@@ -321,9 +321,9 @@ public class Restaurant {
     System.out.println("✅ Customer " + customer.getName() + " registered!");
   }
 
-  public Customer findCustomerById(int customerId) {
+  public Customer findCustomerById(Long customerId) {
     return customers.stream()
-        .filter(customer -> customer.getCustomerId() == customerId)
+        .filter(customer -> customer.getCustomerId().equals(customerId))
         .findFirst()
         .orElse(null);
   }

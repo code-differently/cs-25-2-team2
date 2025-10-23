@@ -72,14 +72,14 @@ public class RestaurantCLI {
     menu.addMenuItem(sweetPotatoFries);
 
     // Add sample staff - NOW WITH PROPER INHERITANCE!
-    chefs.add(new Chef("Gordon Ramsay", "123 Kitchen St", "555-CHEF", "CH001"));
-    chefs.add(new Chef("Julia Child", "456 Culinary Ave", "555-COOK", "CH002"));
+    chefs.add(new Chef("Gordon Ramsay", "123 Kitchen St", "555-CHEF", 7777777L));
+    chefs.add(new Chef("Julia Child", "456 Culinary Ave", "555-COOK", 44444448L));
 
-    deliveryStaff.add(new Delivery("Fast Eddie", "789 Speed Lane", "555-FAST", "DL001"));
-    deliveryStaff.add(new Delivery("Quick Quinn", "321 Rush Road", "555-RUSH", "DL002"));
+    deliveryStaff.add(new Delivery("Fast Eddie", "789 Speed Lane", "555-FAST", 7777766L));
+    deliveryStaff.add(new Delivery("Quick Quinn", "321 Rush Road", "555-RUSH",  8888888L));
 
     // Add sample customer
-    customers.add(new Customer(1, "John Doe", "123 Main St", "555-1234"));
+    customers.add(new Customer(77111117L, "John Doe", "123 Main St", "555-1234"));
   }
 
   /** Main CLI loop. */
@@ -228,7 +228,7 @@ public class RestaurantCLI {
       return;
     }
 
-    String staffId = parts[1];
+    Long staffId = Long.valueOf(parts[1]);
     Staff staff = findStaffById(staffId);
 
     if (staff == null) {
@@ -269,7 +269,7 @@ public class RestaurantCLI {
     String name = parts[1];
     String address = parts[2];
     String phone = parts[3];
-    String id = parts[4];
+    Long id = Long.valueOf(parts[4]);
 
     // Check if ID already exists
     if (findStaffById(id) != null) {
@@ -294,7 +294,7 @@ public class RestaurantCLI {
     String name = parts[1];
     String address = parts[2];
     String phone = parts[3];
-    String id = parts[4];
+    Long id = Long.valueOf(parts[4]);
 
     if (findStaffById(id) != null) {
       System.out.println("❌ Staff ID already exists: " + id);
@@ -308,7 +308,7 @@ public class RestaurantCLI {
   }
 
   /** Find staff by ID across all staff types. */
-  private Staff findStaffById(String id) {
+  private Staff findStaffById(Long id) {
     // This unified search is possible because of proper inheritance!
     return Stream.concat(chefs.stream(), deliveryStaff.stream())
         .filter(staff -> staff.getId().equals(id))
@@ -430,7 +430,7 @@ public class RestaurantCLI {
     }
 
     try {
-      int id = Integer.parseInt(parts[1]);
+      Long id = Long.valueOf(parts[1]);
       String name = parts[2];
       String address = parts[3];
       String phone = parts[4];
@@ -743,7 +743,7 @@ public class RestaurantCLI {
     // Ensure we have the required entities
     if (customers.isEmpty()) {
       System.out.println("❌ No customers found. Adding demo customer...");
-      customers.add(new Customer(999, "Demo Customer", "123 Demo St", "555-DEMO"));
+      customers.add(new Customer(999L, "Demo Customer", "123 Demo St", "555-DEMO"));
     }
 
     if (chefs.isEmpty()) {

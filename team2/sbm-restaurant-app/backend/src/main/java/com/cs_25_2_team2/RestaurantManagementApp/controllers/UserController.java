@@ -2,6 +2,7 @@ package com.cs_25_2_team2.RestaurantManagementApp.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
@@ -32,7 +33,18 @@ import com.cs_25_2_team2.RestaurantManagementApp.services.UserService;
 public class UserController {
     
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private UserService userService;
+
+    public UserController() {
+    }
+    
+    @GetMapping()
+    public int getMethodName() {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM customers", Integer.class);
+    }
     
     /**
      * Login endpoint - maps frontend username/password to backend Customer/Staff
@@ -160,10 +172,10 @@ public class UserController {
     /**
      * Update address
      */
-    @PutMapping("/addresses/{id}")
-    public ResponseEntity<Map<String, String>> updateUserAddress(@PathVariable String id, @RequestBody Map<String, String> addressData) {
+        @PutMapping("/user/{id}/address")
+    public ResponseEntity<Map<String, String>> updateUserAddress(@PathVariable Long id, @RequestBody Map<String, String> addressData) {
         // For now, return the updated address
-        addressData.put("id", id);
+        addressData.put("id", id.toString());
         return ResponseEntity.ok(addressData);
     }
     
@@ -171,7 +183,7 @@ public class UserController {
      * Delete address
      */
     @DeleteMapping("/addresses/{id}")
-    public ResponseEntity<String> deleteUserAddress(@PathVariable String id) {
+    public ResponseEntity<String> deleteUserAddress(@PathVariable Long id) {
         return ResponseEntity.ok("Address deleted successfully");
     }
     
