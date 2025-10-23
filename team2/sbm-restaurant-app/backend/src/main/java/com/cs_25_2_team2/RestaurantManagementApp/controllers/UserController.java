@@ -2,6 +2,7 @@ package com.cs_25_2_team2.RestaurantManagementApp.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
@@ -32,7 +33,18 @@ import com.cs_25_2_team2.RestaurantManagementApp.services.UserService;
 public class UserController {
     
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private UserService userService;
+
+    public UserController() {
+    }
+    
+    @GetMapping()
+    public int getMethodName() {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM customers", Integer.class);
+    }
     
     /**
      * Login endpoint - maps frontend username/password to backend Customer/Staff
