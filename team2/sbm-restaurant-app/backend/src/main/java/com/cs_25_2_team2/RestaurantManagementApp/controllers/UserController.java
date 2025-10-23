@@ -160,10 +160,10 @@ public class UserController {
     /**
      * Update address
      */
-    @PutMapping("/addresses/{id}")
-    public ResponseEntity<Map<String, String>> updateUserAddress(@PathVariable String id, @RequestBody Map<String, String> addressData) {
+        @PutMapping("/user/{id}/address")
+    public ResponseEntity<Map<String, String>> updateUserAddress(@PathVariable Long id, @RequestBody Map<String, String> addressData) {
         // For now, return the updated address
-        addressData.put("id", id);
+        addressData.put("id", id.toString());
         return ResponseEntity.ok(addressData);
     }
     
@@ -171,7 +171,7 @@ public class UserController {
      * Delete address
      */
     @DeleteMapping("/addresses/{id}")
-    public ResponseEntity<String> deleteUserAddress(@PathVariable String id) {
+    public ResponseEntity<String> deleteUserAddress(@PathVariable Long id) {
         return ResponseEntity.ok("Address deleted successfully");
     }
     

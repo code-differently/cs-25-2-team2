@@ -6,15 +6,15 @@ import java.util.List;
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.MenuItemUnavailableException;
 
 public class Cart {
-  private int userId;
+  private Long userId;
   private List<CartItem> items;
 
-  public Cart(int userId) {
+  public Cart(Long userId) {
     this.userId = userId;
     this.items = new ArrayList<>();
   }
 
-  public int getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
@@ -61,7 +61,7 @@ public class Cart {
   }
 
   // Add getCustomerId method to match controller expectations
-  public int getCustomerId() {
+  public Long getCustomerId() {
     return userId;
   }
 

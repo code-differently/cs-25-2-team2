@@ -16,7 +16,7 @@ public class Delivery extends Staff {
   private static final Set<Integer> globallyAssignedOrders =
       new HashSet<>(); // Track orders assigned globally
 
-  public Delivery(String name, String address, String phoneNumber, String id) {
+  public Delivery(String name, String address, String phoneNumber, Long id) {
     super(name, address, phoneNumber, id, "Delivery");
   }
 

@@ -12,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,8 +23,9 @@ import jakarta.persistence.Table;
 public class StaffEntity {
     
     @Id
-    @Column(name = "staff_id", length = 10)
-    private String staffId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "staff_id")
+    private Long staffId;
     
     @Column(name = "username", length = 12, unique = true, nullable = false)
     private String username;
@@ -40,8 +43,8 @@ public class StaffEntity {
     @Column(name = "role", nullable = false)
     private StaffRole role;
     
-    @Column(name = "restaurant_id", length = 10)
-    private String restaurantId;
+    @Column(name = "restaurant_id")
+    private Long restaurantId;
     
     @CreationTimestamp
     @Column(name = "created_at")
@@ -66,8 +69,8 @@ public class StaffEntity {
     // Constructors
     public StaffEntity() {}
     
-    public StaffEntity(String staffId, String username, String name, String phoneNumber, StaffRole role) {
-        this.staffId = staffId;
+    public StaffEntity( String username, String name, String phoneNumber, StaffRole role) {
+        // Let Hibernate generate the ID automatically
         this.username = username;
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -75,8 +78,8 @@ public class StaffEntity {
     }
     
     // Getters and Setters
-    public String getStaffId() { return staffId; }
-    public void setStaffId(String staffId) { this.staffId = staffId; }
+    public Long getStaffId() { return staffId; }
+    public void setStaffId(Long staffId) { this.staffId = staffId; }
     
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
@@ -93,8 +96,8 @@ public class StaffEntity {
     public StaffRole getRole() { return role; }
     public void setRole(StaffRole role) { this.role = role; }
     
-    public String getRestaurantId() { return restaurantId; }
-    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+    public Long getRestaurantId() { return restaurantId; }
+    public void setRestaurantId(Long restaurantId) { this.restaurantId = restaurantId; }
     
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

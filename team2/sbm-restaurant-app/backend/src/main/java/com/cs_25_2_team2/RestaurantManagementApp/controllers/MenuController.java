@@ -61,8 +61,8 @@ public class MenuController {
     /**
      * Get specific menu item by ID
      */
-    @GetMapping("/menuitems/{id}")
-    public ResponseEntity<Map<String, Object>> getMenuItemById(@PathVariable int id) {
+        @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getMenuItemById(@PathVariable Long id) {
         MenuItem item = menuService.getMenuItemById(id);
         if (item == null) {
             return ResponseEntity.notFound().build();
@@ -89,8 +89,8 @@ public class MenuController {
     /**
      * Update menu item (Admin only)
      */
-    @PutMapping("/menuitems/{id}")
-    public ResponseEntity<Map<String, Object>> updateMenuItem(@PathVariable int id, @RequestBody Map<String, Object> frontendItem) {
+        @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateMenuItem(@PathVariable Long id, @RequestBody Map<String, Object> frontendItem) {
         MenuItem existingItem = menuService.getMenuItemById(id);
         if (existingItem == null) {
             return ResponseEntity.notFound().build();
@@ -112,7 +112,7 @@ public class MenuController {
      * Delete menu item (Admin only)
      */
     @DeleteMapping("/menuitems/{id}")
-    public ResponseEntity<String> deleteMenuItem(@PathVariable int id) {
+    public ResponseEntity<String> deleteMenuItem(@PathVariable Long id) {
         MenuItem item = menuService.getMenuItemById(id);
         if (item == null) {
             return ResponseEntity.notFound().build();

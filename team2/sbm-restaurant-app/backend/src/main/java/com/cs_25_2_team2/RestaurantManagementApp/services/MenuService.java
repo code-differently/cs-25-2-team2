@@ -42,15 +42,15 @@ public class MenuService {
     /**
      * Get menu item by ID
      */
-    public MenuItem getMenuItemById(int dishId) {
-        return restaurantMenu.getItemById(dishId);
+    public MenuItem getMenuItemById(Long dishId) {
+        return restaurantMenu.getItemById(dishId.intValue());
     }
     
     /**
      * Get available menu item (throws exception if unavailable)
      */
-    public MenuItem getAvailableMenuItemById(int dishId) {
-        return restaurantMenu.getAvailableItemById(dishId);
+    public MenuItem getAvailableMenuItemById(Long dishId) {
+        return restaurantMenu.getAvailableItemById(dishId.intValue());
     }
     
     /**
@@ -63,15 +63,15 @@ public class MenuService {
     /**
      * Remove menu item from the menu
      */
-    public void removeMenuItem(int dishId) {
-        restaurantMenu.removeMenuItem(dishId);
+    public void removeMenuItem(Long dishId) {
+        restaurantMenu.removeMenuItem(dishId.intValue());
     }
     
     /**
      * Update menu item availability
      */
-    public void updateMenuItemAvailability(int dishId, boolean availability) {
-        MenuItem item = restaurantMenu.getItemById(dishId);
+    public void updateMenuItemAvailability(Long dishId, boolean availability) {
+        MenuItem item = restaurantMenu.getItemById(dishId.intValue());
         if (item != null) {
             item.setAvailability(availability);
         }

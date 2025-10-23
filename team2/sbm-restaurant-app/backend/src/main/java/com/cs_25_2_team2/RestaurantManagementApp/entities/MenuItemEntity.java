@@ -13,6 +13,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -22,11 +24,12 @@ import jakarta.persistence.Table;
 public class MenuItemEntity {
     
     @Id
-    @Column(name = "dish_id", length = 10)
-    private String dishId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dish_id")
+    private Long dishId;
     
-    @Column(name = "restaurant_id", length = 10)
-    private String restaurantId;
+    @Column(name = "restaurant_id")
+    private Long restaurantId;
     
     @Column(name = "dish_name", nullable = false)
     private String dishName;
@@ -93,9 +96,9 @@ public class MenuItemEntity {
     // Constructors
     public MenuItemEntity() {}
     
-    public MenuItemEntity(String dishId, String dishName, Category category, BigDecimal price, 
+    public MenuItemEntity(String dishName, Category category, BigDecimal price, 
                          CookedType cookedType, PotatoType potatoType) {
-        this.dishId = dishId;
+        // Let Hibernate generate the IDs automatically
         this.dishName = dishName;
         this.category = category;
         this.price = price;
@@ -104,11 +107,11 @@ public class MenuItemEntity {
     }
     
     // Getters and Setters
-    public String getDishId() { return dishId; }
-    public void setDishId(String dishId) { this.dishId = dishId; }
+    public Long getDishId() { return dishId; }
+    public void setDishId(Long dishId) { this.dishId = dishId; }
     
-    public String getRestaurantId() { return restaurantId; }
-    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+    public Long getRestaurantId() { return restaurantId; }
+    public void setRestaurantId(Long restaurantId) { this.restaurantId = restaurantId; }
     
     public String getDishName() { return dishName; }
     public void setDishName(String dishName) { this.dishName = dishName; }

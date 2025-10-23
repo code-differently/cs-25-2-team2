@@ -15,7 +15,7 @@ import com.cs_25_2_team2.RestaurantManagementApp.entities.IngredientEntity;
  * Provides CRUD operations and custom queries for ingredient management
  */
 @Repository
-public interface IngredientRepository extends JpaRepository<IngredientEntity, String> {
+public interface IngredientRepository extends JpaRepository<IngredientEntity, Long> {
     
     /**
      * Find ingredient by name (case-insensitive)
@@ -24,9 +24,9 @@ public interface IngredientRepository extends JpaRepository<IngredientEntity, St
     Optional<IngredientEntity> findByNameIgnoreCase(@Param("name") String name);
     
     /**
-     * Find all ingredients by availability status
+     * Find all vegetarian ingredients
      */
-    List<IngredientEntity> findByIsAvailable(boolean isAvailable);
+    List<IngredientEntity> findByIsVegetarian(boolean isVegetarian);
     
     /**
      * Find ingredients by name containing search term (case-insensitive)
@@ -35,14 +35,14 @@ public interface IngredientRepository extends JpaRepository<IngredientEntity, St
     List<IngredientEntity> findByNameContainingIgnoreCase(@Param("searchTerm") String searchTerm);
     
     /**
-     * Count available ingredients
+     * Count vegetarian ingredients
      */
-    @Query("SELECT COUNT(i) FROM IngredientEntity i WHERE i.isAvailable = true")
-    long countAvailableIngredients();
+    @Query("SELECT COUNT(i) FROM IngredientEntity i WHERE i.isVegetarian = true")
+    long countVegetarianIngredients();
     
     /**
      * Find ingredients by multiple IDs
      */
     @Query("SELECT i FROM IngredientEntity i WHERE i.ingredientId IN :ingredientIds")
-    List<IngredientEntity> findByIngredientIds(@Param("ingredientIds") List<String> ingredientIds);
+    List<IngredientEntity> findByIngredientIds(@Param("ingredientIds") List<Long> ingredientIds);
 }
