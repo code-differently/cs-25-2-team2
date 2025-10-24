@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.cs_25_2_team2.RestaurantManagementApp.entities.StaffEntity;
 
 @Repository
-public interface StaffRepository extends JpaRepository<StaffEntity, String> {
+public interface StaffRepository extends JpaRepository<StaffEntity, Long> {
     
     // Find staff by username
     Optional<StaffEntity> findByUsername(String username);
