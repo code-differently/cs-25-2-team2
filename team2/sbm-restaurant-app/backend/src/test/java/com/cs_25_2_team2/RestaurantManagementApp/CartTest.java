@@ -1,12 +1,11 @@
 package com.cs_25_2_team2.RestaurantManagementApp;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ public class CartTest {
   @BeforeEach
   public void setUp() {
     // Initialize cart with user ID
-    cart = new Cart(101);
+    cart = new Cart(101L);
 
     // Create menu items for testing
     frenchFries =
