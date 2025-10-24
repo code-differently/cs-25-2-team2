@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Carousel from "../../components/Carousel";
 import TeamSection from "../../components/TeamSection";
+import PotatoRecipes from "../../components/PotatoRecipes";
 import "./homestyle.scss";
 
 export default function HomePage() {
@@ -76,8 +77,7 @@ export default function HomePage() {
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-gray-100">The World Needed More Tater Love, So We Showed Up</h2>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
-            Think of us as your potato-powered delivery crew, here to bring golden, crispy, buttery goodness straight to your door. At Spud Munch Bunch, we take comfort food seriously but we make it fun, fast, and ridiculously tasty. From cheesy loaded baked potatoes to perfectly seasoned fries, tots, and sides, every bite is crafted to satisfy your cravings. Whether you’re a couch potato or just here for the ultimate fry fix, we’ve got you covered!
-          </p>
+            Think of us as your potato-powered delivery crew, here to bring golden, crispy, buttery goodness straight to your door. At Spud Munch Bunch, we take comfort food seriously but we make it fun, fast, and ridiculously tasty. From cheesy loaded baked potatoes to perfectly seasoned fries, tots, and sides, every bite is crafted to satisfy your cravings. Whether you’re a couch potato or just here for the
         </div>
       </section>
 
@@ -106,6 +106,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Potato Recipes Section */}
+      <PotatoRecipes number={2} />
 
       {/* Team Section */}
       <TeamSection />
