@@ -1,5 +1,6 @@
 package com.cs_25_2_team2.RestaurantManagementApp.repositories;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
 import com.cs_25_2_team2.RestaurantManagementApp.entities.StaffEntity;
 
 @Repository
-public interface OrderRepository extends JpaRepository<OrderEntity, String> {
+public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     
     // Find orders by customer
     List<OrderEntity> findByCustomerOrderByCreatedAtDesc(CustomerEntity customer);
@@ -50,4 +51,14 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
     // Find orders with queue information
     @Query("SELECT o FROM OrderEntity o LEFT JOIN FETCH o.orderQueue WHERE o.orderId = :orderId")
     Optional<OrderEntity> findByIdWithQueue(@Param("orderId") String orderId);
+    
+    // Count orders by assigned chef and status
+    Long countByAssignedChefAndStatus(StaffEntity chef, OrderEntity.OrderStatus status);
+    
+    // Count orders created after a specific date
+    Long countByCreatedAtAfter(LocalDateTime date);
+    
+    // Sum total price of orders created after a specific date
+    @Query("SELECT SUM(o.totalPrice) FROM OrderEntity o WHERE o.createdAt > :date")
+    BigDecimal sumTotalPriceByCreatedAtAfter(@Param("date") LocalDateTime date);
 }

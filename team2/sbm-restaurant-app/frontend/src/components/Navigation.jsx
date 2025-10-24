@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { User, LogOut, ShoppingCart, Home, Menu as MenuIcon, Clock } from "lucide-react";
+import { User, LogOut, ShoppingCart, Home, Menu as MenuIcon, Clock, MessageSquare } from "lucide-react";
 import { cartService } from "../services/cartService";
 import ThemeToggle from "./ui/ThemeToggle";
 
@@ -49,6 +49,7 @@ export default function Navigation() {
     { name: "Menu", path: "/menus", icon: <MenuIcon size={18} /> },
     { name: "Cart", path: "/cart", icon: <ShoppingCart size={18} />, badge: true },
     { name: "Orders", path: "/orders", icon: <Clock size={18} /> },
+    { name: "Chat", path: "/chat", icon: <MessageSquare size={18} /> },
   ];
 
   const toggleUserMenu = () => {

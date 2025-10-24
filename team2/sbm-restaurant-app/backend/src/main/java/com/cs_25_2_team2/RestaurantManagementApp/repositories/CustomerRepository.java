@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.cs_25_2_team2.RestaurantManagementApp.entities.CustomerEntity;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<CustomerEntity, String> {
+public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
     
     // Find customer by username
     Optional<CustomerEntity> findByUsername(String username);
@@ -29,9 +29,9 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, String
     
     // Custom query to find customers with orders
     @Query("SELECT DISTINCT c FROM CustomerEntity c LEFT JOIN FETCH c.orders WHERE c.customerId = :customerId")
-    Optional<CustomerEntity> findByIdWithOrders(@Param("customerId") String customerId);
+    Optional<CustomerEntity> findByIdWithOrders(@Param("customerId") Long customerId);
     
     // Custom query to find customer with cart
     @Query("SELECT c FROM CustomerEntity c LEFT JOIN FETCH c.cart WHERE c.customerId = :customerId")
-    Optional<CustomerEntity> findByIdWithCart(@Param("customerId") String customerId);
+    Optional<CustomerEntity> findByIdWithCart(@Param("customerId") Long customerId);
 }

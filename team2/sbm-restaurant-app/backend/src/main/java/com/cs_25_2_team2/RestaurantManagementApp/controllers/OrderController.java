@@ -1,19 +1,28 @@
 package com.cs_25_2_team2.RestaurantManagementApp.controllers;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import java.util.*;
-import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cs_25_2_team2.RestaurantManagementApp.Order;
-import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
-import com.cs_25_2_team2.RestaurantManagementApp.Customer;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.OrderRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.auth.RequiredRole;
+import com.cs_25_2_team2.RestaurantManagementApp.services.RestaurantService;
+
+import jakarta.servlet.http.HttpSession;
 
 /**
  * REST Controller for managing restaurant orders.
@@ -29,61 +38,112 @@ import com.cs_25_2_team2.RestaurantManagementApp.Customer;
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "http://localhost:3000") // Next.js dev server URL
 public class OrderController {
-    private final List<Order> orders = new ArrayList<>();
+    
+    private final OrderRepository orderRepository;
+    private final RestaurantService restaurantService;
     
     /**
-     * Default constructor for OrderController.
-     * Initializes the controller with an empty list of orders.
-     * Note: This uses in-memory storage - orders will be lost when the application restarts.
-     * In a production environment, this should be replaced with a proper database service.
+     * Constructor for OrderController with dependency injection.
+     * Properly injects dependencies for database operations and business logic.
+     * 
+     * @param orderRepository Repository for order data persistence
+     * @param restaurantService Service for business logic operations
      */
-    public OrderController() {
+    public OrderController(OrderRepository orderRepository, RestaurantService restaurantService) {
+        this.orderRepository = orderRepository;
+        this.restaurantService = restaurantService;
     }
 
     // Endpoint to return all orders
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orders;
+    @RequiredRole({"CHEF", "ADMIN"})
+    public List<OrderEntity> getAllOrders() {
+        return (List<OrderEntity>) orderRepository.findAll();
     }
 
     // Endpoint to get a specific order
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return orders.stream()
-            .filter(o -> o.getId() == id)
-            .findFirst()
+    @RequiredRole({"CUSTOMER", "CHEF", "DELIVERY", "ADMIN"})
+    public ResponseEntity<OrderEntity> getOrderById(@PathVariable Long id) {
+        return orderRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<List<CartItem>> getOrderItems() {
-        // Return all cart items across all orders
-        List<CartItem> allItems = orders.stream()
-            .flatMap(order -> order.getItems().stream())
-            .toList();
-        return ResponseEntity.ok(allItems);
-    }
+
 
     // Endpoint to create a new order
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order newOrder) {
-        orders.add(newOrder);
-        return ResponseEntity.ok(newOrder);
+    @RequiredRole({"CUSTOMER", "ADMIN"})
+    public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> orderData, HttpSession session) {
+        try {
+            // Get user info from session
+            Long userId = (Long) session.getAttribute("userId");
+            String userType = (String) session.getAttribute("userType");
+            String username = (String) session.getAttribute("username");
+            
+            if (userId == null || userType == null) {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "User information not found in session"));
+            }
+            
+            // Create a simple order
+            OrderEntity newOrder = new OrderEntity();
+            
+            // Set totalPrice from the request
+            if (orderData.containsKey("totalPrice")) {
+                String priceStr = orderData.get("totalPrice").toString();
+                newOrder.setTotalPrice(new BigDecimal(priceStr));
+            } else {
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Total price is required"));
+            }
+            
+            // Set order details
+            newOrder.setStatus(OrderEntity.OrderStatus.Placed);
+            newOrder.setCreatedAt(LocalDateTime.now());
+            
+            // For customers, could associate with their account in future enhancement
+            // Currently creating orders with basic information
+            
+            // Save the order
+            OrderEntity savedOrder = orderRepository.save(newOrder);
+            
+            // Return success response
+            Map<String, Object> response = Map.of(
+                "message", "Order created successfully",
+                "orderId", savedOrder.getOrderId(),
+                "status", savedOrder.getStatus().toString(),
+                "totalPrice", savedOrder.getTotalPrice(),
+                "orderBy", username
+            );
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Order creation failed: " + e.getMessage()));
+        }
     }
     
     // Update order status
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
-        return orders.stream()
-            .filter(o -> o.getId() == id)
-            .findFirst()
+    @PutMapping("/{id}")
+    @RequiredRole({"CHEF", "DELIVERY", "ADMIN"})
+    public ResponseEntity<OrderEntity> updateStatus(@PathVariable Long id, @RequestBody Map<String, Object> statusData) {
+        if (!statusData.containsKey("status")) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        return orderRepository.findById(id)
             .map(order -> {
                 try {
-                    order.updateStatus(Order.Status.valueOf(status));
-                    return ResponseEntity.ok(order);
-                } catch (IllegalArgumentException | IllegalStateException e) {
-                    return ResponseEntity.badRequest().<Order>build();
+                    String statusStr = statusData.get("status").toString();
+                    OrderEntity.OrderStatus newStatus = OrderEntity.OrderStatus.valueOf(statusStr);
+                    order.setStatus(newStatus);
+                    OrderEntity savedOrder = orderRepository.save(order);
+                    return ResponseEntity.ok(savedOrder);
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.badRequest().<OrderEntity>build();
                 }
             })
             .orElse(ResponseEntity.notFound().build());
@@ -91,39 +151,13 @@ public class OrderController {
     
     // Cancel an order
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
-        return orders.stream()
-            .filter(o -> o.getId() == id)
-            .findFirst()
-            .map(order -> {
-                try {
-                    order.cancelOrder();
-                    return ResponseEntity.ok("Order cancelled successfully");
-                } catch (Exception e) {
-                    return ResponseEntity.badRequest().body("Cannot cancel order: " + e.getMessage());
-                }
-            })
-            .orElse(ResponseEntity.notFound().build());
-    }
-    
-    // Get orders by customer
-    @GetMapping("/customer/{customerId}")
-    public List<Order> getOrdersByCustomer(@PathVariable Long customerId) {
-        return orders.stream()
-            .filter(o -> o.getCustomer().getCustomerId() == customerId)
-            .toList();
-    }
-    
-    // Get orders by status
-    @GetMapping("/status/{status}")
-    public List<Order> getOrdersByStatus(@PathVariable String status) {
-        try {
-            Order.Status orderStatus = Order.Status.valueOf(status);
-            return orders.stream()
-                .filter(o -> o.getStatus() == orderStatus)
-                .toList();
-        } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
+    @RequiredRole({"CUSTOMER", "ADMIN"})
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
+        if (orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
