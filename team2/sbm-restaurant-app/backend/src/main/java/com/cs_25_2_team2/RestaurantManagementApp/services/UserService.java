@@ -1,23 +1,20 @@
 package com.cs_25_2_team2.RestaurantManagementApp.services;
 
-import com.cs_25_2_team2.RestaurantManagementApp.entities.CustomerEntity;
-import com.cs_25_2_team2.RestaurantManagementApp.entities.StaffEntity;
-import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
-import com.cs_25_2_team2.RestaurantManagementApp.entities.CartEntity;
-import com.cs_25_2_team2.RestaurantManagementApp.repositories.CustomerRepository;
-import com.cs_25_2_team2.RestaurantManagementApp.repositories.StaffRepository;
-import com.cs_25_2_team2.RestaurantManagementApp.repositories.OrderRepository;
-import com.cs_25_2_team2.RestaurantManagementApp.repositories.CartRepository;
-// Import domain classes for API layer
-import com.cs_25_2_team2.RestaurantManagementApp.Customer;
-import com.cs_25_2_team2.RestaurantManagementApp.Staff;
-import com.cs_25_2_team2.RestaurantManagementApp.Chef;
-import com.cs_25_2_team2.RestaurantManagementApp.Order;
-import com.cs_25_2_team2.RestaurantManagementApp.Cart;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
+
+import com.cs_25_2_team2.RestaurantManagementApp.entities.CartEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.CustomerEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.entities.StaffEntity;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.CartRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.CustomerRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.OrderRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.repositories.StaffRepository;
 
 /**
  * Service class for User management using Spring Data JPA repositories.
@@ -131,47 +128,41 @@ public class UserService {
     }
     
     /**
-     * Get customer by ID - accepts int parameter and returns Customer domain object
+     * Get customer by ID - returns CustomerEntity directly (modernized)
      */
-    public Customer getCustomerById(int customerId) {
-        String entityId = convertToEntityCustomerId(customerId);
-        CustomerEntity entity = customerRepository.findById(entityId).orElse(null);
-        return convertToCustomer(entity);
+    public CustomerEntity getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId).orElse(null);
     }
     
     /**
-     * Get staff by ID - returns Staff domain object
+     * Get staff by ID - returns StaffEntity directly (modernized)
      */
-    public Staff getStaffById(String staffId) {
-        StaffEntity entity = staffRepository.findById(staffId).orElse(null);
-        return convertToStaff(entity);
+    public StaffEntity getStaffById(Long staffId) {
+        return staffRepository.findById(staffId).orElse(null);
     }
     
     /**
-     * Update customer profile - accepts int customerId and returns Customer domain object
+     * Update customer profile - returns CustomerEntity directly (modernized)
      */
-    public Customer updateCustomerProfile(int customerId, String name, String address, String phoneNumber) {
-        String entityId = convertToEntityCustomerId(customerId);
-        Optional<CustomerEntity> customerOpt = customerRepository.findById(entityId);
+    public CustomerEntity updateCustomerProfile(Long customerId, String name, String address, String phoneNumber) {
+        Optional<CustomerEntity> customerOpt = customerRepository.findById(customerId);
         if (customerOpt.isPresent()) {
             CustomerEntity customer = customerOpt.get();
             customer.setName(name);
             customer.setAddress(address);
             customer.setPhoneNumber(phoneNumber);
-            CustomerEntity savedEntity = customerRepository.save(customer);
-            return convertToCustomer(savedEntity);
+            return customerRepository.save(customer);
         }
         return null;
     }
     
     /**
-     * Customer checkout - accepts int customerId and returns Order domain object
+     * Customer checkout - returns OrderEntity directly (modernized)
      */
     @Transactional
-    public Order customerCheckout(int customerId) {
-        String entityId = convertToEntityCustomerId(customerId);
+    public OrderEntity customerCheckout(Long customerId) {
         // Get customer with cart
-        Optional<CustomerEntity> customerOpt = customerRepository.findByIdWithCart(entityId);
+        Optional<CustomerEntity> customerOpt = customerRepository.findByIdWithCart(customerId);
         if (customerOpt.isEmpty()) {
             throw new RuntimeException("Customer not found");
         }
@@ -192,25 +183,25 @@ public class UserService {
         order.setCardExpiryYear(2025);
         order.setCardholderName(customer.getName());
         
-        // Save order
+        // Save and return order
         OrderEntity savedOrder = orderRepository.save(order);
         
         // Clear cart (delete cart items)
         cart.getCartItems().clear();
         cartRepository.save(cart);
         
-        // Convert to domain object (simplified - would need proper Order conversion)
-        Customer domainCustomer = convertToCustomer(customer);
-        return domainCustomer.checkout(); // Use existing domain logic
+        return savedOrder;
     }
     
     /**
-     * Get customer's cart - accepts int customerId and returns Cart domain object
+     * Get customer's cart - returns CartEntity directly (modernized)
      */
-    public Cart getCustomerCart(int customerId) {
-        String entityId = convertToEntityCustomerId(customerId);
-        CustomerEntity customer = customerRepository.findById(entityId).orElse(null);
-        return convertToCart(customer);
+    public CartEntity getCustomerCart(Long customerId) {
+        CustomerEntity customer = customerRepository.findById(customerId).orElse(null);
+        if (customer != null) {
+            return customer.getCart();
+        }
+        return null;
     }
     
     /**
@@ -235,58 +226,36 @@ public class UserService {
         return staffRepository.findByRole(staffRole);
     }
     
-    // ===== CONVERTER METHODS BETWEEN ENTITIES AND DOMAIN OBJECTS =====
-    
     /**
-     * Convert CustomerEntity to Customer domain object
+     * Get CustomerEntity by username
      */
-    private Customer convertToCustomer(CustomerEntity entity) {
-        if (entity == null) return null;
+    public CustomerEntity getCustomerByUsername(String username) {
+        Optional<CustomerEntity> customer = customerRepository.findByUsername(username);
+        return customer.orElse(null);
+    }
 
-        Customer customer = new Customer(entity.getCustomerId(), entity.getName(), entity.getAddress(), entity.getPhoneNumber());
+    /**
+     * Get StaffEntity by username
+     */
+    public StaffEntity getStaffByUsername(String username) {
+        Optional<StaffEntity> staff = staffRepository.findByUsername(username);
+        return staff.orElse(null);
+    }
 
-        // Note: Customer domain class doesn't have email field, so we skip it
-        
-        return customer;
-    }
-    
     /**
-     * Convert StaffEntity to Staff domain object (Chef subclass)
+     * Save/update CustomerEntity
      */
-    private Staff convertToStaff(StaffEntity entity) {
-        if (entity == null) return null;
-        
-        // For now, create Chef objects since that's what the controllers expect
-        // StaffEntity doesn't have address field, so we'll use empty string
-        return new Chef(entity.getName(), "", entity.getPhoneNumber(), entity.getStaffId());
+    public CustomerEntity saveCustomer(CustomerEntity customer) {
+        return customerRepository.save(customer);
     }
-    
+
     /**
-     * Convert int customerId to String format for entities
+     * Save/update StaffEntity
      */
-    private String convertToEntityCustomerId(int customerId) {
-        return String.format("CUST%06d", customerId);
+    public StaffEntity saveStaff(StaffEntity staff) {
+        return staffRepository.save(staff);
     }
-    
-    /**
-     * Convert String customerId from entity to int for domain
-     */
-    private Long convertToDomainCustomerId(Long entityCustomerId) {
-        return entityCustomerId;
-    }
-    
-    /**
-     * Create a Cart domain object from customer
-     */
-    private Cart convertToCart(CustomerEntity customerEntity) {
-        if (customerEntity == null) return null;
-        
-        Long customerId = convertToDomainCustomerId(customerEntity.getCustomerId());
-        Cart cart = new Cart(customerId);
-        
-        // In a full implementation, you'd load cart items from CartEntity and CartItemEntity
-        // For now, return empty cart
-        
-        return cart;
-    }
+
+    // ===== ENTITY-BASED OPERATIONS COMPLETE =====
+    // All methods now work directly with JPA entities for consistency with controllers
 }
