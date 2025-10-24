@@ -64,21 +64,21 @@ public class MenuItemIngredientEntity {
 @Embeddable
 class MenuItemIngredientId {
     @Column(name = "menu_item_id")
-    private String menuItemId;
+    private Long menuItemId;
     
     @Column(name = "ingredient_id")
     private Long ingredientId;
     
     public MenuItemIngredientId() {}
     
-    public MenuItemIngredientId(String menuItemId, Long ingredientId) {
+    public MenuItemIngredientId(Long menuItemId, Long ingredientId) {
         this.menuItemId = menuItemId;
         this.ingredientId = ingredientId;
     }
     
     // Getters and Setters
-    public String getMenuItemId() { return menuItemId; }
-    public void setMenuItemId(String menuItemId) { this.menuItemId = menuItemId; }
+    public Long getMenuItemId() { return menuItemId; }
+    public void setMenuItemId(Long menuItemId) { this.menuItemId = menuItemId; }
     
     public Long getIngredientId() { return ingredientId; }
     public void setIngredientId(Long ingredientId) { this.ingredientId = ingredientId; }

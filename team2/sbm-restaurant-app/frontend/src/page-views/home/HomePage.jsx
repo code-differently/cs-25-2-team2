@@ -2,11 +2,18 @@
 
 // Main Home Page Export
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Carousel from "../../components/Carousel";
 import TeamSection from "../../components/TeamSection";
 import "./homestyle.scss";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handleViewMenu = () => {
+    router.push('/menus');
+  };
+
   return (
     <div className="home-page min-h-screen">
       {/* Hero Header Section */}
@@ -39,7 +46,10 @@ export default function HomePage() {
           <Carousel />
           
           <div className="text-center mt-8">
-            <button className="view-full-menu-btn bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
+            <button 
+              onClick={handleViewMenu}
+              className="view-full-menu-btn bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+            >
               View Full Menu
             </button>
           </div>
@@ -62,10 +72,10 @@ export default function HomePage() {
       </section>
 
       {/* Why We're Here Section */}
-      <section className="py-12 px-6 bg-gray-50">
+      <section className="py-12 px-6 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold mb-8 text-center">The World Needed More Tater Love, So We Showed Up</h2>
-          <p className="text-gray-600 text-lg">
+          <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-gray-100">The World Needed More Tater Love, So We Showed Up</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
             Think of us as your potato-powered delivery crew, here to bring golden, crispy, buttery goodness straight to your door. At Spud Munch Bunch, we take comfort food seriously but we make it fun, fast, and ridiculously tasty. From cheesy loaded baked potatoes to perfectly seasoned fries, tots, and sides, every bite is crafted to satisfy your cravings. Whether you’re a couch potato or just here for the ultimate fry fix, we’ve got you covered!
           </p>
         </div>

@@ -6,12 +6,12 @@ import java.util.List;
 import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
 
 public abstract class Staff extends Person {
-  protected String id;
+  protected Long id;
   protected String role;
   protected final List<Order> assignedOrders;
   protected final List<Order> completedOrders;
 
-  public Staff(String name, String address, String phoneNumber, String id, String role) {
+  public Staff(String name, String address, String phoneNumber, Long id, String role) {
     super(name, address, phoneNumber);
     this.id = id;
     this.role = role;
@@ -19,7 +19,7 @@ public abstract class Staff extends Person {
     this.completedOrders = new ArrayList<>();
   }
 
-  public String getId() {
+  public Long getId() {
     return id;
   }
 

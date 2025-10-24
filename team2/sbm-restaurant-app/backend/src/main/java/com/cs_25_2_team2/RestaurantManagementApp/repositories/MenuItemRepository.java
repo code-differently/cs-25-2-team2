@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.cs_25_2_team2.RestaurantManagementApp.entities.MenuItemEntity;
 
 @Repository
-public interface MenuItemRepository extends JpaRepository<MenuItemEntity, String> {
+public interface MenuItemRepository extends JpaRepository<MenuItemEntity, Long> {
     
     // Find available menu items
     List<MenuItemEntity> findByIsAvailableTrue();

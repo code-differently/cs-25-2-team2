@@ -48,7 +48,7 @@ public class OrderController {
 
     // Endpoint to get a specific order
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
         return orders.stream()
             .filter(o -> o.getId() == id)
             .findFirst()
@@ -74,7 +74,7 @@ public class OrderController {
     
     // Update order status
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable int id, @RequestBody String status) {
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestBody String status) {
         return orders.stream()
             .filter(o -> o.getId() == id)
             .findFirst()
@@ -91,7 +91,7 @@ public class OrderController {
     
     // Cancel an order
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> cancelOrder(@PathVariable int id) {
+    public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
         return orders.stream()
             .filter(o -> o.getId() == id)
             .findFirst()
@@ -108,7 +108,7 @@ public class OrderController {
     
     // Get orders by customer
     @GetMapping("/customer/{customerId}")
-    public List<Order> getOrdersByCustomer(@PathVariable int customerId) {
+    public List<Order> getOrdersByCustomer(@PathVariable Long customerId) {
         return orders.stream()
             .filter(o -> o.getCustomer().getCustomerId() == customerId)
             .toList();

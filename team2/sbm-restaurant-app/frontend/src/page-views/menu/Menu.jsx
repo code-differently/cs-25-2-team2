@@ -112,19 +112,7 @@ export default function MenuPage() {
                 onClick={() => setSelectedItem(null)}
                 className="close-button"
               >
-                <svg
-                  className="close-icon"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                ×
               </button>
             </div>
 
@@ -165,8 +153,8 @@ export default function MenuPage() {
             </div>
 
             {/* Add Topping Dropdown */}
-            <div style={{ marginBottom: "1rem" }}>
-              <label htmlFor="add-topping-select">Add Topping: </label>
+            <div className="modal-footer" style={{ marginBottom: "1rem" }}>
+              <label htmlFor="add-topping-select" className="text-gray-800 dark:text-gray-100 font-medium">Add Topping: </label>
               <select
                 id="add-topping-select"
                 onChange={(e) => {

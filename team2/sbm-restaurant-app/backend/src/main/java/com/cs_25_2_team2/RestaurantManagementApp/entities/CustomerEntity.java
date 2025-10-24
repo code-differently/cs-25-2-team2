@@ -10,6 +10,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -20,8 +22,9 @@ import jakarta.persistence.Table;
 public class CustomerEntity {
     
     @Id
-    @Column(name = "customer_id", length = 10)
-    private String customerId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customer_id")
+    private Long customerId;
     
     @Column(name = "username", length = 12, unique = true, nullable = false)
     private String username;
@@ -60,8 +63,8 @@ public class CustomerEntity {
     // Constructors
     public CustomerEntity() {}
     
-    public CustomerEntity(String customerId, String username, String name, String address, String phoneNumber) {
-        this.customerId = customerId;
+    public CustomerEntity(String username, String name, String address, String phoneNumber) {
+        // Let Hibernate generate the ID automatically
         this.username = username;
         this.name = name;
         this.address = address;
@@ -69,8 +72,8 @@ public class CustomerEntity {
     }
     
     // Getters and Setters
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
+    public Long getCustomerId() { return customerId; }
+    public void setCustomerId(Long customerId) { this.customerId = customerId; }
     
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

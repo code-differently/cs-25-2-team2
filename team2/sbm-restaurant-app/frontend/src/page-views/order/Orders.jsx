@@ -8,12 +8,14 @@ import OrderCard from '../../components/order/OrderCards.jsx';
 import "../../components/order/orderstyle.scss";
 
 export default function OrdersPage() {
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [hasInitialized, setHasInitialized] = useState(false);
   
   // Add styles for option elements
   useEffect(() => {
@@ -35,6 +37,9 @@ export default function OrdersPage() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
+      console.log('Fetching orders with status filter:', statusFilter);
       
       // Use the appropriate API based on filter selection
       let ordersData;
@@ -46,13 +51,24 @@ export default function OrdersPage() {
         ordersData = await orderService.getOrdersByStatus(statusFilter);
       }
       
-      setOrders(ordersData);
+      console.log('Orders data received:', ordersData);
+      
+      // Ensure ordersData is an array
+      if (Array.isArray(ordersData)) {
+        setOrders(ordersData);
+      } else {
+        console.warn('Invalid orders data format:', ordersData);
+        setOrders([]);
+      }
+      
       setError(null);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setError('Failed to load orders');
+      setOrders([]); // Set empty array on error
     } finally {
       setLoading(false);
+      setHasInitialized(true);
     }
   };
   
@@ -79,9 +95,17 @@ export default function OrdersPage() {
       setError('Failed to update order status');
     }
   };
+
+  // Navigation handler for Browse Menu button
+  const handleBrowseMenu = () => {
+    router.push('/menus');
+  };
   
+  // Safety check for orders array
+  const safeOrders = Array.isArray(orders) ? orders : [];
+
   // Filter and sort orders
-  const filteredOrders = orders
+  const filteredOrders = safeOrders
     .filter(order => {
       // Only filter by search term as status filtering is now done on the backend
       return searchTerm === '' || 
@@ -103,15 +127,39 @@ export default function OrdersPage() {
       }
     });
 
-  // Fetch orders whenever the status filter changes
+  // Check authentication on component mount
   useEffect(() => {
+    console.log('Checking authentication for orders page...');
+    const isLoggedIn = authService.isLoggedIn();
+    const currentUser = authService.getCurrentUser();
+    
+    console.log('Is logged in:', isLoggedIn);
+    console.log('Current user:', currentUser);
+    
+    // Temporarily bypass auth check for testing
+    if (!isLoggedIn) {
+      console.log('Not logged in, but proceeding with mock data for testing...');
+      setError('Not logged in. Click "Test Login" to authenticate.');
+      setLoading(false);
+      return;
+    }
+    
+    // Initial load
+    console.log('User is authenticated, fetching orders...');
     fetchOrders();
-  }, [statusFilter]);
+  }, [router]);
+
+  // Fetch orders whenever the status filter changes (after initial mount)
+  useEffect(() => {
+    if (hasInitialized) {
+      fetchOrders();
+    }
+  }, [statusFilter, hasInitialized]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
-        <div className="loading-text">Loading your orders...</div>
+        <div className="loading-text" style={{color: 'var(--theme-text-primary)'}}>Loading your orders...</div>
       </div>
     );
   }
@@ -119,7 +167,46 @@ export default function OrdersPage() {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
-        <div className="error-text">Error: {error}</div>
+        <div className="error-text" style={{color: 'var(--error-color)'}}>
+          <p>Error: {error}</p>
+          <div style={{marginTop: '1rem'}}>
+            <button 
+              onClick={fetchOrders}
+              style={{
+                marginRight: '1rem',
+                padding: '0.5rem 1rem',
+                backgroundColor: 'var(--gold-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Retry
+            </button>
+            <button 
+              onClick={async () => {
+                // Quick test login for development
+                try {
+                  await authService.login('customer', 'password');
+                  window.location.reload();
+                } catch (e) {
+                  console.error('Test login failed:', e);
+                }
+              }}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: 'var(--info-color)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Test Login (Dev)
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -178,24 +265,24 @@ export default function OrdersPage() {
           {/* Quick Stats */}
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="stats-card p-3 rounded-lg border">
-              <div className="stats-number text-2xl font-bold">{orders.length}</div>
+              <div className="stats-number text-2xl font-bold">{safeOrders.length}</div>
               <div className="stats-label text-sm">Total Orders</div>
             </div>
             <div className="stats-card p-3 rounded-lg border">
               <div className="stats-number success text-2xl font-bold">
-                {orders.filter(o => o.status === 'Delivered').length}
+                {safeOrders.filter(o => o.status === 'Delivered').length}
               </div>
               <div className="stats-label text-sm">Delivered</div>
             </div>
             <div className="stats-card p-3 rounded-lg border">
               <div className="stats-number info text-2xl font-bold">
-                {orders.filter(o => ['Placed', 'Preparing', 'ReadyForDelivery', 'OutForDelivery'].includes(o.status)).length}
+                {safeOrders.filter(o => ['Placed', 'Preparing', 'ReadyForDelivery', 'OutForDelivery'].includes(o.status)).length}
               </div>
               <div className="stats-label text-sm">In Progress</div>
             </div>
             <div className="stats-card p-3 rounded-lg border">
               <div className="stats-number text-2xl font-bold">
-                ${orders.reduce((sum, order) => sum + order.totalPrice, 0).toFixed(2)}
+                ${safeOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0).toFixed(2)}
               </div>
               <div className="stats-label text-sm">Total Spent</div>
             </div>
@@ -208,16 +295,19 @@ export default function OrdersPage() {
           <div className="empty-state text-center">
             <div className="text-6xl mb-4">🍟</div>
             <h3 className="text-xl font-semibold mb-2 empty-title">
-              {orders.length === 0 ? 'No orders yet' : 'No orders match your search'}
+              {safeOrders.length === 0 ? 'No orders yet' : 'No orders match your search'}
             </h3>
             <p className="empty-text mb-4">
-              {orders.length === 0 
+              {safeOrders.length === 0 
                 ? 'Start your potato journey by placing your first order!' 
                 : 'Try adjusting your search or filter criteria'
               }
             </p>
-            {orders.length === 0 && (
-              <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200">
+            {safeOrders.length === 0 && (
+              <button 
+                onClick={handleBrowseMenu}
+                className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+              >
                 Browse Menu
               </button>
             )}
@@ -226,7 +316,7 @@ export default function OrdersPage() {
           <>
             <div className="flex justify-between items-center mb-4">
               <p className="order-count-text">
-                Showing {filteredOrders.length} of {orders.length} orders
+                Showing {filteredOrders.length} of {safeOrders.length} orders
               </p>
               <button 
                 onClick={fetchOrders}

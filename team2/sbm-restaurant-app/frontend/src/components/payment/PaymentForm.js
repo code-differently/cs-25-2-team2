@@ -66,13 +66,11 @@ export default function PaymentForm() {
     // Load cart data
     const cartItems = cartService.getCart();
     const totals = cartService.getCartTotals(cartItems);
-    
     if (cartItems.length === 0) {
       // Redirect to menu if cart is empty
-      router.push('/menu');
+      router.push('/menus');
       return;
     }
-    
     setCart(cartItems);
     setCartTotals(totals);
   }, [router]);
@@ -91,6 +89,7 @@ export default function PaymentForm() {
     let sum = 0;
     let isEven = false;
     
+
     for (let i = cleaned.length - 1; i >= 0; i--) {
       let digit = parseInt(cleaned[i]);
       
@@ -225,7 +224,7 @@ export default function PaymentForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Process payment
+  // Process payment and create order (combined functionality)
   const processPayment = async () => {
     if (!validateForm()) {
       return false;
@@ -237,16 +236,17 @@ export default function PaymentForm() {
       // Simulate payment processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Create order data from cart
+      // Create order data from cart (using cartService functionality)
       const orderData = await cartService.cartToOrder();
       
       // Generate payment transaction details
       const transactionId = generateTransactionId();
       const processedAt = new Date().toISOString();
       
-      // Add payment information to order
-      const orderWithPayment = {
+      // Create unified order with payment information
+      const completeOrder = {
         ...orderData,
+        // Payment details
         payment: {
           method: 'credit_card',
           cardLastFour: paymentData.cardNumber.slice(-4),
@@ -257,35 +257,26 @@ export default function PaymentForm() {
           status: 'completed'
         },
         billingAddress: paymentData.billingAddress,
-        status: 'Paid', // Update order status to indicate payment completion
+        // Order status progression: Placed -> Paid
+        status: 'Paid', // Final status after successful payment
         paymentMethod: 'Credit Card',
-        orderNotes: `Payment processed via credit card ending in ${paymentData.cardNumber.slice(-4)}`
+        orderNotes: `Order placed and paid via credit card ending in ${paymentData.cardNumber.slice(-4)}`
       };
       
-      console.log('Creating order with payment data:', orderWithPayment);
+      console.log('Creating complete order with payment:', completeOrder);
       
-      // Create the order through orderService
-      const createdOrder = await orderService.createOrder(orderWithPayment);
+      // Create the order through orderService (combines placement + payment)
+      const createdOrder = await orderService.createOrder(completeOrder);
       
-      console.log('Order created successfully:', createdOrder);
+      console.log('Order placed and paid successfully:', createdOrder);
       
-      // Update order status to "Paid" if it wasn't already set
-      if (createdOrder.id && createdOrder.status !== 'Paid') {
-        try {
-          await orderService.updateOrderStatus(createdOrder.id, 'Paid');
-          console.log('Order status updated to Paid');
-        } catch (statusError) {
-          console.warn('Could not update order status, but order was created:', statusError);
-        }
-      }
-      
-      // Clear cart after successful payment
+      // Clear cart after successful order completion
       cartService.clearCart();
       
       // Set order details for success page
       setOrderDetails({
         ...createdOrder,
-        payment: orderWithPayment.payment
+        payment: completeOrder.payment
       });
       setPaymentSuccess(true);
       
@@ -347,19 +338,13 @@ export default function PaymentForm() {
           
           <div className="success-actions">
             <button 
-              onClick={() => router.push(`/orders/confirmation?orderId=${orderDetails.id}`)} 
+              onClick={() => router.push('/orders')} 
               className="btn-primary"
             >
-              View Order Details
+              View My Orders
             </button>
             <button 
-              onClick={() => router.push('/orders')} 
-              className="btn-secondary"
-            >
-              View Order History
-            </button>
-            <button 
-              onClick={() => router.push('/menu')} 
+              onClick={() => router.push('/menus')} 
               className="btn-secondary"
             >
               Continue Shopping
