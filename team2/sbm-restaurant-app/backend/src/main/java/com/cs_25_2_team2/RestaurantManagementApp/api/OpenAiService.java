@@ -1,4 +1,6 @@
+
 package com.cs_25_2_team2.RestaurantManagementApp.api;
+import com.cs_25_2_team2.RestaurantManagementApp.api.Chatbot;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +45,25 @@ public class OpenAiService {
 
     public Long deleteConversation(Long id) {
         return conversations.remove(id) != null ? id : null;
+    }
+
+
+    public String generateChatbotResponse(String userInput) {
+        StringBuilder prompt = new StringBuilder("Based on the following menu items, provide a response to the user query:\n\n");
+        for (Map<String, Object> item : Chatbot.getMenuItems()) {
+            prompt.append("- ").append(item.get("name"))
+                  .append(" (Category: ").append(item.get("category"))
+                  .append(", Price: $").append(item.get("price"))
+                  .append(", Calories: ").append(item.get("calories"))
+                  .append(")\n");
+        }
+        prompt.append("\nUser Query: ").append(userInput);
+
+        try {
+            return sendMessage(prompt.toString()).get("reply").toString();
+        } catch (Exception e) {
+            return "Error generating response: " + e.getMessage();
+        }
     }
 
     public Map<String, Object> sendMessage(String message) throws IOException, InterruptedException {
@@ -117,14 +138,17 @@ public class OpenAiService {
         var idMatch = java.util.regex.Pattern.compile("\\b(order\\s+#?)(\\d+)\\b").matcher(m);
         if (idMatch.find()) {
             String id = idMatch.group(2);
-            return String.format("Order #%s is currently 'Preparing'. Items: Margherita Pizza x1, Caesar Salad x1. Estimated ready in 12 minutes.", id);
+            return String.format("Order #%s is currently being prepared. Items: Texas Loaded Baked Potato x1, Aloo Tikki Chaat x2. Estimated ready in 10 minutes.", id);
+        }
+        if (m.contains("who's the chef") || m.contains("who is the chef") || m.contains("chef name") || m.contains("who made") || m.contains("who cooked")) {
+            return "Chef Ramsey is currently preparing your order.";
         }
         if (m.contains("what's in") || m.contains("what is in") || m.contains("items in")) {
-            return "Your order contains: Margherita Pizza x1, Caesar Salad x1, Garlic Knots x3. Total: $27.50.";
+            return "Your order contains: Texas Loaded Baked Potato x1, Aloo Tikki Chaat x2. Total: $37.97.";
         }
         if (m.contains("status")) {
-            return "Your order is in 'Preparing' state. Assigned chef: Alice. Estimated ready in 12 minutes.";
+            return "Your order is currently being prepared by Chef Ramsey. Estimated ready in 10 minutes.";
         }
-        return "I can help with order status and contents. Please provide an order number or ask 'what's in my order' or 'order status'.";
+        return "I can help with your order status and details. Please provide an order number or ask about the items, chef, or status in your order.";
     }
 }

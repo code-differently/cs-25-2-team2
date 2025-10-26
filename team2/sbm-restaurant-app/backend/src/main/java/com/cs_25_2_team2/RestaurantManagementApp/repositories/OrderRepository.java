@@ -36,8 +36,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     @Query("SELECT o FROM OrderEntity o LEFT JOIN FETCH o.orderItems WHERE o.orderId = :orderId")
     Optional<OrderEntity> findByIdWithItems(@Param("orderId") String orderId);
     
-    // Find orders in kitchen queue (pending or preparing)
-    @Query("SELECT o FROM OrderEntity o WHERE o.status IN ('Placed', 'Preparing') ORDER BY o.createdAt ASC")
+    // Find orders in kitchen queue (pending, placed, or preparing)
+    @Query("SELECT o FROM OrderEntity o WHERE o.status IN ('Pending', 'Placed', 'Preparing') ORDER BY o.createdAt ASC")
     List<OrderEntity> findOrdersInKitchenQueue();
     
     // Find orders ready for delivery

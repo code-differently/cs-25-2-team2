@@ -1,4 +1,8 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
+import com.cs_25_2_team2.RestaurantManagementApp.Customer;
+import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+import com.cs_25_2_team2.RestaurantManagementApp.Order;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +26,7 @@ public class OrderTest {
 
   @BeforeEach
   void setUp() {
-    customer = new Customer(1, "Trishtan", "6 Main St", "555-555-5555");
+  customer = new Customer(1L, "Trishtan", "6 Main St", "555-555-5555");
 
     cartItem1 =
         new CartItem(
@@ -57,10 +61,10 @@ public class OrderTest {
         cartItems.size(),
         order.getItems().size(),
         "Order should have the correct number of CartItems");
-    assertEquals(
-        Order.Status.Placed,
-        order.getStatus(),
-        "Order status should be 'Placed' upon initialization");
+  assertEquals(
+    Order.Status.Pending,
+    order.getStatus(),
+    "Order status should be 'Pending' upon initialization");
     assertEquals(orderDate, order.getCreatedAt(), "Order should have the correct order date");
   }
 
@@ -78,26 +82,27 @@ public class OrderTest {
   @Test
   @DisplayName("Test status update")
   void testStatusUpdate() {
-    order.updateStatus(Order.Status.Preparing);
-    assertEquals(
-        Order.Status.Preparing, order.getStatus(), "Order status should be updated to 'Preparing'");
+  order.updateStatus(Order.Status.Placed);
+  order.updateStatus(Order.Status.Preparing);
+  assertEquals(
+    Order.Status.Preparing, order.getStatus(), "Order status should be updated to 'Preparing'");
 
-    // Follow proper workflow: Preparing -> ReadyForDelivery -> OutForDelivery -> Delivered
-    order.updateStatus(Order.Status.ReadyForDelivery);
-    assertEquals(
-        Order.Status.ReadyForDelivery,
-        order.getStatus(),
-        "Order status should be updated to 'ReadyForDelivery'");
+  // Follow proper workflow: Preparing -> ReadyForDelivery -> OutForDelivery -> Delivered
+  order.updateStatus(Order.Status.ReadyForDelivery);
+  assertEquals(
+    Order.Status.ReadyForDelivery,
+    order.getStatus(),
+    "Order status should be updated to 'ReadyForDelivery'");
 
-    order.updateStatus(Order.Status.OutForDelivery);
-    assertEquals(
-        Order.Status.OutForDelivery,
-        order.getStatus(),
-        "Order status should be updated to 'OutForDelivery'");
+  order.updateStatus(Order.Status.OutForDelivery);
+  assertEquals(
+    Order.Status.OutForDelivery,
+    order.getStatus(),
+    "Order status should be updated to 'OutForDelivery'");
 
-    order.updateStatus(Order.Status.Delivered);
-    assertEquals(
-        Order.Status.Delivered, order.getStatus(), "Order status should be updated to 'Delivered'");
+  order.updateStatus(Order.Status.Delivered);
+  assertEquals(
+    Order.Status.Delivered, order.getStatus(), "Order status should be updated to 'Delivered'");
   }
 
   @Test
@@ -117,7 +122,7 @@ public class OrderTest {
     // This test covers the notifyChefAndCustomer() method indirectly
     // The order starts with Placed status, which already triggered notifyChefAndCustomer()
     // So we just verify the initial status is Placed
-    assertEquals(Order.Status.Placed, order.getStatus(), "Order should start with Placed status");
+  assertEquals(Order.Status.Pending, order.getStatus(), "Order should start with Pending status");
   }
 
   @Test

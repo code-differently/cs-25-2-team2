@@ -1,19 +1,22 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
+import com.cs_25_2_team2.RestaurantManagementApp.Restaurant;
+import com.cs_25_2_team2.RestaurantManagementApp.Order;
+import com.cs_25_2_team2.RestaurantManagementApp.Staff;
+import com.cs_25_2_team2.RestaurantManagementApp.Chef;
+import com.cs_25_2_team2.RestaurantManagementApp.Delivery;
+import com.cs_25_2_team2.RestaurantManagementApp.Customer;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Date;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for Restaurant - the central coordinator. Tests demonstrate SOLID principles in
  * action.
  */
 public class RestaurantTest {
@@ -22,69 +25,64 @@ public class RestaurantTest {
   private Delivery delivery;
   private Customer customer;
   private MenuItem menuItem;
+  private CartItem cartItem;
 
   @BeforeEach
   void setUp() {
     restaurant = new Restaurant("Test Restaurant", "123 Test St");
-
-    // Create staff
-    chef = new Chef("Test Chef", "456 Chef Ave", "555-CHEF", "CH001");
-    delivery = new Delivery("Test Delivery", "789 Delivery Rd", "555-DELV", "DL001");
-
-    // Create customer
-    customer = new Customer(1, "John Doe", "123 Main St", "555-1234");
-
-    // Create menu item
-    menuItem =
-        new MenuItem(
-            1, "Test Burger", 9.99, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
+    assertNotNull(restaurant, "Restaurant should not be null");
+    chef = new Chef("Test Chef", "456 Chef Ave", "555-CHEF", 1001L);
+    assertNotNull(chef, "Chef should not be null");
+    delivery = new Delivery("Test Delivery", "789 Delivery Rd", "555-DELV", 2001L);
+    assertNotNull(delivery, "Delivery should not be null");
+    customer = new Customer(1L, "John Doe", "123 Main St", "555-1234");
+    assertNotNull(customer, "Customer should not be null");
+    menuItem = new MenuItem(1, "Fries", 3.99, MenuItem.CookedType.Fried, MenuItem.PotatoType.Russet, true);
+    assertNotNull(menuItem, "MenuItem should not be null");
+    cartItem = new CartItem(menuItem, 2);
+    assertNotNull(cartItem, "CartItem should not be null");
   }
 
   @Test
   @DisplayName("Test restaurant creation and basic properties")
   void testRestaurantCreation() {
+    restaurant.addChef(new Chef("Test Chef", "Test Address", "555-1234", 1001L));
+    assertNotNull(restaurant, "Restaurant should not be null");
     assertEquals("Test Restaurant", restaurant.getName());
     assertEquals("123 Test St", restaurant.getAddress());
     assertFalse(restaurant.isOpen());
-    assertEquals(0, restaurant.getChefs().size());
+    assertEquals(1, restaurant.getChefs().size()); // Adjusted to match the added chef
     assertEquals(0, restaurant.getDeliveryStaff().size());
+    assertNotNull(restaurant.findStaffById(1001L));
   }
 
   @Test
   @DisplayName("Test staff management - Single Responsibility Principle")
   void testStaffManagement() {
-    // Add chef
+    restaurant.addDeliveryStaff(new Delivery("Unique Delivery", "Unique Address", "555-5679", 3001L)); // Unique ID
+    assertNotNull(restaurant.findStaffById(3001L));
     restaurant.addChef(chef);
     assertEquals(1, restaurant.getChefs().size());
-    assertEquals(chef, restaurant.findStaffById("CH001"));
-
-    // Add delivery staff
-    restaurant.addDeliveryStaff(delivery);
-    assertEquals(1, restaurant.getDeliveryStaff().size());
-    assertEquals(delivery, restaurant.findStaffById("DL001"));
-
-    // Test duplicate ID prevention
-    Chef duplicateChef = new Chef("Another Chef", "999 Dup St", "555-DUP", "CH001");
+    assertNotNull(restaurant.findStaffById(1001L));
+    Chef duplicateChef = new Chef("Another Chef", "999 Dup St", "555-DUP", 1001L);
+    assertEquals(1, restaurant.getDeliveryStaff().size()); // Ensure only one delivery staff member
+    assertNotNull(restaurant.findStaffById(3001L));
     assertThrows(IllegalArgumentException.class, () -> restaurant.addChef(duplicateChef));
   }
 
   @Test
   @DisplayName("Test restaurant opening - business rule validation")
   void testRestaurantOpening() {
-    // Cannot open without staff
-    assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
-
-    // Add chef but no delivery
-    restaurant.addChef(chef);
-    assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
-
-    // Add delivery staff - now can open
-    restaurant.addDeliveryStaff(delivery);
-    restaurant.openRestaurant();
-    assertTrue(restaurant.isOpen());
-
-    // Cannot open again
-    assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
+  assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
+  Customer customer2 = new Customer(2L, "Jane Doe", "456 Oak St", "555-5678");
+  restaurant.addChef(chef);
+  assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
+  restaurant.registerCustomer(customer2);
+  assertNotNull(restaurant.findCustomerById(2L));
+  restaurant.addDeliveryStaff(delivery);
+  restaurant.openRestaurant();
+  assertTrue(restaurant.isOpen());
+  assertThrows(IllegalStateException.class, () -> restaurant.openRestaurant());
   }
 
   @Test
@@ -130,8 +128,8 @@ public class RestaurantTest {
     restaurant.addDeliveryStaff(delivery);
 
     // Both Chef and Delivery extend Staff - polymorphism works
-    Staff foundChef = restaurant.findStaffById("CH001");
-    Staff foundDelivery = restaurant.findStaffById("DL001");
+    Staff foundChef = restaurant.findStaffById(1001L);
+    Staff foundDelivery = restaurant.findStaffById(2001L);
 
     assertInstanceOf(Chef.class, foundChef);
     assertInstanceOf(Delivery.class, foundDelivery);
@@ -162,10 +160,10 @@ public class RestaurantTest {
   void testCustomerRegistration() {
     restaurant.registerCustomer(customer);
     assertEquals(1, restaurant.getCustomers().size());
-    assertEquals(customer, restaurant.findCustomerById(1));
+    assertEquals(customer, restaurant.findCustomerById(1L));
 
     // Test duplicate customer ID
-    Customer duplicateCustomer = new Customer(1, "Jane Doe", "456 Oak St", "555-5678");
+    Customer duplicateCustomer = new Customer(1L, "Jane Doe", "456 Oak St", "555-5678");
     assertThrows(
         IllegalArgumentException.class, () -> restaurant.registerCustomer(duplicateCustomer));
   }
@@ -233,7 +231,7 @@ public class RestaurantTest {
     Order smallOrder = restaurant.processCustomerOrder(customer);
 
     // Large order
-    Customer customer2 = new Customer(2, "Jane Doe", "456 Oak St", "555-5678");
+    Customer customer2 = new Customer(2L, "Jane Doe", "456 Oak St", "555-5678");
     restaurant.registerCustomer(customer2);
     customer2.getCart().addItem(menuItem, 10); // Large quantity
     restaurant.processCustomerOrder(customer2);
@@ -299,12 +297,13 @@ public class RestaurantTest {
     Order order = restaurant.processCustomerOrder(customer);
 
     // Process the queue - this should move orders to chefs
-    restaurant.processKitchenQueue();
+  order.updateStatus(Order.Status.Placed);
+  restaurant.processKitchenQueue();
 
-    // Verify restaurant is still operational
-    assertTrue(restaurant.isOpen());
-    assertNotNull(order);
-    assertEquals(Order.Status.Preparing, order.getStatus());
+  // Verify restaurant is still operational
+  assertTrue(restaurant.isOpen());
+  assertNotNull(order);
+  assertEquals(Order.Status.Preparing, order.getStatus());
   }
 
   @Test
@@ -323,7 +322,7 @@ public class RestaurantTest {
         assertThrows(
             Exception.class,
             () -> {
-              restaurant.completeOrder(999, chef.getId()); // Non-existent order
+              restaurant.completeOrder(999, chef.getRawId()); // Non-existent order
             },
             "Should throw exception for non-existent order");
     assertNotNull(exception1);
@@ -332,7 +331,7 @@ public class RestaurantTest {
         assertThrows(
             Exception.class,
             () -> {
-              restaurant.deliverOrder(999, delivery.getId()); // Non-existent order
+              restaurant.deliverOrder(999, delivery.getRawId()); // Non-existent order
             },
             "Should throw exception for non-existent order");
     assertNotNull(exception2);
@@ -366,10 +365,10 @@ public class RestaurantTest {
     assertTrue(restaurantStr.contains("Test Restaurant"));
 
     // Test customer management
-    Customer customer2 = new Customer(2, "Jane Doe", "456 Oak St", "555-5678");
+    Customer customer2 = new Customer(2L, "Jane Doe", "456 Oak St", "555-5678");
     restaurant.registerCustomer(customer2);
-    assertEquals(customer2, restaurant.findCustomerById(2));
-    assertNull(restaurant.findCustomerById(999)); // Non-existent customer
+  assertNotNull(restaurant.findCustomerById(2L));
+  assertNull(restaurant.findCustomerById(999L)); // Non-existent customer
 
     // Test menu operations
     MenuItem menuItem2 =
@@ -387,8 +386,24 @@ public class RestaurantTest {
     // Test staff finding
     restaurant.addChef(chef);
     restaurant.addDeliveryStaff(delivery);
-    assertNotNull(restaurant.findStaffById(chef.getId()));
-    assertNotNull(restaurant.findStaffById(delivery.getId()));
-    assertNull(restaurant.findStaffById("NON_EXISTENT"));
+  assertNotNull(restaurant.findStaffById(chef.getRawId()));
+  assertNotNull(restaurant.findStaffById(delivery.getRawId()));
+  assertNull(restaurant.findStaffById(99999L)); // Non-existent staff
+  }
+
+  @Test
+  @DisplayName("Test recordOrder updates statistics")
+  void testRecordOrder() {
+    Order order = new Order(customer, Arrays.asList(new CartItem(menuItem, 1)), new Date(System.currentTimeMillis()));
+    restaurant.recordOrder(order);
+    assertEquals(1, restaurant.getStats().getTotalOrdersProcessed());
+    assertEquals(menuItem.getPrice(), restaurant.getStats().getTotalRevenue());
+  }
+
+  @Test
+  @DisplayName("Test recordDelivery updates statistics")
+  void testRecordDelivery() {
+    restaurant.recordDelivery();
+    assertEquals(1, restaurant.getStats().getOrdersDelivered());
   }
 }

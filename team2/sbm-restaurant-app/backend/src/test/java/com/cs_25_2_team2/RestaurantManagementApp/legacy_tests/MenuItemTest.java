@@ -1,4 +1,4 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
+
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+import com.cs_25_2_team2.RestaurantManagementApp.Ingredient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -146,12 +149,16 @@ public class MenuItemTest {
     assertEquals(1, vegetarianDish.getIngredients().size());
 
     // Adding non-vegetarian with enforcement should throw exception
-    Exception exception =
         assertThrows(
             Ingredient.NonVegetarianIngredientException.class,
             () -> {
               vegetarianDish.addIngredient(bacon, true);
             });
+    assertThrows(
+      Ingredient.NonVegetarianIngredientException.class,
+      () -> {
+        vegetarianDish.addIngredient(bacon, true);
+      });
 
     // Adding non-vegetarian without enforcement should work
     vegetarianDish.addIngredient(bacon);

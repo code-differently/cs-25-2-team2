@@ -1,4 +1,14 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
+import com.cs_25_2_team2.RestaurantManagementApp.Person;
+import com.cs_25_2_team2.RestaurantManagementApp.Cart;
+import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
+import com.cs_25_2_team2.RestaurantManagementApp.Order;
+import com.cs_25_2_team2.RestaurantManagementApp.Chef;
+import com.cs_25_2_team2.RestaurantManagementApp.Restaurant;
+import com.cs_25_2_team2.RestaurantManagementApp.Customer;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+import com.cs_25_2_team2.RestaurantManagementApp.Menu;
+import com.cs_25_2_team2.RestaurantManagementApp.Ingredient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,7 +32,7 @@ public class CustomerTest {
   @BeforeEach
   void setUp() {
     // Create a new customer for testing
-    customer = new Customer(1, "John Doe", "123 Main St", "555-123-4567");
+  customer = new Customer(1L, "John Doe", "123 Main St", "555-123-4567");
 
     // Create test menu items with base ingredients
     frenchFries =
@@ -106,26 +116,26 @@ public class CustomerTest {
 
   @Test
   void testSetAddress() {
-    customer.setAddress("456 Oak Ave");
-    assertEquals(
-        "456 Oak Ave",
-        customer.getAddress(),
-        "Customer address should be updated to '456 Oak Ave'");
+  customer.setAddress("456 Oak Ave");
+  assertEquals(
+    "456 Oak Ave",
+    customer.getAddress(),
+    "Customer address should be updated to '456 Oak Ave'");
   }
 
   @Test
   void testSetPhoneNumber() {
     customer.setPhoneNumber("555-987-6543");
-    assertEquals(
-        "555-987-6543",
-        customer.getPhoneNumber(),
-        "Phone number should be updated to '555-987-6543'");
+  assertEquals(
+    "555-987-6543",
+    customer.getPhoneNumber(),
+    "Phone number should be updated to '555-987-6543'");
   }
 
   @Test
   void testSetCustomerId() {
-    customer.setCustomerId(99);
-    assertEquals(99, customer.getCustomerId(), "Customer ID should be updated to 99");
+  customer.setCustomerId(99L);
+  assertEquals(99L, customer.getCustomerId(), "Customer ID should be updated to 99");
   }
 
   @Test
@@ -218,7 +228,7 @@ public class CustomerTest {
     assertNotNull(order, "Order should not be null after checkout");
     assertEquals(
         customer, order.getCustomer(), "Order should be associated with the correct customer");
-    assertEquals(Order.Status.Placed, order.getStatus(), "New order should have 'Placed' status");
+  assertEquals(Order.Status.Pending, order.getStatus(), "New order should have 'Pending' status");
 
     List<CartItem> orderItems = order.getItems();
     assertNotNull(orderItems, "Order items list should not be null");
@@ -262,7 +272,7 @@ public class CustomerTest {
   @DisplayName("Test Person toString method coverage")
   void testPersonToStringCoverage() {
     // Create a Chef to test Person's toString method since Person is abstract
-    Chef chef = new Chef("Test Chef", "123 Test St", "555-0000", "CHEF001");
+  Chef chef = new Chef("Test Chef", "123 Test St", "555-0000", 1001L);
 
     // Call toString which uses Person's toString implementation
     String result = chef.toString();

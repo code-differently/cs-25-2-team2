@@ -44,7 +44,7 @@ public class OrderEntity {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private OrderStatus status = OrderStatus.Placed;
+    private OrderStatus status = OrderStatus.Pending;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_chef_id", referencedColumnName = "staff_id")
@@ -87,7 +87,7 @@ public class OrderEntity {
     private OrderQueueEntity orderQueue;
     
     public enum OrderStatus {
-        Placed, Preparing, ReadyForDelivery, OutForDelivery, Delivered
+        Pending, Placed, Preparing, ReadyForDelivery, OutForDelivery, Delivered
     }
     
     // Constructors

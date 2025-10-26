@@ -1,4 +1,4 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+
+import com.cs_25_2_team2.RestaurantManagementApp.Cart;
+import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +23,8 @@ public class CartTest {
 
   @BeforeEach
   public void setUp() {
-    // Initialize cart with user ID
-    cart = new Cart(101);
+  // Initialize cart with user ID
+  cart = new Cart(101L);
 
     // Create menu items for testing
     frenchFries =

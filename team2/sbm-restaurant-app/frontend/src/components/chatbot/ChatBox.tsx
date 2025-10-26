@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import "./chatbotstyle.scss";
 
 type Msg = { id?: number; from: "user" | "assistant"; text: string; simulated?: boolean };
 
@@ -54,12 +55,12 @@ export default function ChatBox() {
   return (
     <div style={{ maxWidth: 720, margin: "24px auto", padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
       <h2>Restaurant Chatbot</h2>
-      <div ref={listRef} style={{ maxHeight: 360, overflow: "auto", padding: 8, background: "#fafafa", borderRadius: 6 }}>
+      <div ref={listRef} style={{ maxHeight: 360, overflow: "auto", padding: 8, background: "#fafafa", borderRadius: 6 }} className="chatbot-bubble-container">
         {messages.length === 0 && <div style={{ color: "#666" }}>Ask about your order status or what's in your order.</div>}
         {messages.map((m, i) => (
-          <div key={i} style={{ margin: "8px 0" }}>
+          <div key={i}>
             <div style={{ fontSize: 12, color: "#888" }}>{m.from === "user" ? "You" : m.simulated ? "Assistant (simulated)" : "Assistant"}</div>
-            <div style={{ background: m.from === "user" ? "#e6f7ff" : "#fff", padding: 8, borderRadius: 6, whiteSpace: "pre-wrap" }}>{m.text}</div>
+            <div className={`chatbot-message ${m.from}`}>{m.text}</div>
           </div>
         ))}
       </div>

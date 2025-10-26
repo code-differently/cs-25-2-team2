@@ -181,3 +181,13 @@
 .empty-text {
   color: var(--theme-text-secondary) !important;
 }
+
+:root {
+  --status-placed: #6c63ff;
+  --status-preparing: #fbbf24;
+  --status-ready: #10b981;
+  --status-out-for-delivery: #3b82f6;
+  --status-delivered: #22c55e;
+  --status-cancelled: #ef4444;
+  --status-pending: #a3a3a3; // Add a neutral gray for Pending
+}

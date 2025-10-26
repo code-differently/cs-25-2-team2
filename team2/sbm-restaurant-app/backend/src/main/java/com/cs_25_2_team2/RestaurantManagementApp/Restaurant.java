@@ -30,6 +30,7 @@ public class Restaurant {
   private final RestaurantStats stats;
   private boolean isOpen;
   private final LocalDateTime openedAt;
+  private final List<Staff> staff;
 
   /** Restaurant statistics tracker. */
   public static class RestaurantStats {
@@ -92,6 +93,7 @@ public class Restaurant {
     this.stats = new RestaurantStats();
     this.isOpen = false;
     this.openedAt = LocalDateTime.now();
+    this.staff = new ArrayList<>();
   }
 
   // ========== RESTAURANT OPERATIONS (Single Responsibility Principle) ==========
@@ -245,20 +247,22 @@ public class Restaurant {
    */
   public void addChef(Chef chef) {
     validateStaffMember(chef);
-    if (findChefById(chef.getId()) != null) {
-      throw new IllegalArgumentException("Chef ID already exists: " + chef.getId());
+    if (findStaffById(chef.id) != null) {
+      throw new IllegalArgumentException("Staff ID already exists: " + chef.getFormattedId());
     }
     chefs.add(chef);
+    staff.add(chef); // Add to general staff list
     System.out.println("✅ Chef " + chef.getName() + " joined the team!");
   }
 
   /** Adds delivery staff to the restaurant. */
   public void addDeliveryStaff(Delivery delivery) {
     validateStaffMember(delivery);
-    if (findDeliveryStaffById(delivery.getId()) != null) {
-      throw new IllegalArgumentException("Delivery staff ID already exists: " + delivery.getId());
+    if (findStaffById(delivery.id) != null) {
+      throw new IllegalArgumentException("Staff ID already exists: " + delivery.getFormattedId());
     }
     deliveryStaff.add(delivery);
+    staff.add(delivery); // Add to general staff list
     System.out.println("✅ Delivery staff " + delivery.getName() + " joined the team!");
   }
 
@@ -270,7 +274,7 @@ public class Restaurant {
     if (staff.getName() == null || staff.getName().trim().isEmpty()) {
       throw new IllegalArgumentException("Staff member must have a name");
     }
-    if (staff.getId() == null) {
+    if (staff.id == null) {
       throw new IllegalArgumentException("Staff member must have an ID");
     }
   }
@@ -288,24 +292,24 @@ public class Restaurant {
   // ========== SEARCH AND RETRIEVAL ==========
 
   private Chef findChefById(Long id) {
-    return chefs.stream().filter(chef -> chef.getId().equals(id)).findFirst().orElse(null);
+  return chefs.stream().filter(chef -> chef.id.equals(id)).findFirst().orElse(null);
   }
 
   private Delivery findDeliveryStaffById(Long id) {
-    return deliveryStaff.stream()
-        .filter(delivery -> delivery.getId().equals(id))
-        .findFirst()
-        .orElse(null);
+  return deliveryStaff.stream()
+    .filter(delivery -> delivery.id.equals(id))
+    .findFirst()
+    .orElse(null);
   }
 
   /** Finds staff member by ID (demonstrates polymorphism). */
   public Staff findStaffById(Long id) {
-    // Check chefs first
     Staff staff = findChefById(id);
     if (staff != null) return staff;
-
-    // Then check delivery staff
-    return findDeliveryStaffById(id);
+    staff = findDeliveryStaffById(id);
+    if (staff != null) return staff;
+    // Search in the general staff list
+    return this.staff.stream().filter(s -> s.getRawId().equals(id)).findFirst().orElse(null);
   }
 
   // ========== CUSTOMER MANAGEMENT ==========
@@ -391,6 +395,16 @@ public class Restaurant {
         .forEach(
             entry ->
                 System.out.println("   " + entry.getKey() + ": " + entry.getValue() + " sold"));
+  }
+
+  /** Records an order and updates statistics. */
+  public void recordOrder(Order order) {
+    stats.recordOrder(order);
+  }
+
+  /** Records a delivery and updates statistics. */
+  public void recordDelivery() {
+    stats.recordDelivery();
   }
 
   // ========== GETTERS ==========

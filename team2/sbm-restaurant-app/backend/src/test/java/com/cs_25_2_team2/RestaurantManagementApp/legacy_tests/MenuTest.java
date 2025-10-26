@@ -1,4 +1,7 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
+import com.cs_25_2_team2.RestaurantManagementApp.Menu;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

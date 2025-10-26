@@ -164,7 +164,7 @@ public class UserControllerTest {
         CustomerEntity customer = new CustomerEntity();
         customer.setCustomerId(nextCustomerId++);
         customer.setUsername("testuser");
-        customer.setPasswordHash("testpass");
+    customer.setPasswordHash("hashed_testpass");
         customer.setName("Test User");
         customer.setEmail("test@example.com");
         customer.setPhoneNumber("123-456-7890");
@@ -190,7 +190,7 @@ public class UserControllerTest {
         StaffEntity staff = new StaffEntity();
         staff.setStaffId(nextStaffId++);
         staff.setUsername("staffuser");
-        staff.setPasswordHash("staffpass");
+    staff.setPasswordHash("hashed_staffpass");
         staff.setName("Staff User");
         staff.setRole(StaffEntity.StaffRole.Chef);
         staffStorage.put(staff.getStaffId(), staff);

@@ -18,6 +18,6 @@ public class HealthChecker {
 
     @GetMapping
     public int testSelectOne() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM restaurants;", Integer.class);
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM carts;", Integer.class);
     }
 }

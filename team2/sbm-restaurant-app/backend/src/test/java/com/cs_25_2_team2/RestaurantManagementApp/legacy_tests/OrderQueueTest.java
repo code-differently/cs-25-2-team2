@@ -1,4 +1,12 @@
-package com.cs_25_2_team2.RestaurantManagementApp;
+
+package com.cs_25_2_team2.RestaurantManagementApp.legacy_tests;
+
+import com.cs_25_2_team2.RestaurantManagementApp.OrderQueue;
+import com.cs_25_2_team2.RestaurantManagementApp.Order;
+import com.cs_25_2_team2.RestaurantManagementApp.Customer;
+import com.cs_25_2_team2.RestaurantManagementApp.CartItem;
+import com.cs_25_2_team2.RestaurantManagementApp.MenuItem;
+import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,8 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundException;
-
 public class OrderQueueTest {
   private OrderQueue orderQueue;
   private Order order1, order2, order3;
@@ -27,7 +33,7 @@ public class OrderQueueTest {
   @BeforeEach
   void setUp() {
     orderQueue = new OrderQueue();
-    customer = new Customer(1, "John Doe", "123 Main St", "555-1234");
+  customer = new Customer(1L, "John Doe", "123 Main St", "555-1234");
 
     // Create test orders
     List<CartItem> items1 = new ArrayList<>();

@@ -23,10 +23,10 @@ public class WebConfig implements WebMvcConfigurer {
     private AuthInterceptor authInterceptor;
 
     @Value("${frontend.origin:http://localhost:3000}")
-    private String frontendOrigin;
+    private @jakarta.annotation.Nonnull String frontendOrigin;
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(@org.springframework.lang.NonNull InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/**")  // Apply to all API endpoints
                 .excludePathPatterns(
@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@org.springframework.lang.NonNull CorsRegistry registry) {
         // Permit the frontend development server and any configured origin to call our API.
         registry.addMapping("/api/**")
                 .allowedOrigins(frontendOrigin)

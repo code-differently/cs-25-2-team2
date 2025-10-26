@@ -16,6 +16,7 @@ public class Order {
   private Status status; // Order status
 
   public enum Status {
+    Pending,
     Placed,
     Preparing,
     ReadyForDelivery,
@@ -35,12 +36,12 @@ public class Order {
       throw new IllegalArgumentException("Created date cannot be null");
     }
 
-    this.id = nextId++;
-    this.customer = customer;
-    this.items = List.copyOf(items); // Create immutable copy of the items list
-    this.status = Status.Placed;
-    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
-    this.createdAt = createdAt;
+  this.id = nextId++;
+  this.customer = customer;
+  this.items = List.copyOf(items); // Create immutable copy of the items list
+  this.status = Status.Pending;
+  this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
+  this.createdAt = createdAt;
   }
 
   /** Constructor for creating an order with a specific ID (used for updates). */
@@ -55,12 +56,12 @@ public class Order {
       throw new IllegalArgumentException("Created date cannot be null");
     }
 
-    this.id = id; // Use provided ID instead of generating new one
-    this.customer = customer;
-    this.items = List.copyOf(items); // Create immutable copy of the items list
-    this.status = Status.Placed;
-    this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
-    this.createdAt = createdAt;
+  this.id = id; // Use provided ID instead of generating new one
+  this.customer = customer;
+  this.items = List.copyOf(items); // Create immutable copy of the items list
+  this.status = Status.Pending;
+  this.totalPrice = items.stream().mapToDouble(CartItem::getSubtotal).sum();
+  this.createdAt = createdAt;
   }
 
   public int getId() {
@@ -109,8 +110,10 @@ public class Order {
    */
   private void validateStatusTransition(Status newStatus) {
     switch (status) {
-      case Delivered -> {
-        throw new IllegalStateException("Cannot change status of a delivered order");
+      case Pending -> {
+        if (newStatus != Status.Placed) {
+          throw new IllegalStateException("Order can only move from Pending to Placed");
+        }
       }
       case Placed -> {
         if (newStatus != Status.Preparing) {
@@ -132,6 +135,9 @@ public class Order {
         if (newStatus != Status.Delivered) {
           throw new IllegalStateException("Order can only move from OutForDelivery to Delivered");
         }
+      }
+      case Delivered -> {
+        throw new IllegalStateException("Cannot change status of a delivered order");
       }
     }
   }

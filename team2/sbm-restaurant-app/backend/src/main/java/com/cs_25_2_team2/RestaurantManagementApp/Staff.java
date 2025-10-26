@@ -7,6 +7,18 @@ import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundExcepti
 
 public abstract class Staff extends Person {
   protected Long id;
+  /**
+   * Returns the raw staff ID (Long) for internal/test use.
+   */
+  public Long getRawId() {
+    return id;
+  }
+  /**
+   * Returns the staff member's formatted ID (for display).
+   */
+  public String getId() {
+    return getFormattedId();
+  }
   protected String role;
   protected final List<Order> assignedOrders;
   protected final List<Order> completedOrders;
@@ -19,8 +31,9 @@ public abstract class Staff extends Person {
     this.completedOrders = new ArrayList<>();
   }
 
-  public Long getId() {
-    return id;
+  public String getFormattedId() {
+    // Default implementation: zero-padded to 3 digits, override in subclasses
+    return String.format("%03d", id);
   }
 
   public String getRole() {
@@ -101,5 +114,17 @@ public abstract class Staff extends Person {
   public String toString() {
     return String.format(
         "Staff{name='%s', id='%s', role='%s', phone='%s'}", getName(), id, role, getPhoneNumber());
+  }
+  
+  public String getName() {
+    return name;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
   }
 }

@@ -100,7 +100,7 @@ public class OrderController {
             }
             
             // Set order details
-            newOrder.setStatus(OrderEntity.OrderStatus.Placed);
+            newOrder.setStatus(OrderEntity.OrderStatus.Pending);
             newOrder.setCreatedAt(LocalDateTime.now());
             
             // For customers, could associate with their account in future enhancement

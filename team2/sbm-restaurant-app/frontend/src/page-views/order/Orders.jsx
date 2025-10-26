@@ -242,6 +242,7 @@ export default function OrdersPage() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent"
             >
               <option value="all">All Status</option>
+              <option value="Pending">Pending</option>
               <option value="Placed">Placed</option>
               <option value="Preparing">Preparing</option>
               <option value="ReadyForDelivery">Ready for Delivery</option>
