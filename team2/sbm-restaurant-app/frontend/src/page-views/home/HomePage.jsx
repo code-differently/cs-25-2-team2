@@ -109,7 +109,7 @@ export default function HomePage() {
       </section>
 
       {/* Potato Recipes Section */}
-      <PotatoRecipes number={2} />
+      {/*<PotatoRecipes number={2} />
 
       {/* Team Section */}
       <TeamSection />
