@@ -13,6 +13,31 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class OpenAiChatControllerTest {
+    @Test
+    void testPostMessageFallbackOnIllegalStateException() throws IOException, InterruptedException {
+        when(service.sendMessage(anyString(), anyBoolean())).thenThrow(new IllegalStateException("No API key"));
+        when(service.simulateOrderReply(anyString())).thenReturn("Simulated fallback");
+        Map<String, Object> requestBody = Map.of("message", "Hello", "simulate", false);
+        ResponseEntity<?> response = controller.postMessage(requestBody);
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().toString().contains("Simulated fallback"));
+    assertTrue(response.getBody().toString().contains("simulated"));
+    }
+
+    @Test
+    void testPostMessageFallbackOnIOException() throws IOException, InterruptedException {
+        when(service.sendMessage(anyString(), anyBoolean())).thenThrow(new IOException("Upstream error"));
+        when(service.simulateOrderReply(anyString())).thenReturn("Simulated fallback");
+        Map<String, Object> requestBody = Map.of("message", "Hello", "simulate", false);
+        ResponseEntity<?> response = controller.postMessage(requestBody);
+        assertEquals(200, response.getStatusCode().value());
+        assertNotNull(response.getBody());
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().toString().contains("Simulated fallback"));
+    assertTrue(response.getBody().toString().contains("simulated"));
+    }
 
     private OpenAiService service;
     private OpenAiChatController controller;
@@ -54,8 +79,9 @@ class OpenAiChatControllerTest {
 
         assertEquals(400, response.getStatusCode().value());
         assertNotNull(response.getBody(), "Response body should not be null");
-        assertTrue(response.getBody().toString().contains("error"));
-        assertTrue(response.getBody().toString().contains("message is required"));
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().toString().contains("error"));
+    assertTrue(response.getBody().toString().contains("message is required"));
 
         @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
@@ -70,7 +96,8 @@ class OpenAiChatControllerTest {
         ResponseEntity<?> response = controller.delete(1L);
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().toString().contains("deleted=1"));
+    assertNotNull(response.getBody());
+    assertTrue(response.getBody().toString().contains("deleted=1"));
     }
 
     @Test

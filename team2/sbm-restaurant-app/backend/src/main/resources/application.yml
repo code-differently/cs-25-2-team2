@@ -1,3 +1,6 @@
 spoonacular:
   api:
-    key: 182cb87ece5940ef9ee3a2af3026726c
+    key: '${Spoonacular_API_Key}'
+openai:
+  api:
+    key: '${OPENAI_API_KEY}'

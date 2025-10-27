@@ -127,7 +127,8 @@ public class OpenAiService {
         return Map.of("id", id, "reply", assistantReply, "simulated", false);
     }
 
-    private boolean looksLikeOrderQuery(String message) {
+    /* package-private for test access */
+    boolean looksLikeOrderQuery(String message) {
         String m = message == null ? "" : message.toLowerCase();
         return m.contains("order") || m.contains("status") || m.contains("what's in my order") || m.contains("what is in my order") || m.contains("items in my order") || m.matches(".*order\\s+#?\\d+.*");
     }

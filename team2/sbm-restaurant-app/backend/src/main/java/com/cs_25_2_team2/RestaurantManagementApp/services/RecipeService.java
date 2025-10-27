@@ -10,8 +10,13 @@ import reactor.core.publisher.Mono;
 public class RecipeService {
     private final WebClient.Builder webClientBuilder;
 
-    @Value("${spoonacular.api.key}")
-    private String spoonKey;
+    @Value("${Spoonacular_API_Key}")
+        private String spoonKey;
+
+        // Setter for test access
+        public void setSpoonKey(String spoonKey) {
+            this.spoonKey = spoonKey;
+        }
 
     public RecipeService(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder;
