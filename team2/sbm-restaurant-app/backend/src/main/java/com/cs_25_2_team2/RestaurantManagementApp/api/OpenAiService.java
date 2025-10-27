@@ -1,4 +1,3 @@
-
 package com.cs_25_2_team2.RestaurantManagementApp.api;
 import com.cs_25_2_team2.RestaurantManagementApp.api.Chatbot;
 
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -132,7 +132,7 @@ public class OpenAiService {
         return m.contains("order") || m.contains("status") || m.contains("what's in my order") || m.contains("what is in my order") || m.contains("items in my order") || m.matches(".*order\\s+#?\\d+.*");
     }
 
-    private String simulateOrderReply(String message) {
+    public String simulateOrderReply(String message) {
         // Basic heuristic: if contains an order number, echo a mocked status; otherwise provide a general answer.
         String m = message == null ? "" : message.toLowerCase();
         var idMatch = java.util.regex.Pattern.compile("\\b(order\\s+#?)(\\d+)\\b").matcher(m);
