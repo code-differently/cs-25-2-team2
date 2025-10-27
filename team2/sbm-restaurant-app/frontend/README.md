@@ -33,4 +33,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+Chat UI (development)
+---------------------
+
+This project includes a minimal chat UI that talks to the Spring Boot backend via a Next.js API route (proxy). The proxy injects `simulate: true` by default so you can run the frontend without an OpenAI API key.
+
+Run frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The chat UI will be available at http://localhost:3000.
+
+To point the proxy to a different backend URL, set the `BACKEND_URL` env var before starting Next.js:
+
+```bash
+export BACKEND_URL=http://localhost:8080
+npm run dev
+```
+
+
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
