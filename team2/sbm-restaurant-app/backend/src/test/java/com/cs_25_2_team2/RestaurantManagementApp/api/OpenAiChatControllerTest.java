@@ -22,8 +22,10 @@ class OpenAiChatControllerTest {
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     assertNotNull(response.getBody());
-    assertTrue(response.getBody().toString().contains("Simulated fallback"));
-    assertTrue(response.getBody().toString().contains("simulated"));
+    Object body = response.getBody();
+    assertNotNull(body);
+    assertTrue(body.toString().contains("Simulated fallback"));
+    assertTrue(body.toString().contains("simulated"));
     }
 
     @Test
@@ -35,8 +37,10 @@ class OpenAiChatControllerTest {
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     assertNotNull(response.getBody());
-    assertTrue(response.getBody().toString().contains("Simulated fallback"));
-    assertTrue(response.getBody().toString().contains("simulated"));
+    Object body = response.getBody();
+    assertNotNull(body);
+    assertTrue(body.toString().contains("Simulated fallback"));
+    assertTrue(body.toString().contains("simulated"));
     }
 
     private OpenAiService service;
@@ -80,8 +84,10 @@ class OpenAiChatControllerTest {
         assertEquals(400, response.getStatusCode().value());
         assertNotNull(response.getBody(), "Response body should not be null");
     assertNotNull(response.getBody());
-    assertTrue(response.getBody().toString().contains("error"));
-    assertTrue(response.getBody().toString().contains("message is required"));
+    Object body = response.getBody();
+    assertNotNull(body);
+    assertTrue(body.toString().contains("error"));
+    assertTrue(body.toString().contains("message is required"));
 
         @SuppressWarnings("unchecked")
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
@@ -97,7 +103,9 @@ class OpenAiChatControllerTest {
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
     assertNotNull(response.getBody());
-    assertTrue(response.getBody().toString().contains("deleted=1"));
+    Object body = response.getBody();
+    assertNotNull(body);
+    assertTrue(body.toString().contains("deleted=1"));
     }
 
     @Test
