@@ -14,10 +14,10 @@ class ChatMessageTest {
     }
 
     @Test
-    void testSetAndGetMessage() {
-        String message = "Hello, World!";
-        chatMessage.setMessage(message);
-        assertEquals(message, chatMessage.getMessage());
+    void testSetAndGetContent() {
+        String content = "Hello, World!";
+        chatMessage.setContent(content);
+        assertEquals(content, chatMessage.getContent());
     }
 
     @Test
