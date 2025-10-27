@@ -1,6 +1,0 @@
-spoonacular:
-  api:
-    key: '${Spoonacular_API_Key}'
-openai:
-  api:
-    key: '${OPENAI_API_KEY}'
