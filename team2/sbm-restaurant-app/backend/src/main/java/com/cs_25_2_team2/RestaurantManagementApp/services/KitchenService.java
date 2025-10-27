@@ -30,6 +30,8 @@ public class KitchenService {
     
     private final OrderQueue orderQueue;
     private final Map<String, Chef> chefs = new HashMap<>();
+    // Use Long for chef keys for consistency
+    private final Map<Long, Chef> chefsById = new HashMap<>();
     private final Map<String, Staff> kitchenStaff = new HashMap<>();
     
     /**
@@ -44,29 +46,38 @@ public class KitchenService {
      * Get all pending orders for kitchen preparation
      */
     public List<Order> getPendingOrders() {
-        return new ArrayList<>(); // TODO: Fix OrderQueue.getPendingOrders()
+        // Return orders with status Pending
+        return orderQueue.getAll().stream()
+            .filter(order -> order.getStatus() == Order.Status.Pending)
+            .toList();
     }
     
     /**
      * Get orders currently being prepared
      */
     public List<Order> getOrdersInPreparation() {
-        return new ArrayList<>(); // TODO: Fix OrderQueue.getOrdersInPreparation()
+        // Return orders with status Preparing
+        return orderQueue.getAll().stream()
+            .filter(order -> order.getStatus() == Order.Status.Preparing)
+            .toList();
     }
     
     /**
      * Get completed orders ready for delivery
      */
     public List<Order> getReadyOrders() {
-        return new ArrayList<>(); // TODO: Fix OrderQueue.getReadyOrders()
+        // Return orders with status ReadyForDelivery
+        return orderQueue.getAll().stream()
+            .filter(order -> order.getStatus() == Order.Status.ReadyForDelivery)
+            .toList();
     }
     
     /**
      * Add order to kitchen queue
      */
     public void addOrderToQueue(Order order) {
-        // TODO: Fix OrderQueue.addOrder() method
-        System.out.println("Order queued: " + order.toString());
+    orderQueue.add(order);
+    System.out.println("Order queued: " + order.toString());
     }
     
     /**
@@ -136,7 +147,7 @@ public class KitchenService {
      * Get all chefs in the kitchen
      */
     public List<Chef> getAllChefs() {
-        return new ArrayList<>(chefs.values());
+    return new ArrayList<>(chefsById.values());
     }
     
     /**
@@ -150,22 +161,22 @@ public class KitchenService {
      * Get chef by ID
      */
     public Chef getChefById(Long chefId) {
-        return chefs.get(String.valueOf(chefId));
+    return chefsById.get(chefId);
     }
     
     /**
      * Add chef to kitchen
      */
     public void addChef(Chef chef) {
-        chefs.put(String.valueOf(chef.getId()), chef);
-        kitchenStaff.put(String.valueOf(chef.getId()), chef);
+    chefsById.put(chef.getRawId(), chef);
+    kitchenStaff.put(String.valueOf(chef.getRawId()), chef);
     }
     
     /**
      * Get available chefs (not busy)
      */
     public List<Chef> getAvailableChefs() {
-        return chefs.values().stream()
+        return chefsById.values().stream()
             .filter(chef -> !chef.isBusy())
             .toList();
     }
@@ -174,8 +185,8 @@ public class KitchenService {
      * Get orders assigned to a specific chef
      */
     public List<Order> getOrdersForChef(String chefId) {
-        Chef chef = chefs.get(chefId);
-        return chef != null ? chef.getAssignedOrders() : new ArrayList<>();
+    Chef chef = chefsById.get(Long.valueOf(chefId));
+    return chef != null ? chef.getAssignedOrders() : new ArrayList<>();
     }
     
     /**
@@ -227,8 +238,8 @@ public class KitchenService {
      * Find available chef using existing Chef.isBusy() method
      */
     private Chef findAvailableChef() {
-        return chefs.values().stream()
-            .filter(chef -> !chef.isBusy()) // Uses existing isBusy() method
+        return chefsById.values().stream()
+            .filter(chef -> !chef.isBusy())
             .findFirst()
             .orElse(null);
     }
@@ -237,7 +248,7 @@ public class KitchenService {
      * Find chef assigned to a specific order
      */
     private Chef findChefByOrder(Order order) {
-        return chefs.values().stream()
+        return chefsById.values().stream()
             .filter(chef -> chef.getAssignedOrders().contains(order))
             .findFirst()
             .orElse(null);
@@ -256,7 +267,7 @@ public class KitchenService {
         addChef(chef2);
         addChef(chef3);
         
-        System.out.println("Initialized kitchen with " + chefs.size() + " chefs");
+    System.out.println("Initialized kitchen with " + chefsById.size() + " chefs");
     }
     
     /**
@@ -264,7 +275,7 @@ public class KitchenService {
      */
     public Map<String, Object> getKitchenStatistics() {
         Map<String, Object> stats = new HashMap<>();
-        stats.put("totalChefs", chefs.size());
+    stats.put("totalChefs", chefsById.size());
         stats.put("availableChefs", getAvailableChefs().size());
         stats.put("pendingOrders", getPendingOrders().size());
         stats.put("preparingOrders", getOrdersInPreparation().size());

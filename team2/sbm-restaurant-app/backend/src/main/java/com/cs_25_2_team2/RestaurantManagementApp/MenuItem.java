@@ -21,7 +21,8 @@ public class MenuItem {
     Boiled,
     Steamed,
     Scalloped,
-    Soupped
+    Soupped,
+    Raw
   }
 
   public enum PotatoType {

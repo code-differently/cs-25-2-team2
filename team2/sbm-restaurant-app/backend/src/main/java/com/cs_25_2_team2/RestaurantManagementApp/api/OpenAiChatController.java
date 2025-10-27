@@ -86,9 +86,13 @@ public class OpenAiChatController {
             Map<String, Object> result = service.sendMessage(message, simulate);
             return ResponseEntity.ok(result);
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+            // Fall back to a simulated response if OpenAI API key is missing
+            String fallbackReply = service.simulateOrderReply(message);
+            return ResponseEntity.ok(Map.of("reply", fallbackReply, "simulated", true));
         } catch (IOException | InterruptedException e) {
-            return ResponseEntity.status(502).body(Map.of("error", "OpenAI request failed", "details", e.getMessage()));
+            // Fall back to a simulated response if OpenAI API call fails
+            String fallbackReply = service.simulateOrderReply(message);
+            return ResponseEntity.ok(Map.of("reply", fallbackReply, "simulated", true));
         }
     }
 

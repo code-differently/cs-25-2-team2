@@ -261,8 +261,11 @@ public class RestaurantService {
         
         // Handle status-specific logic
         switch (newStatus) {
+            case Pending:
+                // Pending is the initial state, no special handling needed
+                break;
             case Placed:
-                // Initial status, no special handling needed
+                // Placed after Pending, no special handling needed
                 break;
             case Preparing:
                 if (order.getAssignedChef() == null) {
@@ -304,6 +307,8 @@ public class RestaurantService {
      */
     private boolean isValidStatusTransition(OrderEntity.OrderStatus from, OrderEntity.OrderStatus to) {
         switch (from) {
+            case Pending:
+                return to == OrderEntity.OrderStatus.Placed;
             case Placed:
                 return to == OrderEntity.OrderStatus.Preparing;
             case Preparing:

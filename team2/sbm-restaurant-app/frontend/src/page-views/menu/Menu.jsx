@@ -25,7 +25,12 @@ export default function MenuPage() {
     if (category !== "All" && item.category !== category) {
       shouldShow = false;
     }
-    if (!item.name.toLowerCase().includes(search.toLowerCase())) {
+    const searchLower = search.toLowerCase();
+    const matchesName = item.name.toLowerCase().includes(searchLower);
+    const matchesToppings =
+      item.toppings &&
+      item.toppings.some((topping) => topping.name.toLowerCase().includes(searchLower));
+    if (!matchesName && !matchesToppings) {
       shouldShow = false;
     }
     return shouldShow;

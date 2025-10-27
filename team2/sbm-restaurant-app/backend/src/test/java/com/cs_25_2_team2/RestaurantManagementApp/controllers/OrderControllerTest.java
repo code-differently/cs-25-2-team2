@@ -15,22 +15,28 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
 import com.cs_25_2_team2.RestaurantManagementApp.entities.OrderEntity;
 import com.cs_25_2_team2.RestaurantManagementApp.repositories.OrderRepository;
+import com.cs_25_2_team2.RestaurantManagementApp.services.RestaurantService;
+
+import jakarta.servlet.http.HttpSession;
 
 public class OrderControllerTest {
 
     private OrderController controller;
     private OrderRepository proxyRepo;
     private InMemoryHandler handler;
+    private RestaurantService restaurantService; 
+    private HttpSession session;
 
     @BeforeEach
     void setup() throws Exception {
-        controller = new OrderController();
+        controller = new OrderController(proxyRepo, restaurantService);
 
         // Create dynamic proxy repository backed by in-memory handler
         handler = new InMemoryHandler();
@@ -44,6 +50,29 @@ public class OrderControllerTest {
         Field repoField = OrderController.class.getDeclaredField("orderRepository");
         repoField.setAccessible(true);
         repoField.set(controller, proxyRepo);
+
+        // Mock HttpSession with basic attributes
+            session = new jakarta.servlet.http.HttpSession() {
+            private int maxInactiveInterval = 0;
+            @Override public int getMaxInactiveInterval() { return maxInactiveInterval; }
+            @Override public void setMaxInactiveInterval(int interval) { maxInactiveInterval = interval; }
+            @Override public jakarta.servlet.ServletContext getServletContext() { return null; }
+            private final Map<String, Object> attributes = new HashMap<>();
+            {
+                attributes.put("userId", 1L);
+                attributes.put("userType", "CUSTOMER");
+                attributes.put("username", "testuser");
+            }
+            @Override public Object getAttribute(String name) { return attributes.get(name); }
+            @Override public void setAttribute(String name, Object value) { attributes.put(name, value); }
+            @Override public void removeAttribute(String name) { attributes.remove(name); }
+            @Override public java.util.Enumeration<String> getAttributeNames() { return java.util.Collections.enumeration(attributes.keySet()); }
+            @Override public long getCreationTime() { return 0; }
+            @Override public String getId() { return "mockSession"; }
+            @Override public long getLastAccessedTime() { return 0; }
+            @Override public void invalidate() {}
+            @Override public boolean isNew() { return false; }
+        };
     }
 
     @Test
@@ -51,44 +80,17 @@ public class OrderControllerTest {
         Map<String, Object> body = new HashMap<>();
         body.put("totalPrice", "12.50");
 
-        ResponseEntity<OrderEntity> resp = controller.createOrder(body);
-
-        assertEquals(201, resp.getStatusCodeValue(), "Should return 201 Created");
-        OrderEntity created = resp.getBody();
-        assertNotNull(created, "Created order body should not be null");
-        // status default set to "Placed" by controller
-        try {
-            Method getStatus = created.getClass().getMethod("getStatus");
-            Object status = getStatus.invoke(created);
-            assertEquals("Placed", status.toString(), "Default status should be Placed");
-        } catch (Exception ex) {
-            fail("OrderEntity should have getStatus() method: " + ex.getMessage());
-        }
-
-        // createdAt set
-        try {
-            Method getCreatedAt = created.getClass().getMethod("getCreatedAt");
-            Object createdAt = getCreatedAt.invoke(created);
-            assertNotNull(createdAt, "createdAt should be set");
-            assertTrue(createdAt instanceof LocalDateTime, "createdAt should be LocalDateTime");
-        } catch (Exception ex) {
-            fail("OrderEntity should have getCreatedAt() method: " + ex.getMessage());
-        }
-
-        // totalPrice check
-        try {
-            Method getTotalPrice = created.getClass().getMethod("getTotalPrice");
-            Object tp = getTotalPrice.invoke(created);
-            assertNotNull(tp, "totalPrice should be set on created order");
-            assertTrue(tp instanceof BigDecimal, "totalPrice should be BigDecimal");
-            assertEquals(0, new BigDecimal("12.50").compareTo((BigDecimal) tp), "totalPrice must match");
-        } catch (Exception ex) {
-            fail("OrderEntity should have getTotalPrice() method: " + ex.getMessage());
-        }
-
-        // id assigned by repository proxy
-        Long id = handler.getIdFromEntity(created);
-        assertNotNull(id, "Saved order should have an id assigned");
+    ResponseEntity<?> resp = controller.createOrder(body, session);
+    Assertions.assertEquals(201, resp.getStatusCodeValue(), "Should return 201 Created");
+    Object respBody = resp.getBody();
+    assertNotNull(respBody, "Created order body should not be null");
+    assertTrue(respBody instanceof Map, "Response should be a Map");
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    assertNotNull(response.get("status"), "Status should not be null");
+    Assertions.assertEquals("Pending", response.get("status").toString(), "Default status should be Pending");
+    assertNotNull(response.get("orderId"), "Saved order should have an id assigned");
+    assertNotNull(response.get("totalPrice"), "totalPrice should not be null");
+    Assertions.assertTrue(new BigDecimal("12.50").compareTo(new BigDecimal(response.get("totalPrice").toString())) == 0, "totalPrice must match");
     }
 
     @Test
@@ -98,8 +100,8 @@ public class OrderControllerTest {
         Map<String, Object> b = new HashMap<>();
         b.put("totalPrice", "4.50");
 
-        controller.createOrder(a);
-        controller.createOrder(b);
+    controller.createOrder(a, session);
+    controller.createOrder(b, session);
 
         List<OrderEntity> all = controller.getAllOrders();
         assertNotNull(all);
@@ -121,19 +123,23 @@ public class OrderControllerTest {
         Map<String, Object> body = new HashMap<>();
         body.put("totalPrice", "7.25");
 
-        ResponseEntity<OrderEntity> createdResp = controller.createOrder(body);
-        OrderEntity created = createdResp.getBody();
-        assertNotNull(created);
+    ResponseEntity<?> createdResp = controller.createOrder(body, session);
+    Object respBody = createdResp.getBody();
+    assertNotNull(respBody);
+    assertTrue(respBody instanceof Map, "Response body should be a Map");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    assertNotNull(response, "Response map should not be null");
+    assertNotNull(response.get("orderId"));
+    Long id = Long.valueOf(response.get("orderId").toString());
+    assertNotNull(id);
 
-        Long id = handler.getIdFromEntity(created);
-        assertNotNull(id);
+    ResponseEntity<OrderEntity> getResp = controller.getOrderById(id);
+    assertEquals(200, getResp.getStatusCode().value());
+    assertNotNull(getResp.getBody());
 
-        ResponseEntity<OrderEntity> getResp = controller.getOrderById(id);
-        assertEquals(200, getResp.getStatusCodeValue());
-        assertNotNull(getResp.getBody());
-
-        ResponseEntity<OrderEntity> notFound = controller.getOrderById(999999L);
-        assertEquals(404, notFound.getStatusCodeValue());
+    ResponseEntity<OrderEntity> notFound = controller.getOrderById(999999L);
+    assertEquals(404, notFound.getStatusCode().value());
     }
 
     @Test
@@ -141,29 +147,38 @@ public class OrderControllerTest {
         Map<String, Object> body = new HashMap<>();
         body.put("totalPrice", "2.00");
 
-        OrderEntity created = controller.createOrder(body).getBody();
-        Long id = handler.getIdFromEntity(created);
+        ResponseEntity<?> createdResp = controller.createOrder(body, session);
+        Object respBody = createdResp.getBody();
+        assertNotNull(respBody);
+    assertTrue(respBody instanceof Map, "Response body should be a Map");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    assertNotNull(response, "Response map should not be null");
+    assertNotNull(response.get("orderId"));
+        Long id = Long.valueOf(response.get("orderId").toString());
         assertNotNull(id);
 
         Map<String, Object> statusBody = new HashMap<>();
-        statusBody.put("status", "Paid");
+        statusBody.put("status", "Placed"); // Use valid enum value
 
         ResponseEntity<OrderEntity> updated = controller.updateStatus(id, statusBody);
-        assertEquals(200, updated.getStatusCodeValue());
+    assertEquals(200, updated.getStatusCode().value());
+        assertNotNull(updated.getBody());
         try {
+            assertNotNull(updated.getBody(), "Updated order body should not be null");
             Method getStatus = updated.getBody().getClass().getMethod("getStatus");
-            assertEquals("Paid", getStatus.invoke(updated.getBody()).toString());
+            assertEquals("Placed", getStatus.invoke(updated.getBody()).toString());
         } catch (Exception ex) {
             fail("OrderEntity should have getStatus method: " + ex.getMessage());
         }
 
         // Bad request when no status provided
         ResponseEntity<OrderEntity> badReq = controller.updateStatus(id, new HashMap<>());
-        assertEquals(400, badReq.getStatusCodeValue());
+    assertEquals(400, badReq.getStatusCode().value());
 
         // Not found when non-existing id
         ResponseEntity<OrderEntity> notFound = controller.updateStatus(888888L, statusBody);
-        assertEquals(404, notFound.getStatusCodeValue());
+    assertEquals(404, notFound.getStatusCode().value());
     }
 
     @Test
@@ -171,15 +186,22 @@ public class OrderControllerTest {
         Map<String, Object> body = new HashMap<>();
         body.put("totalPrice", "9.99");
 
-        OrderEntity created = controller.createOrder(body).getBody();
-        Long id = handler.getIdFromEntity(created);
+    ResponseEntity<?> createdResp = controller.createOrder(body, session);
+    Object respBody = createdResp.getBody();
+    assertNotNull(respBody);
+    assertTrue(respBody instanceof Map, "Response body should be a Map");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    assertNotNull(response, "Response map should not be null");
+    assertNotNull(response.get("orderId"));
+    Long id = Long.valueOf(response.get("orderId").toString());
 
-        ResponseEntity<Void> delResp = controller.cancelOrder(id);
-        assertEquals(204, delResp.getStatusCodeValue());
+    ResponseEntity<Void> delResp = controller.cancelOrder(id);
+    assertEquals(204, delResp.getStatusCode().value());
 
-        // second delete should be 404
-        ResponseEntity<Void> second = controller.cancelOrder(id);
-        assertEquals(404, second.getStatusCodeValue());
+    // second delete should be 404
+    ResponseEntity<Void> second = controller.cancelOrder(id);
+    assertEquals(404, second.getStatusCode().value());
     }
 
     // ---------- Helper: In-memory InvocationHandler for OrderRepository ----------
@@ -309,7 +331,7 @@ public class OrderControllerTest {
         org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
     }
 
-    private void assertEquals(int expected, int actual, String message) {
+    private void assertEquals(BigDecimal expected, BigDecimal actual, String message) {
         org.junit.jupiter.api.Assertions.assertEquals(expected, actual, message);
     }
 
@@ -336,4 +358,95 @@ public class OrderControllerTest {
     private void fail(String message) {
         org.junit.jupiter.api.Assertions.fail(message);
     }
+
+    // ---------- Additional Tests for Edge Cases ----------
+    @Test
+void createOrder_missingTotalPrice_returnsBadRequest() {
+    Map<String, Object> body = new HashMap<>();
+    // No totalPrice
+    ResponseEntity<?> resp = controller.createOrder(body, session);
+    assertEquals(400, resp.getStatusCode().value());
+}
+
+@Test
+void createOrder_missingSessionAttributes_returnsBadRequest() {
+    Map<String, Object> body = new HashMap<>();
+    body.put("totalPrice", "10.00");
+    // Session missing userId and userType
+    HttpSession badSession = new jakarta.servlet.http.HttpSession() {
+        private final Map<String, Object> attributes = new HashMap<>();
+        @Override public Object getAttribute(String name) { return attributes.get(name); }
+        @Override public void setAttribute(String name, Object value) { attributes.put(name, value); }
+        @Override public void removeAttribute(String name) { attributes.remove(name); }
+        @Override public java.util.Enumeration<String> getAttributeNames() { return java.util.Collections.enumeration(attributes.keySet()); }
+        @Override public long getCreationTime() { return 0; }
+        @Override public String getId() { return "badSession"; }
+        @Override public long getLastAccessedTime() { return 0; }
+        @Override public int getMaxInactiveInterval() { return 0; }
+        @Override public void setMaxInactiveInterval(int interval) {}
+        @Override public jakarta.servlet.ServletContext getServletContext() { return null; }
+        @Override public void invalidate() {}
+        @Override public boolean isNew() { return false; }
+    };
+    ResponseEntity<?> resp = controller.createOrder(body, badSession);
+    assertEquals(400, resp.getStatusCode().value());
+}
+
+@Test
+void updateStatus_invalidStatus_returnsBadRequest() {
+    Map<String, Object> body = new HashMap<>();
+    body.put("totalPrice", "5.00");
+    ResponseEntity<?> createdResp = controller.createOrder(body, session);
+    Object respBody = createdResp.getBody();
+    assertNotNull(respBody);
+    @SuppressWarnings("unchecked")
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    Long id = Long.valueOf(response.get("orderId").toString());
+    Map<String, Object> statusBody = new HashMap<>();
+    statusBody.put("status", "NotAStatus");
+    ResponseEntity<OrderEntity> resp = controller.updateStatus(id, statusBody);
+    assertEquals(400, resp.getStatusCode().value());
+}
+
+@Test
+void updateStatus_missingStatus_returnsBadRequest() {
+    Map<String, Object> body = new HashMap<>();
+    body.put("totalPrice", "5.00");
+    ResponseEntity<?> createdResp = controller.createOrder(body, session);
+    Object respBody = createdResp.getBody();
+    assertNotNull(respBody);
+    @SuppressWarnings("unchecked")
+    Map<String, Object> response = (Map<String, Object>) respBody;
+    Long id = Long.valueOf(response.get("orderId").toString());
+    Map<String, Object> statusBody = new HashMap<>();
+    ResponseEntity<OrderEntity> resp = controller.updateStatus(id, statusBody);
+    assertEquals(400, resp.getStatusCode().value());
+}
+
+@Test
+void updateStatus_nonExistentOrder_returnsNotFound() {
+    Map<String, Object> statusBody = new HashMap<>();
+    statusBody.put("status", "Placed");
+    ResponseEntity<OrderEntity> resp = controller.updateStatus(999999L, statusBody);
+    assertEquals(404, resp.getStatusCode().value());
+}
+
+@Test
+void cancelOrder_nonExistentOrder_returnsNotFound() {
+    ResponseEntity<Void> resp = controller.cancelOrder(999999L);
+    assertEquals(404, resp.getStatusCode().value());
+}
+
+@Test
+void getAllOrders_empty_returnsEmptyList() {
+    List<OrderEntity> all = controller.getAllOrders();
+    assertNotNull(all);
+    assertTrue(all.isEmpty(), "Should be empty when no orders exist");
+}
+
+@Test
+void getOrderById_nonExistent_returnsNotFound() {
+    ResponseEntity<OrderEntity> resp = controller.getOrderById(999999L);
+    assertEquals(404, resp.getStatusCode().value());
+}
 }

@@ -49,27 +49,27 @@ const mockKitchenOrders = [
     customerId: 1,
     customerName: "John Doe",
     totalPrice: 13.97,
-    status: "Pending",
+    status: "Preparing",
     createdAt: "2025-10-22T10:30:00",
-    items: ["French Fries x2", "Loaded Potato Skins x1"]
+    items: ["Texas Loaded Baked Potato x2", "Potato Salad x1"]
   },
   {
     id: 102,
     customerId: 1,
     customerName: "John Doe",
     totalPrice: 4.99,
-    status: "Preparing",
+    status: "ReadyForDelivery",
     createdAt: "2025-10-22T12:45:00",
-    items: ["Potato Soup x1"]
+    items: ["Loaded Baked Potato Soup x1"]
   },
   {
     id: 103,
     customerId: 2,
     customerName: "Jane Smith",
-    totalPrice: 13.27,
-    status: "ReadyForDelivery",
+    totalPrice: 14.99,
+    status: "Delivered",
     createdAt: "2025-10-22T11:20:00",
-    items: ["Baked Potato x2", "Sweet Potato Fries x1"]
+    items: ["Aloo Tikki Chaat x1"]
   }
 ];
 
@@ -82,7 +82,14 @@ export const kitchenService = {
       return response.data;
     } catch (error) {
       console.warn('Backend API unreachable for getPendingOrders(), using mock data:', error.message);
-      return mockKitchenOrders.filter(order => order.status === 'Pending');
+      return mockKitchenOrders.filter(order => [
+        'Pending',
+        'Delivered',
+        'Preparing',
+        'Out for Delivery',
+        'ReadyForDelivery',
+        'Cancelled'
+      ].includes(order.status));
     }
   },
 
@@ -121,6 +128,14 @@ export const kitchenService = {
       
       const order = mockKitchenOrders.find(o => o.id === orderId);
       if (order && order.status === 'Preparing') {
+        order.status = 'Out for Delivery';
+        return {
+          success: true,
+          message: "Order marked as out for delivery",
+          orderId: orderId
+        };
+      }
+      if (order && order.status === 'Out for Delivery') {
         order.status = 'ReadyForDelivery';
         return {
           success: true,
@@ -146,8 +161,11 @@ export const kitchenService = {
       
       return {
         pending: mockKitchenOrders.filter(order => order.status === 'Pending'),
+        delivered: mockKitchenOrders.filter(order => order.status === 'Delivered'),
         preparing: mockKitchenOrders.filter(order => order.status === 'Preparing'),
-        ready: mockKitchenOrders.filter(order => order.status === 'ReadyForDelivery')
+        outForDelivery: mockKitchenOrders.filter(order => order.status === 'Out for Delivery'),
+        readyForDelivery: mockKitchenOrders.filter(order => order.status === 'ReadyForDelivery'),
+        cancelled: mockKitchenOrders.filter(order => order.status === 'Cancelled')
       };
     }
   },
@@ -160,11 +178,15 @@ export const kitchenService = {
     } catch (error) {
       console.warn('Backend API unreachable for getEstimatedPreparationTime(), using mock data:', error.message);
       
-      const pendingCount = mockKitchenOrders.filter(o => o.status === 'Pending').length;
-      const preparingCount = mockKitchenOrders.filter(o => o.status === 'Preparing').length;
+  const pendingCount = mockKitchenOrders.filter(o => o.status === 'Pending').length;
+  const deliveredCount = mockKitchenOrders.filter(o => o.status === 'Delivered').length;
+  const preparingCount = mockKitchenOrders.filter(o => o.status === 'Preparing').length;
+  const outForDeliveryCount = mockKitchenOrders.filter(o => o.status === 'Out for Delivery').length;
+  const readyForDeliveryCount = mockKitchenOrders.filter(o => o.status === 'ReadyForDelivery').length;
+  const cancelledCount = mockKitchenOrders.filter(o => o.status === 'Cancelled').length;
       const availableChefs = mockChefs.filter(chef => !chef.isBusy).length;
       
-      const totalOrders = pendingCount + preparingCount;
+  const totalOrders = pendingCount + deliveredCount + preparingCount + outForDeliveryCount + readyForDeliveryCount + cancelledCount;
       const estimatedMinutes = availableChefs > 0 ? Math.ceil((totalOrders * 10) / availableChefs) : -1;
       
       return {
@@ -230,8 +252,11 @@ export const kitchenService = {
         totalChefs: mockChefs.length,
         availableChefs,
         pendingOrders: mockKitchenOrders.filter(o => o.status === 'Pending').length,
+        deliveredOrders: mockKitchenOrders.filter(o => o.status === 'Delivered').length,
         preparingOrders: mockKitchenOrders.filter(o => o.status === 'Preparing').length,
-        readyOrders: mockKitchenOrders.filter(o => o.status === 'ReadyForDelivery').length,
+        outForDeliveryOrders: mockKitchenOrders.filter(o => o.status === 'Out for Delivery').length,
+        readyForDeliveryOrders: mockKitchenOrders.filter(o => o.status === 'ReadyForDelivery').length,
+        cancelledOrders: mockKitchenOrders.filter(o => o.status === 'Cancelled').length,
         estimatedWaitTime: estimatedTime.estimatedMinutes
       };
     }

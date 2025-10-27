@@ -13,6 +13,11 @@ import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundExcepti
  * delivery workflow.
  */
 public class Delivery extends Staff {
+  @Override
+  public String getFormattedId() {
+    // Always D + zero-padded 3 digits (e.g., D001)
+    return String.format("D%03d", id);
+  }
   private static final Set<Integer> globallyAssignedOrders =
       new HashSet<>(); // Track orders assigned globally
 
@@ -146,8 +151,8 @@ public class Delivery extends Staff {
 
   @Override
   public String toString() {
-    return String.format(
-        "Delivery{name='%s', id='%s', assignedOrders=%d, deliveredOrders=%d}",
-        getName(), getId(), assignedOrders.size(), completedOrders.size());
+  return String.format(
+    "Delivery{name='%s', id='%s', assignedOrders=%d, deliveredOrders=%d}",
+    getName(), getFormattedId(), assignedOrders.size(), completedOrders.size());
   }
 }

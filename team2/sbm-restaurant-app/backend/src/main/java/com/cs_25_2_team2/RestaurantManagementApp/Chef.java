@@ -14,6 +14,16 @@ import com.cs_25_2_team2.RestaurantManagementApp.exceptions.OrderNotFoundExcepti
  * order management responsibilities.
  */
 public class Chef extends Staff {
+  @Override
+  public String getFormattedId() {
+    // If id < 1000, use C + zero-padded 3 digits (e.g., C002)
+    // If id >= 1000, use CH + id (e.g., CH999)
+    if (id < 1000) {
+      return String.format("C%03d", id);
+    } else {
+      return "CH" + id;
+    }
+  }
   private final Map<Integer, Order> orders;
   private final Map<Integer, Order> activeOrders; // Orders currently being prepared
 
@@ -137,7 +147,7 @@ public class Chef extends Staff {
    */
   public void cancelOrder(int orderId) {
     Order order = getOrder(orderId);
-    if (order.getStatus() != Order.Status.Placed) {
+    if (order.getStatus() != Order.Status.Pending && order.getStatus() != Order.Status.Placed) {
       throw new InvalidOrderStateException(orderId, order.getStatus().toString(), "cancel");
     }
 
@@ -187,9 +197,9 @@ public class Chef extends Staff {
    * @return A list of orders waiting in queue
    */
   public List<Order> getPendingOrders() {
-    return orders.values().stream()
-        .filter(order -> order.getStatus() == Order.Status.Placed)
-        .toList();
+  return orders.values().stream()
+    .filter(order -> order.getStatus() == Order.Status.Pending || order.getStatus() == Order.Status.Placed)
+    .toList();
   }
 
   /**
@@ -253,8 +263,16 @@ public class Chef extends Staff {
 
   @Override
   public String toString() {
-    return String.format(
-        "Chef{name='%s', id='%s', orders=%d, activeOrders=%d}",
-        getName(), getId(), orders.size(), activeOrders.size());
+  return String.format(
+    "Chef{name='%s', id='%s', orders=%d, activeOrders=%d}",
+    getName(), getFormattedId(), orders.size(), activeOrders.size());
+  }
+
+  @Override
+  public String getId() {
+    if (!super.getId().startsWith("CH")) {
+      return "CH" + super.getId();
+    }
+    return super.getId();
   }
 }

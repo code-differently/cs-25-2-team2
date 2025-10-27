@@ -16,43 +16,35 @@ const api = axios.create({
 const mockMenuItems = [
   {
     id: 1,
-    name: "French Fries",
-    category: "Sides",
-    price: 3.99,
-    calories: 365,
-    toppings: ["Salt", "Ketchup"]
-  },
-  {
-    id: 2,
-    name: "Loaded Potato Skins",
-    category: "Appetizers", 
-    price: 5.99,
-    calories: 450,
+    name: "Texas Loaded Baked Potato",
+    category: "Main",
+    price: 7.99,
+    calories: "650 cal",
     toppings: ["Cheese", "Bacon", "Sour Cream"]
   },
   {
+    id: 2,
+    name: "Aloo Tikki Chaat",
+    category: "Main",
+    price: 14.99,
+    calories: "300 cal",
+    toppings: ["Cheese", "Chicken", "Pico de Gallo"]
+  },
+  {
     id: 3,
-    name: "Potato Soup",
-    category: "Soups",
-    price: 4.99,
-    calories: 280,
-    toppings: ["Herbs", "Cream"]
+    name: "Potato Salad",
+    category: "Side",
+    price: 5.99,
+    calories: "357 cal",
+    toppings: ["Cheese", "Green Onions", "Ranch"]
   },
   {
     id: 4,
-    name: "Baked Potato",
-    category: "Entrees",
-    price: 4.49,
-    calories: 220,
-    toppings: ["Butter", "Cheese", "Bacon"]
-  },
-  {
-    id: 5,
-    name: "Sweet Potato Fries",
-    category: "Sides",
-    price: 4.29,
-    calories: 315,
-    toppings: ["Cinnamon", "Honey"]
+    name: "Loaded Baked Potato Soup",
+    category: "Soup",
+    price: 5.99,
+    calories: "450 cal",
+    toppings: ["Cheese", "Green Onions", "Bacon"]
   }
 ];
 
