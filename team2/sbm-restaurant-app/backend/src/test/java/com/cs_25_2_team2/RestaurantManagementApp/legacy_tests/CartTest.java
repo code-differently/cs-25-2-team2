@@ -26,7 +26,7 @@ public class CartTest {
   @BeforeEach
   public void setUp() {
   // Initialize cart with user ID
-  cart = new Cart(101LL);
+  cart = new Cart(101L);
 
     // Create menu items for testing
     frenchFries =

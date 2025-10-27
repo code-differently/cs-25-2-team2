@@ -77,7 +77,8 @@ export default function HomePage() {
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-gray-100">The World Needed More Tater Love, So We Showed Up</h2>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
-            Think of us as your potato-powered delivery crew, here to bring golden, crispy, buttery goodness straight to your door. At Spud Munch Bunch, we take comfort food seriously but we make it fun, fast, and ridiculously tasty. From cheesy loaded baked potatoes to perfectly seasoned fries, tots, and sides, every bite is crafted to satisfy your cravings. Whether you’re a couch potato or just here for the
+            Think of us as your potato-powered delivery crew, here to bring golden, crispy, buttery goodness straight to your door. At Spud Munch Bunch, we take comfort food seriously but we make it fun, fast, and ridiculously tasty. From cheesy loaded baked potatoes to perfectly seasoned fries, tots, and sides, every bite is crafted to satisfy your cravings. Whether you’re a couch potato or just here for the ultimate fry fix, we’ve got you covered with spud-tacular flavors made with love!
+          </p>
         </div>
       </section>
 
